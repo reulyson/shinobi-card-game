@@ -51,6 +51,12 @@ const KEYWORD_ICON: Partial<Record<Keyword, CardIconId>> = {
   Formação: 'formacao',
   Veneno: 'veneno',
   'Escudo de Feitiço': 'selado',
+  Sobrepujar: 'ataque-individual',
+  Fúria: 'golpe-veloz',
+  Desafiador: 'formacao',
+  Barreira: 'selado',
+  Regeneração: 'vida',
+  Efêmero: 'oculto',
 };
 
 const CATEGORY_ICON: Partial<Record<JutsuCategory, CardIconId>> = {
@@ -65,15 +71,24 @@ const SPEED_ICON: Record<JutsuSpeed, CardIconId> = {
   Focada: 'ampulheta',
 };
 
-/** Mapeia symbolType existente → selo de família (sem alterar dados). */
+/** Mapeia symbolType / nome existente → selo de família (sem alterar dados). */
 export function jutsuFamilyOf(card: JutsuCardDef): JutsuFamilySeal {
+  const name = card.name.toLowerCase();
+  // Genjutsu clássicos já no repo (ex.: Magen) — só visual.
+  if (
+    name.includes('magen') ||
+    name.includes('genjutsu') ||
+    name.includes('tsukuyomi') ||
+    card.symbolType === 'shadow' ||
+    card.symbolType === 'byakugan'
+  ) {
+    return 'selo-genjutsu';
+  }
+  // shadow/byakugan já tratados acima como Genjutsu (narrowing remove do switch)
   switch (card.symbolType) {
     case 'taijutsu':
     case 'kunai':
       return 'selo-taijutsu';
-    case 'shadow':
-    case 'byakugan':
-      return 'selo-genjutsu';
     case 'rasengan':
     case 'chidori':
     case 'fire':

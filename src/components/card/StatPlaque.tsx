@@ -5,6 +5,8 @@ import { StatColorState } from './theme';
 export interface StatPlaqueProps {
   kind: 'power' | 'vitality';
   value: number;
+  /** Texto opcional (ex.: "+3" em equipamentos). */
+  display?: string;
   /** Cor relativa à base: vermelho abaixo, verde acima, branco igual. */
   colorState?: StatColorState;
   /** Variante de campo (plaquinhas grandes penduradas). */
@@ -25,6 +27,7 @@ const STATE_CLASS: Record<StatColorState, string> = {
 export const StatPlaque: React.FC<StatPlaqueProps> = ({
   kind,
   value,
+  display,
   colorState = 'base',
   field = false,
   className = '',
@@ -36,7 +39,7 @@ export const StatPlaque: React.FC<StatPlaqueProps> = ({
     data-state={colorState}
   >
     <CardIcon id={kind === 'power' ? 'poder' : 'vida'} size={field ? 18 : 14} />
-    <b>{value}</b>
+    <b>{display ?? value}</b>
   </div>
 );
 

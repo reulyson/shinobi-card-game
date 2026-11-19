@@ -26,27 +26,18 @@ export interface CardFaceProps {
   card: CardDef;
   unit?: BoardUnit;
   size?: CardFaceSize;
-  /** Custo efetivo (descontos). */
   effectiveCost?: number;
-  /** Override de poder exibido (prévia de combate). */
   power?: number;
-  /** Override de vitalidade exibida (prévia de combate). */
   vitality?: number;
-  /** Estado de cor do poder; se omitido, compara com a base. */
   powerState?: StatColorState;
-  /** Estado de cor da vitalidade; se omitido, compara com a base. */
   vitalityState?: StatColorState;
-  /** Patente visual (ninja); padrão = unit.evolutionLevel ou 1. */
   rankLevel?: 1 | 2 | 3;
-  /** Contador de level-up atual. */
   levelProgress?: number;
   selected?: boolean;
   dimmed?: boolean;
   playable?: boolean;
   className?: string;
-  /** Força faixa dourada de Jutsu Exclusivo. */
   exclusive?: boolean;
-  /** Força faixa verde “criada por carta”. */
   createdByCard?: boolean;
 }
 
@@ -127,6 +118,27 @@ function formatRulesHtml(text: string): string {
     );
 }
 
+/** Traço curto sob o nome (v7o): patente / role — nunca o title longo. */
+function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
+  switch (card.kind) {
+    case 'ninja':
+      return patenteLabel(rank);
+    case 'unidade':
+    case 'token':
+      return card.role.toUpperCase();
+    case 'equipamento':
+      return 'EQUIPAMENTO';
+    case 'jutsu':
+    case 'armadilha':
+      return null;
+    default: {
+      const _never: never = card;
+      void _never;
+      return null;
+    }
+  }
+}
+
 function FamilySeal({ family }: { family: ReturnType<typeof jutsuFamilyOf> }) {
   const labels: Record<typeof family, [string, string]> = {
     'selo-ninjutsu': ['忍', '術'],
@@ -153,8 +165,17 @@ function ShinobiSeal() {
 
 function EquipSeal() {
   return (
-    <div className="sc-seal-starburst" title="Equipamento" style={{ background: 'radial-gradient(circle at 35% 30%, #E5E7EB, #4B5563)', borderColor: '#1F2937' }}>
-      <span className="sc-kanji" style={{ color: '#111827' }}>武</span>
+    <div
+      className="sc-seal-starburst"
+      title="Equipamento"
+      style={{
+        background: 'radial-gradient(circle at 35% 30%, #E5E7EB, #4B5563)',
+        borderColor: '#1F2937',
+      }}
+    >
+      <span className="sc-kanji" style={{ color: '#111827' }}>
+        武
+      </span>
     </div>
   );
 }
@@ -166,25 +187,31 @@ function KeywordRow({
   pills: Array<{ id: CardIconId | null; label: string }>;
   field?: boolean;
 }) {
-  if (field || pills.length === 0) return null;
+  if (pills.length === 0) return null;
+  const wrapClass = field ? 'sc-field-kw' : '';
+
   if (pills.length === 1) {
     const p = pills[0];
     return (
-      <div className="sc-pill">
-        {p.id && <CardIcon id={p.id} size={14} />}
-        <span>{p.label}</span>
+      <div className={`sc-pill-row ${wrapClass}`}>
+        <div className="sc-pill" title={p.label}>
+          {p.id && <CardIcon id={p.id} size={field ? 10 : 14} />}
+          <span>{p.label}</span>
+        </div>
       </div>
     );
   }
+
+  // 2+: só ícones (como gen_v7o); sem ícone → pílula compacta
   return (
-    <div className="sc-tiles">
+    <div className={`sc-tiles ${wrapClass}`}>
       {pills.map((p, i) =>
         p.id ? (
           <div key={`${p.label}-${i}`} className="sc-tile" title={p.label}>
-            <CardIcon id={p.id} size={14} />
+            <CardIcon id={p.id} size={field ? 9 : 13} />
           </div>
         ) : (
-          <div key={`${p.label}-${i}`} className="sc-pill">
+          <div key={`${p.label}-${i}`} className="sc-pill" title={p.label}>
             <span>{p.label}</span>
           </div>
         ),
@@ -194,7 +221,7 @@ function KeywordRow({
 }
 
 /**
- * Face frontal v7o (LoR-champion para Ninja; pergaminho para Jutsu; compacta no campo).
+ * Face frontal v7o (arte ~55% + painel sólido; pergaminho para Jutsu; campo 95×132).
  * Renderiza apenas textos já presentes em `CardDef` / `BoardUnit`.
  */
 export const CardFace: React.FC<CardFaceProps> = ({
@@ -222,7 +249,8 @@ export const CardFace: React.FC<CardFaceProps> = ({
 
   const isExclusiveJutsu =
     exclusive || (card.kind === 'jutsu' && SIGNATURE_JUTSU_IDS.has(card.id));
-  const signatureOwner = isExclusiveJutsu && card.kind === 'jutsu' ? getSignatureOwner(card.id) : undefined;
+  const signatureOwner =
+    isExclusiveJutsu && card.kind === 'jutsu' ? getSignatureOwner(card.id) : undefined;
   const isCreated =
     createdByCard || card.kind === 'token' || NINJA_CREATED_ONLY_IDS.has(card.id);
 
@@ -236,19 +264,18 @@ export const CardFace: React.FC<CardFaceProps> = ({
     vitality ?? (unit && isCharacter ? getUnitHealth(unit) : stats?.health);
   const basePower = stats?.attack ?? 0;
   const baseVitality = stats?.health ?? 0;
-  const pState = powerState ?? (shownPower != null ? compareStat(shownPower, basePower) : 'base');
+  const pState =
+    powerState ?? (shownPower != null ? compareStat(shownPower, basePower) : 'base');
   const vState =
-    vitalityState ?? (shownVitality != null ? compareStat(shownVitality, baseVitality) : 'base');
+    vitalityState ??
+    (shownVitality != null ? compareStat(shownVitality, baseVitality) : 'base');
 
   const kws = keywordsFor(card, unit, rank);
   const pills = keywordPills(kws);
   const rules = abilityTextFor(card, rank);
-  const lvlCounter = levelUpCounter(
-    card,
-    rank,
-    levelProgress ?? unit?.evolutionProgress,
-  );
+  const lvlCounter = levelUpCounter(card, rank, levelProgress ?? unit?.evolutionProgress);
   const family = card.kind === 'jutsu' ? jutsuFamilyOf(card) : null;
+  const traits = shortTraits(card, rank);
 
   const sizeClass =
     size === 'field'
@@ -289,16 +316,10 @@ export const CardFace: React.FC<CardFaceProps> = ({
   const costMod =
     cost < card.cost ? 'sc-card__cost--down' : cost > card.cost ? 'sc-card__cost--up' : '';
 
-  const nameFontSize =
-    card.name.length > 16
-      ? field
-        ? 9
-        : 12
-      : field
-        ? 10
-        : size === 'zoom' || size === 'inspector'
-          ? 22
-          : 15;
+  const showBandStats =
+    !field &&
+    ((isCharacter && shownPower != null && shownVitality != null) ||
+      card.kind === 'equipamento');
 
   return (
     <div
@@ -334,30 +355,17 @@ export const CardFace: React.FC<CardFaceProps> = ({
 
         <div className="sc-card__flow">
           <div className="sc-card__box">
-            <div className="sc-card__name" style={{ fontSize: nameFontSize }}>
-              {card.name}
-            </div>
-
-            {!field && card.kind === 'ninja' && (
-              <div className="sc-card__traits">{patenteLabel(rank)}</div>
+            {field ? (
+              <div className="sc-card__name-banner">
+                <div className="sc-card__name">{card.name}</div>
+              </div>
+            ) : (
+              <div className="sc-card__name">{card.name}</div>
             )}
 
-            {!field && (card.kind === 'unidade' || card.kind === 'token') && (
-              <>
-                <div className="sc-card__rule" />
-                {card.title ? (
-                  <div className="sc-card__traits">{card.title.toUpperCase()}</div>
-                ) : null}
-              </>
-            )}
-
-            {!field && card.kind === 'equipamento' && (
-              <>
-                <div className="sc-card__rule" />
-                <div className="sc-card__traits">
-                  EQUIPAMENTO · +{card.bonusAttack}/+{card.bonusHealth}
-                </div>
-              </>
+            {!field && traits && <div className="sc-card__traits">{traits}</div>}
+            {!field && (card.kind === 'unidade' || card.kind === 'token' || card.kind === 'equipamento') && (
+              <div className="sc-card__rule" />
             )}
 
             {card.kind === 'jutsu' && !field && (
@@ -410,13 +418,6 @@ export const CardFace: React.FC<CardFaceProps> = ({
                 <div className="sc-card__req">{lvlCounter}</div>
               </>
             )}
-
-            {isCharacter && shownPower != null && shownVitality != null && !field && (
-              <div className="sc-inline-stats">
-                <StatPlaque kind="power" value={shownPower} colorState={pState} />
-                <StatPlaque kind="vitality" value={shownVitality} colorState={vState} />
-              </div>
-            )}
           </div>
         </div>
 
@@ -424,13 +425,41 @@ export const CardFace: React.FC<CardFaceProps> = ({
           className={`sc-card__band ${band.gold ? 'sc-card__band--gold' : ''}`}
           style={band.gold ? undefined : { background: band.color }}
         >
+          {showBandStats && card.kind === 'equipamento' && (
+            <>
+              <div className="sc-card__bst sc-card__bst--l">
+                <CardIcon id="poder" size={14} />
+                <b>+{card.bonusAttack}</b>
+              </div>
+              <div className="sc-card__bst sc-card__bst--r">
+                <b>+{card.bonusHealth}</b>
+                <CardIcon id="vida" size={14} />
+              </div>
+            </>
+          )}
+          {showBandStats && isCharacter && shownPower != null && shownVitality != null && (
+            <>
+              <div className="sc-card__bst sc-card__bst--l">
+                <CardIcon id="poder" size={14} />
+                <b style={pState === 'up' ? { color: '#4ade80' } : pState === 'down' ? { color: '#ff5252' } : undefined}>
+                  {shownPower}
+                </b>
+              </div>
+              <div className="sc-card__bst sc-card__bst--r">
+                <b style={vState === 'up' ? { color: '#4ade80' } : vState === 'down' ? { color: '#ff5252' } : undefined}>
+                  {shownVitality}
+                </b>
+                <CardIcon id="vida" size={14} />
+              </div>
+            </>
+          )}
           {band.gold && <CardIcon id="coroa" size={12} />}
           <span>{band.label}</span>
         </div>
       </div>
 
       <div className={`sc-card__cost ${costMod}`} title="Custo de Chakra">
-        <CardIcon id="orbe-chakra" size={field ? 32 : 48} />
+        <CardIcon id="orbe-chakra" size={field ? 30 : 48} />
         <b>{cost}</b>
       </div>
 
