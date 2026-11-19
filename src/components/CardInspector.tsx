@@ -232,7 +232,9 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
             levelProgress={
               unit && previewRank === unit.evolutionLevel
                 ? unit.evolutionProgress
-                : savedRank?.progress
+                : savedRank && savedRank.level === previewRank
+                  ? savedRank.progress
+                  : 0
             }
           />
         </div>

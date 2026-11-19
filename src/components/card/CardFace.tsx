@@ -331,7 +331,12 @@ export const CardFace: React.FC<CardFaceProps> = ({
   const kws = keywordsFor(card, unit, rank);
   const pills = keywordPills(kws);
   const rules = abilityTextFor(card, rank);
-  const lvlCounter = levelUpCounter(card, rank, levelProgress ?? unit?.evolutionProgress);
+  const lvlCounter = levelUpCounter(
+    card,
+    rank,
+    levelProgress ??
+      (unit && unit.evolutionLevel === rank ? unit.evolutionProgress : undefined),
+  );
   const family =
     card.kind === 'jutsu'
       ? jutsuFamilyOf(card)
