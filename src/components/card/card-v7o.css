@@ -1,0 +1,780 @@
+/* Shinobi Chronicles — layout de carta v7o + verso-v3 */
+
+.sc-card {
+  --sc-el: #475569;
+  --sc-dk: #1e293b;
+  --sc-fc: #4fc3f7;
+  --sc-fcd: #1e88c0;
+  position: relative;
+  box-sizing: border-box;
+  border: 7px solid transparent;
+  border-radius: 16px;
+  overflow: visible;
+  flex: none;
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f3f4f6, #9ca3af 28%, #f9fafb 48%, #6b7280 72%, #d1d5db) border-box;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #fff;
+  user-select: none;
+}
+
+.sc-card--size-hand {
+  width: 156px;
+  height: 219px;
+}
+
+.sc-card--size-zoom {
+  width: 312px;
+  height: 438px;
+}
+
+.sc-card--size-field {
+  width: 95px;
+  height: 132px;
+  border-width: 5px;
+  border-radius: 12px;
+}
+
+.sc-card--size-collection {
+  width: 100%;
+  aspect-ratio: 312 / 438;
+  height: auto;
+}
+
+.sc-card--rank-gennin {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f0c08a, #a0612b 28%, #f6cfa0 48%, #7a431c 72%, #d99a5c) border-box;
+}
+
+.sc-card--rank-chuunin {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f3f4f6, #9ca3af 28%, #f9fafb 48%, #6b7280 72%, #d1d5db) border-box;
+}
+
+.sc-card--rank-jounnin,
+.sc-card--exclusive {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #fff3b0, #c98a1b 28%, #fde68a 48%, #8a5a10 72%, #f5c542) border-box;
+}
+
+.sc-card__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.sc-card--field .sc-card__clip {
+  border-radius: 7px;
+}
+
+.sc-card__art {
+  position: absolute;
+  inset: 0;
+  height: 68%;
+  background-size: cover;
+  background-position: 50% 25%;
+}
+
+.sc-card__art-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+
+.sc-card__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #0b102055 0%,
+    #0b102000 20%,
+    #0b102000 40%,
+    #0b1020 62%,
+    #0b1020 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sc-card--lor .sc-card__shade {
+  background: linear-gradient(
+    180deg,
+    #0b102000 35%,
+    #0b1020aa 58%,
+    #0b1020f2 78%,
+    #0b1020 100%
+  );
+}
+
+.sc-card__cost {
+  position: absolute;
+  left: -14px;
+  top: -14px;
+  width: 48px;
+  height: 48px;
+  z-index: 6;
+  filter: drop-shadow(0 3px 4px #000c);
+}
+
+.sc-card--field .sc-card__cost {
+  left: -8px;
+  top: -8px;
+  width: 32px;
+  height: 32px;
+}
+
+.sc-card__cost img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sc-card__cost b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: #fff;
+  -webkit-text-stroke: 2px #0b1530;
+  paint-order: stroke fill;
+  padding-top: 6px;
+}
+
+.sc-card--field .sc-card__cost b {
+  font-size: 15px;
+  padding-top: 4px;
+  -webkit-text-stroke: 1.5px #0b1530;
+}
+
+.sc-card__cost--down b {
+  color: #6ee7b7;
+}
+
+.sc-card__cost--up b {
+  color: #e9d5ff;
+}
+
+.sc-card__seal {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  z-index: 6;
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 3px 4px #000c);
+}
+
+.sc-card--field .sc-card__seal {
+  right: -6px;
+  top: -6px;
+  width: 28px;
+  height: 28px;
+}
+
+.sc-seal-starburst {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff3b0, #f5c542 60%, #b9791a);
+  border: 1.5px solid #7c4a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px #000b;
+}
+
+.sc-seal-starburst .sc-kanji {
+  font-family: 'Yuji Boku', 'Yuji Syuku', serif;
+  font-size: 22px;
+  color: #1a1208;
+  line-height: 1;
+}
+
+.sc-card--field .sc-seal-starburst .sc-kanji {
+  font-size: 14px;
+}
+
+.sc-seal-family {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fffbea, #f1e4c0 80%);
+  box-shadow: 0 2px 5px #000b, 0 0 0 2px #b8923f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.98;
+  overflow: hidden;
+}
+
+.sc-seal-family span {
+  font-family: 'Yuji Boku', 'Yuji Syuku', serif;
+  color: #0e0b07;
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+}
+
+.sc-card--field .sc-seal-family span {
+  font-size: 8px;
+}
+
+.sc-seal-family .sc-hanko {
+  position: absolute;
+  right: 6%;
+  bottom: 8%;
+  width: 22%;
+  height: 22%;
+  background: #c1272d;
+  border-radius: 2px;
+  z-index: 2;
+  transform: rotate(-6deg);
+  opacity: 0.92;
+}
+
+.sc-card__band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 3;
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.sc-card--field .sc-card__band {
+  height: 18px;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+}
+
+.sc-card__band--gold {
+  background: linear-gradient(0deg, #ca8a04, #fde68a);
+  color: #1c1400;
+}
+
+.sc-card__band span {
+  font-family: Bangers, Impact, sans-serif;
+}
+
+.sc-card__flow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.sc-card--field .sc-card__flow {
+  bottom: 20px;
+}
+
+.sc-card--jutsu .sc-card__flow {
+  bottom: 24px;
+}
+
+.sc-card__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Ninja LoR champion overlay */
+.sc-card--lor:not(.sc-card--field) .sc-card__box {
+  height: 148px;
+  padding: 36px 12px 8px;
+  justify-content: flex-end;
+  gap: 3px;
+  border: none;
+  border-radius: 0;
+  background: linear-gradient(180deg, #0b102000 0%, #0b1020cc 26%, #0b1020f2 52%, #0b1020f8 100%);
+  box-shadow: none;
+}
+
+.sc-card--lor:not(.sc-card--field) .sc-card__name {
+  color: #fff;
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 6px #000, 0 0 3px #000;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.sc-card--lor:not(.sc-card--field) .sc-card__traits {
+  color: #f5c542;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-top: -2px;
+}
+
+.sc-card--lor:not(.sc-card--field) .sc-card__rules {
+  color: #f1f5f9;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 600;
+  text-shadow: 0 1px 2px #000;
+}
+
+.sc-card--lor:not(.sc-card--field) .sc-card__rules em {
+  color: #fbbf24;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.sc-lvlbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 92%;
+  margin-top: 2px;
+}
+
+.sc-lvlbar i {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #0000, #d4a24c, #0000);
+}
+
+.sc-lvlbar b {
+  font: 800 8px 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 1.8px;
+  color: #e5b84b;
+  white-space: nowrap;
+}
+
+.sc-card__req {
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #f6b6a4;
+  font: 700 9.5px 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px #000;
+  text-transform: none;
+}
+
+/* Unidade / token / equipamento (caixa metálica / pergaminho curto) */
+.sc-card--unit:not(.sc-card--field) .sc-card__box,
+.sc-card--equip:not(.sc-card--field) .sc-card__box {
+  height: 96px;
+  padding: 6px 10px 6px;
+  margin: 0;
+  border-radius: 5px;
+  border-left: 8px solid #1b2f63;
+  border-right: 8px solid #1b2f63;
+  border-top: 2px solid #5b6574;
+  border-bottom: 2px solid #5b6574;
+  background:
+    repeating-linear-gradient(100deg, #fff0 0 7px, #0000000d 7px 8px),
+    linear-gradient(180deg, #f4f6f9, #d5dbe3 45%, #b9c1cc);
+  box-shadow: inset 0 2px 0 #fff, inset 0 -3px 4px #6b728055, 0 3px 8px #000b;
+  color: #1a1208;
+}
+
+.sc-card--equip:not(.sc-card--field) .sc-card__box {
+  border-left-color: #1f2937;
+  border-right-color: #1f2937;
+  background:
+    repeating-linear-gradient(100deg, #fff0 0 7px, #ffffff0d 7px 8px),
+    linear-gradient(180deg, #8b95a3, #4b5563 55%, #2b3340);
+  color: #f3f4f6;
+}
+
+.sc-card--unit:not(.sc-card--field) .sc-card__name,
+.sc-card--equip:not(.sc-card--field) .sc-card__name {
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 14px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.sc-card--unit:not(.sc-card--field) .sc-card__rule {
+  width: 86%;
+  height: 1.5px;
+  background: #b91c1c;
+}
+
+.sc-card--equip:not(.sc-card--field) .sc-card__rule {
+  background: #fbbf24;
+}
+
+.sc-card--unit:not(.sc-card--field) .sc-card__rules,
+.sc-card--equip:not(.sc-card--field) .sc-card__rules {
+  font-size: 9.5px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.sc-card--equip:not(.sc-card--field) .sc-card__rules em {
+  color: #fde68a;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.sc-card--unit:not(.sc-card--field) .sc-card__rules em {
+  color: #b91c1c;
+  font-style: normal;
+  font-weight: 800;
+}
+
+/* Jutsu pergaminho */
+.sc-card--jutsu:not(.sc-card--field) .sc-card__box {
+  height: 118px;
+  margin: 0 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 0;
+  border-top: 6px solid var(--sc-fc);
+  border-bottom: 6px solid var(--sc-fc);
+  background: radial-gradient(ellipse at 50% 50%, #fbf1d2, #ebd9a8 85%, #d9be82);
+  box-shadow: inset 0 2px 0 #fff8, inset 0 -2px 0 #fff8, inset 0 0 0 1px var(--sc-fcd), 0 2px 6px #000a;
+  color: #2b1b0e;
+  overflow: visible;
+}
+
+.sc-card--jutsu:not(.sc-card--field) .sc-card__box::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: -6px;
+  bottom: -6px;
+  width: 18px;
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, var(--sc-fcd) 0 7px, #0000 7px calc(100% - 7px), var(--sc-fcd) calc(100% - 7px)),
+    linear-gradient(90deg, #3a1f0c, #b07a45 35%, #7a4a22 65%, #2a170a);
+  box-shadow: 0 2px 4px #000b, inset 0 0 0 1px #0006;
+}
+
+.sc-card--jutsu.sc-card--exclusive:not(.sc-card--field) .sc-card__box::after {
+  background:
+    linear-gradient(180deg, #f5c542 0 7px, #0000 7px calc(100% - 7px), #f5c542 calc(100% - 7px)),
+    linear-gradient(90deg, #3a1f0c, #b07a45 35%, #7a4a22 65%, #2a170a);
+}
+
+.sc-card--jutsu:not(.sc-card--field) .sc-card__name {
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 14px;
+  color: #1a1208;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.sc-card--jutsu:not(.sc-card--field) .sc-card__rule {
+  width: 86%;
+  height: 1.5px;
+  background: var(--sc-fcd);
+}
+
+.sc-card--jutsu:not(.sc-card--field) .sc-card__rules {
+  font-size: 10px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: #2b1b0e;
+}
+
+.sc-card--jutsu:not(.sc-card--field) .sc-card__rules em {
+  color: #b91c1c;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.sc-card--fam-ninjutsu {
+  --sc-fc: #4fc3f7;
+  --sc-fcd: #1e88c0;
+}
+
+.sc-card--fam-genjutsu {
+  --sc-fc: #9c27b0;
+  --sc-fcd: #6a1b7a;
+}
+
+.sc-card--fam-taijutsu {
+  --sc-fc: #3a7d44;
+  --sc-fcd: #2c5f2d;
+}
+
+.sc-card__cap {
+  font-weight: 800;
+  font-size: 9px;
+  color: #7a4a00;
+}
+
+.sc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 8px;
+  background: #0b1020f2;
+  border: 1.5px solid #d4a24c;
+  font-weight: 800;
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  color: #fde68a;
+  white-space: nowrap;
+}
+
+.sc-pill-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sc-tiles {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.sc-tile {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #64748b, #1e293b 75%);
+  border: 1.5px solid #b8923f;
+  border-radius: 5px;
+}
+
+/* Campo: nome + faixa + plaquinhas grandes */
+.sc-card--field .sc-card__box {
+  height: 42px;
+  padding: 2px 4px 2px;
+  justify-content: center;
+  background: linear-gradient(180deg, #0b102000, #0b1020ee 40%, #0b1020);
+  border: none;
+  border-radius: 0;
+}
+
+.sc-card--field .sc-card__name {
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 10px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 3px #000;
+  line-height: 1.05;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sc-card--field .sc-card__rule,
+.sc-card--field .sc-card__rules,
+.sc-card--field .sc-card__traits,
+.sc-card--field .sc-lvlbar,
+.sc-card--field .sc-card__req,
+.sc-card--field .sc-pill,
+.sc-card--field .sc-tiles {
+  display: none;
+}
+
+.sc-card--field .sc-card__art {
+  height: 78%;
+}
+
+/* Plaquinhas de stats */
+.sc-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #0b1020f0;
+  border: 1.5px solid #e5e7eb;
+  font-family: Bangers, Impact, sans-serif;
+  line-height: 1;
+}
+
+.sc-stat b {
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  -webkit-text-stroke: 2.5px #0a0f1e;
+  paint-order: stroke fill;
+}
+
+.sc-stat--base {
+  border-color: #e5e7eb;
+}
+
+.sc-stat--base b {
+  color: #fff;
+}
+
+.sc-stat--up {
+  border-color: #4ade80;
+  box-shadow: 0 0 8px #4ade8066;
+}
+
+.sc-stat--up b {
+  color: #4ade80;
+}
+
+.sc-stat--down {
+  border-color: #ff5252;
+  box-shadow: 0 0 8px #ff525266;
+}
+
+.sc-stat--down b {
+  color: #ff5252;
+}
+
+.sc-stat--field {
+  position: absolute;
+  bottom: -16px;
+  z-index: 7;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #0a0f1ef8;
+  border-width: 2.5px;
+  gap: 4px;
+  filter: drop-shadow(0 3px 4px #000a);
+}
+
+.sc-stat--field b {
+  font-size: 22px;
+  -webkit-text-stroke: 3.5px #0a0f1e;
+}
+
+.sc-stat--field.sc-stat--up {
+  border-color: #4ade80;
+  box-shadow: 0 0 10px #4ade8099, 0 3px 4px #000a;
+}
+
+.sc-stat--field.sc-stat--down {
+  border-color: #ff5252;
+  box-shadow: 0 0 10px #ff525299, 0 3px 4px #000a;
+}
+
+.sc-stat--field.sc-stat--power {
+  left: -4px;
+}
+
+.sc-stat--field.sc-stat--vitality {
+  right: -4px;
+}
+
+.sc-inline-stats {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px;
+  margin-top: 2px;
+}
+
+.sc-card--field .sc-inline-stats {
+  display: none;
+}
+
+/* Verso v3 */
+.sc-card--back {
+  background:
+    linear-gradient(#000, #000) padding-box,
+    linear-gradient(135deg, #f3f4f6, #9ca3af 28%, #f9fafb 48%, #6b7280 72%, #d1d5db) border-box !important;
+}
+
+.sc-back-inner {
+  position: absolute;
+  inset: 8px;
+  border: 2.5px solid #f97316;
+  border-radius: 8px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sc-card--field .sc-back-inner {
+  inset: 5px;
+  border-width: 2px;
+  border-radius: 6px;
+}
+
+.sc-back-swirls {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.sc-back-crest {
+  position: relative;
+  z-index: 2;
+  width: 68%;
+  height: auto;
+  filter: drop-shadow(0 0 12px #f9731655);
+}
+
+.sc-card--dimmed {
+  filter: brightness(0.62) saturate(0.5);
+}
+
+.sc-card--selected {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+.sc-card--playable {
+  box-shadow: 0 0 0 1px #38bdf8aa, 0 12px 26px rgba(0, 0, 0, 0.55);
+}
+
+.sc-deck-thumb {
+  width: 28px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.sc-deck-thumb .sc-card {
+  width: 156px;
+  height: 219px;
+  transform: scale(0.179);
+  transform-origin: top left;
+}

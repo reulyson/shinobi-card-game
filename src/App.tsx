@@ -10,6 +10,7 @@ import { BattleArena } from './components/BattleArena';
 import { soundFX } from './utils/sound';
 import { OFFICIAL_ART } from './data/officialArt';
 import { OfficialImage, VillageSymbol } from './components/OfficialImage';
+import { CardGallery } from './components/card/CardGallery';
 
 type ActiveScreen = 'lobby' | 'battle' | 'collection' | 'builder' | 'rules' | 'history';
 
@@ -73,6 +74,14 @@ export default function App() {
       setScreen('builder');
     }
   };
+
+  const showCardGallery =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('gallery') === 'cartas';
+
+  if (showCardGallery) {
+    return <CardGallery />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0B111A] text-slate-100 flex flex-col">

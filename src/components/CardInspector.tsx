@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Swords, Heart, X, Wrench, EyeOff } from 'lucide-react';
+import { Sparkles, X, Wrench, EyeOff } from 'lucide-react';
 import { BoardUnit, CardDef, getKeywordLabel, Keyword, SPEED_DISPLAY_NAME, SPEED_FULL_LABEL } from '../types/game';
 import { KEYWORD_SHORT_HELP, STATUS_SHORT_HELP, getTriggerHelp, splitAbilityText } from '../data/keywordHelp';
 import { getRecurringAbilitiesForCard, mergeRecurringAbilityLines } from '../engine/recurringAbilities';
 import { KEYWORD_VISUALS } from '../data/keywordVisuals';
 import { getCardById, getNinjaDuplicateCardId, getNotDeckableReason } from '../data/cards';
 import { getUnitHealth, getUnitPower } from '../engine/battleEngine';
-import { AnimePortrait } from './AnimePortrait';
+import { CardFace } from './card/CardFace';
 
 interface CardInspectorProps {
   card: CardDef | null;
@@ -218,25 +218,24 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
         )}
       </div>
 
-      {/* Art Preview */}
-      <div className="relative h-36 shrink-0 rounded-lg overflow-hidden border border-slate-700/80 bg-slate-950">
-        <AnimePortrait card={card} evolved={activeRank >= 2} evolutionLevel={activeRank} />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/90 border border-sky-500/60 text-sky-200 font-mono-num text-xs font-bold">
-          Chakra {savedRank && savedRank.level > 1 ? savedRank.cost : card.cost}
+      {/* Carta v7o (zoom/detalhe) */}
+      <div className="relative flex justify-center shrink-0 py-2 overflow-visible">
+        <div className="origin-top" style={{ transform: 'scale(0.72)', height: 315 }}>
+          <CardFace
+            card={card}
+            unit={unit}
+            size="zoom"
+            rankLevel={activeRank}
+            effectiveCost={savedRank && savedRank.level > 1 ? savedRank.cost : card.cost}
+            power={isCharacter ? previewAttack : undefined}
+            vitality={isCharacter ? previewHealth : undefined}
+            levelProgress={
+              unit && previewRank === unit.evolutionLevel
+                ? unit.evolutionProgress
+                : savedRank?.progress
+            }
+          />
         </div>
-        {isCharacter && (
-          <div className="absolute bottom-2 inset-x-2 flex items-center justify-between text-xs font-mono-num font-bold">
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-red-950/90 border border-red-500/60 text-red-200">
-              <Swords className="w-3 h-3" />
-              {previewAttack}
-            </span>
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-500/60 text-emerald-200">
-              <Heart className="w-3 h-3" />
-              {previewHealth}
-            </span>
-          </div>
-        )}
       </div>
 
       {card.kind === 'ninja' && (
