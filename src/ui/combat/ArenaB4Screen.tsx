@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ArenaBackground } from './ArenaBackground';
 import { AttackArrows } from './AttackArrows';
+import { BoardBands } from './BoardBands';
 import { CombatBoard } from './CombatBoard';
 import { DeckPile } from './DeckPile';
 import { FixedStage } from './FixedStage';
@@ -47,11 +48,14 @@ export function ArenaB4Screen({
           onCardClick={onCardClick}
         />
 
+        {/* Faixas/linha 205→1395 atrás do Histórico (laterais do pergaminho transparentes). */}
+        <BoardBands />
+
         <PilhaStrip items={model.pilha} compact={model.combatBusy || model.pilha.length > 6} />
         <AttackArrows arrows={model.arrows} />
         <OcultoSlots rivalCount={model.rivalOculto} myCount={model.myOculto} />
 
-        {/* Part 4 mount: Histórico */}
+        {/* Part 4 mount: Histórico — laterais abertas para ver faixas/linha */}
         <HistoricoScroll lines={model.historicoLines} />
 
         <VitalidadeBandanas

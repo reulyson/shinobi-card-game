@@ -108,10 +108,6 @@ export function CombatBoard({
   const rivalField = rb.filter(Boolean).length;
   const myField = mb.filter(Boolean).length;
 
-  // Faixas e linha central: x 205→1395 em coords de tela (= 5→1195 relativos ao tabuleiro).
-  const bandLeft = STK_BAND.x - BOARD.x;
-  const bandWidth = STK_BAND.w;
-
   return (
     <div
       className="absolute"
@@ -122,7 +118,7 @@ export function CombatBoard({
         width: BOARD.w,
         height: BOARD.h,
         zIndex: 8,
-        background: 'linear-gradient(180deg, rgba(14,22,54,0.86), rgba(8,12,34,0.92))',
+        background: 'linear-gradient(180deg, rgba(14,22,54,0.78), rgba(8,12,34,0.84))',
         border: '5px solid #111',
         boxShadow:
           '0 0 0 3px #fff, 0 0 0 9px #F97316, 0 0 0 12px #111, 0 14px 30px rgba(0,0,0,0.75)',
@@ -151,53 +147,51 @@ export function CombatBoard({
         </svg>
       </div>
 
-      {/* Faixas de borda a borda — passam ATRÁS do Histórico (coluna direita). */}
+      {/* Faixas 205→1395 (relativo: 5→1195) — atrás das cartas; o Histórico deixa laterais abertas. */}
       <div
         className="pointer-events-none absolute"
         data-band="rival"
         style={{
-          left: bandLeft,
+          left: STK_BAND.x - BOARD.x,
           top: RIVAL_BACK_Y - BOARD.y,
-          width: bandWidth,
+          width: STK_BAND.w,
           height: 144,
-          background: 'rgba(185,28,28,0.28)',
+          background: 'rgba(185,28,28,0.34)',
         }}
       />
       <div
         className="pointer-events-none absolute"
         data-band="combat"
         style={{
-          left: bandLeft,
+          left: STK_BAND.x - BOARD.x,
           top: ZONES.combat.y - BOARD.y,
-          width: bandWidth,
+          width: STK_BAND.w,
           height: ZONES.combat.h,
-          background: 'rgba(255,210,63,0.08)',
+          background: 'rgba(255,210,63,0.10)',
         }}
       />
       <div
         className="pointer-events-none absolute"
         data-band="player"
         style={{
-          left: bandLeft,
+          left: STK_BAND.x - BOARD.x,
           top: MY_BACK_Y - BOARD.y,
-          width: bandWidth,
+          width: STK_BAND.w,
           height: 144,
-          background: 'rgba(29,95,214,0.28)',
+          background: 'rgba(29,95,214,0.34)',
         }}
       />
-
-      {/* Linha central da Pilha (205→1395), atrás do Histórico. */}
       <div
-        className="pointer-events-none absolute"
-        data-pilha-line
+        className="pointer-events-none absolute box-border"
+        data-pilha-line-board
         style={{
-          left: bandLeft,
-          top: LINE_Y - BOARD.y - 1,
-          width: bandWidth,
-          height: 3,
-          background: 'linear-gradient(90deg,#F97316,#FFD23F,#F97316)',
-          boxShadow: '0 0 10px rgba(255,210,63,0.55), 0 0 0 1px rgba(255,255,255,0.35)',
-          zIndex: 1,
+          left: STK_BAND.x - BOARD.x,
+          top: LINE_Y - BOARD.y - 4,
+          width: STK_BAND.w,
+          height: 8,
+          background: 'linear-gradient(90deg,#F97316,#FFD23F 50%,#F97316)',
+          border: '2px solid #111',
+          boxShadow: '0 0 0 2px #fff, 0 0 12px rgba(255,210,63,0.55)',
         }}
       />
 
