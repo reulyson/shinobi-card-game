@@ -4,8 +4,12 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+const GITHUB_PAGES_BASE = '/shinobi-card-game/';
+
 export default defineConfig(() => {
   return {
+    base:
+      process.env.GITHUB_PAGES === 'true' ? GITHUB_PAGES_BASE : '/',
     plugins: [
       react(),
       tailwindcss(),
