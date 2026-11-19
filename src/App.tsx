@@ -10,6 +10,7 @@ import { BattleArena } from './components/BattleArena';
 import { soundFX } from './utils/sound';
 import { OFFICIAL_ART } from './data/officialArt';
 import { OfficialImage, VillageSymbol } from './components/OfficialImage';
+import { ArenaB4Demo, resolveArenaB4DemoFromSearch } from './ui/combat';
 
 type ActiveScreen = 'lobby' | 'battle' | 'collection' | 'builder' | 'rules' | 'history';
 
@@ -17,6 +18,9 @@ const STORAGE_DECK_KEY = 'shinobi_chronicles_deck_v4';
 const STORAGE_ARENA_KEY = 'shinobi_chronicles_arena_v1';
 
 export default function App() {
+  const b4Demo = resolveArenaB4DemoFromSearch(
+    typeof window !== 'undefined' ? window.location.search : ''
+  );
   const [screen, setScreen] = useState<ActiveScreen>('lobby');
 
   const [activeDeckIds, setActiveDeckIds] = useState<string[]>(() => {
@@ -73,6 +77,10 @@ export default function App() {
       setScreen('builder');
     }
   };
+
+  if (b4Demo) {
+    return <ArenaB4Demo demoId={b4Demo} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0B111A] text-slate-100 flex flex-col">
