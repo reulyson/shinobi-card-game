@@ -33,9 +33,9 @@ export const ARENAS: Record<ArenaId, ArenaDefinition> = {
     subtitle: 'Zona de Treinamento 44',
     imageUrl: OFFICIAL_ART.forestOfDeath,
     accentColor: '#10B981',
-    ruleSummary: 'Terreno Traiçoeiro: Armadilhas custam 1 de Chakra a menos. No início da rodada, a unidade mais ferida sofre 1 de dano.',
+    ruleSummary: 'Terreno Traiçoeiro: Ocultos custam 1 de Chakra a menos. No início da rodada, a unidade mais ferida sofre 1 de dano.',
     detailedRule:
-      'Cartas de Armadilha têm seu custo reduzido em 1 (mínimo 1). Ao iniciar cada rodada, o personagem com menor Vida atual de cada lado (se já estiver ferido e sem Cura Natural) sofre 1 de dano.',
+      'Cartas de Oculto têm seu custo reduzido em 1 (mínimo 1). Ao iniciar cada rodada, o personagem com menor Vida atual de cada lado (se já estiver ferido e sem Cura Natural) sofre 1 de dano.',
   },
   arena_chunin: {
     id: 'arena_chunin',

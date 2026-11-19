@@ -4,15 +4,15 @@ import { RECURRING_TRIGGER_HELP, RECURRING_TRIGGER_LABEL } from '../types/game';
 /** Explicação de 1 linha de cada palavra-chave (mesmo sentido do glossário das regras). */
 export const KEYWORD_SHORT_HELP: Record<Keyword, string> = {
   Elusivo: 'Só pode ser bloqueado por Furtivo ou Visão Ninja.',
-  'Visão Aguçada': 'Pode bloquear Furtivos e vê as Armadilhas ocultas do rival.',
-  Sobrepujar: 'Dano além da Vida do bloqueador vai para o Portão.',
+  'Visão Aguçada': 'Pode bloquear Furtivos e vê os Ocultos do rival.',
+  Sobrepujar: 'Dano além da Vida do bloqueador vai para a Vitalidade.',
   'Ataque Rápido': 'Ao atacar, golpeia antes do bloqueador.',
   'Ataque Duplo': 'Ao atacar, golpeia antes e de novo junto com o bloqueador.',
   Desafiador: 'Ao atacar, você escolhe quem do rival bloqueia.',
   Assustador: 'Só pode ser bloqueado por Poder 3+.',
   Imprudente: 'Só pode ser bloqueado por Vida 3+.',
   Formidável: 'Golpeia usando a Vida no lugar do Poder.',
-  Impacto: 'Ao golpear atacando, causa 1 de dano ao Portão.',
+  Impacto: 'Ao golpear atacando, causa 1 de dano à Vitalidade.',
   'Não Bloqueia': 'Não pode bloquear.',
   Imóvel: 'Não pode atacar nem bloquear.',
   Barreira: 'Anula o próximo dano nesta rodada.',
@@ -20,8 +20,8 @@ export const KEYWORD_SHORT_HELP: Record<Keyword, string> = {
   Robusto: 'Sofre 1 de dano a menos.',
   Regeneração: 'Recupera toda a Vida no início da rodada.',
   Imortal: 'Na 1ª morte, volta Paralisada com 1 de Vida.',
-  'Roubo de Vida': 'O dano que causa cura o seu Portão.',
-  Drenar: 'O dano deste efeito cura o seu Portão.',
+  'Roubo de Vida': 'O dano que causa cura a sua Vitalidade.',
+  Drenar: 'O dano deste efeito cura a sua Vitalidade.',
   Efêmero: 'Morre ao golpear ou no fim da rodada.',
   Vulnerável: 'Atacantes rivais podem forçá-la a bloquear.',
   Fúria: 'Ganha +1/+1 ao abater uma unidade em combate.',
@@ -60,7 +60,7 @@ const TRIGGER_WORDS = [
   'Último Desejo',
   'Se for sua 1ª carta da rodada',
   'Se você já jogou outra carta nesta rodada',
-  'Se você já causou dano ao Portão rival nesta rodada',
+  'Se você já causou dano à Vitalidade rival nesta rodada',
   'Formação',
   'Copiar',
   'Meditação',
@@ -86,6 +86,7 @@ const TRIGGER_WORDS = [
   'Rápido',
   'Preparado',
   'Concentrado',
+  'Oculto',
 ];
 
 export interface AbilityLine {

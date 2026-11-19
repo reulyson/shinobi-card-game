@@ -35,7 +35,7 @@ export const VILLAGE_SYMBOLS = {
 
 export type VillageKey = keyof typeof VILLAGE_SYMBOLS;
 
-/** Vila de cada facção do jogo (para o símbolo no Portão). */
+/** Vila de cada facção do jogo (para o símbolo na Vitalidade). */
 export function villageOfFaction(faction?: string): VillageKey {
   if (faction === 'Areia') return 'suna';
   if (faction === 'Névoa') return 'kiri';

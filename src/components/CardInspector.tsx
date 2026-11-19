@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles, Swords, Heart, X, Wrench, EyeOff } from 'lucide-react';
-import { BoardUnit, CardDef, getKeywordLabel, Keyword, SPEED_DISPLAY_NAME, SPEED_FULL_LABEL } from '../types/game';
+import {
+  BoardUnit,
+  CardDef,
+  getKeywordLabel,
+  isOcultoJutsu,
+  Keyword,
+  SPEED_DISPLAY_NAME,
+  SPEED_FULL_LABEL,
+} from '../types/game';
 import { KEYWORD_SHORT_HELP, STATUS_SHORT_HELP, getTriggerHelp, splitAbilityText } from '../data/keywordHelp';
 import { getRecurringAbilitiesForCard, mergeRecurringAbilityLines } from '../engine/recurringAbilities';
 import { KEYWORD_VISUALS } from '../data/keywordVisuals';
@@ -45,10 +53,8 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
         : card.kind === 'token'
           ? `Token · ${card.role}`
           : card.kind === 'jutsu'
-            ? `Jutsu · ${SPEED_DISPLAY_NAME[card.speed]} · ${card.category}`
-            : card.kind === 'armadilha'
-              ? 'Armadilha Oculta'
-              : 'Equipamento Ninja';
+            ? `Jutsu · ${SPEED_DISPLAY_NAME[card.speed]}${card.family ? ` · ${card.family}` : ''} · ${card.category}`
+            : 'Equipamento Ninja';
 
   const equippedCard = unit?.equippedCardId ? getCardById(unit.equippedCardId) : undefined;
   const previewAttack =
@@ -104,12 +110,12 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
       cls: 'border-sky-500/50 bg-sky-950/50 text-sky-200',
     });
   }
-  if (card.kind === 'armadilha') {
+  if (isOcultoJutsu(card) && card.triggerType) {
     chips.push({
       key: 'trap',
-      label: 'Armadilha',
+      label: 'Oculto',
       icon: EyeOff,
-      help: 'Fica escondida até o gatilho. Arma como Preparado; dispara como Rápido.',
+      help: 'Jogada virada para baixo; ativa no gatilho. Máx. 3 em jogo.',
       cls: 'border-purple-500/50 bg-purple-950/50 text-purple-200',
     });
   }
@@ -175,7 +181,7 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
       : [];
   const abilityLines = mergeRecurringAbilityLines(splitAbilityText(abilityText), recurringAbilities);
   const flavor =
-    card.kind === 'jutsu' || card.kind === 'armadilha' || card.kind === 'equipamento' ? card.flavorText : undefined;
+    card.kind === 'jutsu' || card.kind === 'equipamento' ? card.flavorText : undefined;
 
   return (
     <div className="flex flex-col gap-3 text-slate-100">
@@ -199,10 +205,10 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
           {!isCharacter && (
             <div className="text-[11px] text-slate-500 truncate">
               {card.kind === 'jutsu'
-                ? 'Jutsu'
-                : card.kind === 'armadilha'
-                  ? 'Armadilha'
-                  : 'Equipamento'}
+                ? isOcultoJutsu(card)
+                  ? 'Jutsu · Oculto'
+                  : 'Jutsu'
+                : 'Equipamento'}
             </div>
           )}
         </div>
