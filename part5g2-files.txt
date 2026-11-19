@@ -1,0 +1,6 @@
+src/components/BattleArena.tsx
+src/components/CardInspector.tsx
+src/components/CardView.tsx
+src/components/RulesView.tsx
+src/data/cards.ts
+src/engine/battleEngine.ts

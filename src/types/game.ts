@@ -1,0 +1,673 @@
+export type TeamFaction =
+  | 'Time 7'
+  | 'Time 8'
+  | 'Time 9'
+  | 'Time 10'
+  | 'Som & Sannin'
+  | 'Hokages'
+  | 'Areia'
+  | 'Névoa'
+  | 'Neutro'
+  | 'Akatsuki';
+
+export type Keyword =
+  | 'Elusivo'
+  | 'Visão Aguçada'
+  | 'Sobrepujar'
+  | 'Ataque Rápido'
+  | 'Ataque Duplo'
+  | 'Desafiador'
+  | 'Assustador'
+  | 'Imprudente'
+  | 'Formidável'
+  | 'Impacto'
+  | 'Não Bloqueia'
+  | 'Imóvel'
+  | 'Barreira'
+  | 'Escudo de Feitiço'
+  | 'Robusto'
+  | 'Regeneração'
+  | 'Imortal'
+  | 'Roubo de Vida'
+  | 'Drenar'
+  | 'Efêmero'
+  | 'Vulnerável'
+  | 'Fúria'
+  | 'Destinado'
+  | 'Aperfeiçoar'
+  | 'Evoluir'
+  | 'Sagrado'
+  | 'Sintonia'
+  | 'Fluxo'
+  | 'Auxiliar'
+  | 'Imbuir'
+  | 'Contagem'
+  // Parte 5 · Grupo 5: novas palavras-chave genéricas.
+  | 'Veneno'
+  | 'Parceiro'
+  | 'Formação'
+  | 'Copiar';
+
+export type JutsuSpeed = 'Rapida' | 'Lenta' | 'Imediata' | 'Focada';
+
+export const SPEED_DISPLAY_NAME: Record<JutsuSpeed, string> = {
+  Imediata: 'Instantâneo',
+  Rapida: 'Rápido',
+  Lenta: 'Preparado',
+  Focada: 'Concentrado',
+};
+
+export const SPEED_FULL_LABEL: Record<JutsuSpeed, string> = {
+  Imediata: 'Instantâneo — resolve na hora, sem resposta',
+  Rapida: 'Rápido — entra na Pilha e pode ser respondido',
+  Lenta: 'Preparado — fora de combate, entra na Pilha',
+  Focada: 'Concentrado — fora de combate, resolve na hora',
+};
+
+export const KEYWORD_DISPLAY_NAME: Record<Keyword, string> = {
+  Elusivo: 'Furtivo',
+  'Visão Aguçada': 'Visão Ninja',
+  Sobrepujar: 'Perfurante',
+  'Ataque Rápido': 'Golpe Veloz',
+  'Ataque Duplo': 'Combo',
+  Desafiador: 'Provocar',
+  Assustador: 'Intimidação',
+  Imprudente: 'Ímpeto',
+  Formidável: 'Muralha',
+  Impacto: 'Ataque ao Portão',
+  'Não Bloqueia': 'Sem Guarda',
+  Imóvel: 'Imobilizado',
+  Barreira: 'Substituição',
+  'Escudo de Feitiço': 'Contra-Jutsu',
+  Robusto: 'Resistente',
+  Regeneração: 'Cura Natural',
+  Imortal: 'Segunda Chance',
+  'Roubo de Vida': 'Absorção de Chakra',
+  Drenar: 'Dreno de Chakra',
+  Efêmero: 'Clone',
+  Vulnerável: 'Exposto',
+  Fúria: 'Sede de Batalha',
+  Destinado: 'Determinação',
+  Aperfeiçoar: 'Treinamento',
+  Evoluir: 'Despertar',
+  Sagrado: 'Legado',
+  Sintonia: 'Meditação',
+  Fluxo: 'Cadeia de Jutsus',
+  Auxiliar: 'Apoio',
+  Imbuir: 'Fluxo de Chakra',
+  Contagem: 'Contagem',
+  Veneno: 'Veneno X',
+  Parceiro: 'Parceiro',
+  Formação: 'Formação',
+  Copiar: 'Copiar',
+};
+
+export function getKeywordLabel(kw: Keyword): string {
+  return KEYWORD_DISPLAY_NAME[kw] || kw;
+}
+
+/** Lista de palavras-chave com os nomes exibidos ao jogador (glossário das regras). */
+export function formatKeywords(kws: readonly Keyword[], separator = ' · '): string {
+  return kws.map(getKeywordLabel).join(separator);
+}
+
+export type JutsuCategory =
+  | 'Ataque Direto'
+  | 'Ataque em Área'
+  | 'Ataque Individual'
+  | 'Ataque Múltiplo'
+  | 'Fortalecer'
+  | 'Enfraquecer'
+  | 'Cura'
+  | 'Invocação'
+  | 'Detectar/Revelar';
+
+export type ArenaId =
+  | 'vale_do_fim'
+  | 'floresta_da_morte'
+  | 'arena_chunin'
+  | 'telhados_konoha';
+
+/** URLs de imagens oficiais da Narutopedia (static.wikia.nocookie.net) por graduação. */
+export interface RankImageUrls {
+  gennin: string;
+  chuunin: string;
+  jounnin: string;
+}
+
+/** Campos de mídia comuns: imagem salva e página de origem na Narutopedia. */
+export interface CardMediaFields {
+  /** URL exata da imagem (Narutopedia). Usada antes de qualquer consulta à API. */
+  imageUrl?: string;
+  /** URL da página de origem na Narutopedia, para conferência. */
+  sourceUrl?: string;
+}
+
+export interface CharacterVisualDNA {
+  skinTone: string;
+  hairColor: string;
+  hairStyle:
+    | 'spiky_blonde'
+    | 'spiky_duckbutt'
+    | 'pink_bob'
+    | 'silver_gravity'
+    | 'indigo_long'
+    | 'brown_wild'
+    | 'dark_hood'
+    | 'black_wavy'
+    | 'bowl_cut'
+    | 'brown_long'
+    | 'buns_twin'
+    | 'pineapple'
+    | 'blonde_ponytail'
+    | 'orange_spiky'
+    | 'goatee_spiky'
+    | 'pale_long'
+    | 'silver_ponytail'
+    | 'long_brown_sage'
+    | 'white_fur'
+    | 'hokage_hat'
+    | 'yellow_flash'
+    | 'red_short'
+    | 'four_tails';
+  eyeStyle:
+    | 'blue_normal'
+    | 'sharingan'
+    | 'byakugan'
+    | 'emerald'
+    | 'slit_beast'
+    | 'sunglasses'
+    | 'amber'
+    | 'snake_gold'
+    | 'determined_dark'
+    | 'crimson';
+  outfitColor: string;
+  accentColor: string;
+  hasHeadband: boolean;
+  headbandColor: string;
+  marking?:
+    | 'whiskers'
+    | 'fangs'
+    | 'swirls'
+    | 'glasses'
+    | 'purple_eyes'
+    | 'face_paint'
+    | 'beard'
+    | 'sand_tattoo'
+    | 'curse_seal';
+  evolvedAura: string;
+}
+
+/**
+ * Habilidades recorrentes (Parte 5 · Grupo 4): gatilhos que disparam várias vezes na partida,
+ * fora a Entrada. Nomes exibidos em RECURRING_TRIGGER_LABEL.
+ */
+export type RecurringTrigger =
+  | 'inicio_rodada'
+  | 'fim_rodada'
+  | 'ao_atacar'
+  | 'ao_bloquear'
+  | 'ao_golpear'
+  | 'ao_conjurar'
+  | 'vinganca'
+  | 'repouso'
+  | 'ultimo_desejo';
+
+export const RECURRING_TRIGGER_LABEL: Record<RecurringTrigger, string> = {
+  inicio_rodada: 'Início da rodada',
+  fim_rodada: 'Fim da rodada',
+  ao_atacar: 'Investida',
+  ao_bloquear: 'Ao bloquear',
+  ao_golpear: 'Ao golpear',
+  ao_conjurar: 'Ao conjurar',
+  vinganca: 'Vingança',
+  repouso: 'Repouso',
+  ultimo_desejo: 'Último Desejo',
+};
+
+export const RECURRING_TRIGGER_HELP: Record<RecurringTrigger, string> = {
+  inicio_rodada: 'Dispara no começo de cada rodada, depois da compra.',
+  fim_rodada: 'Dispara no fim de cada rodada, antes de os Clones caírem.',
+  ao_atacar: 'Dispara sempre que esta unidade é declarada atacante (Ao atacar).',
+  ao_bloquear: 'Dispara sempre que esta unidade bloqueia, antes dos golpes.',
+  ao_golpear: 'Dispara sempre que esta unidade golpeia em combate (atacando ou bloqueando).',
+  ao_conjurar: 'Dispara sempre que você resolve um Jutsu com esta unidade em campo.',
+  vinganca: 'Dispara sempre que outro aliado seu morre.',
+  repouso: 'Dispara no fim da rodada se esta unidade não atacou nem bloqueou nela.',
+  ultimo_desejo: 'Dispara quando esta unidade morre.',
+};
+
+/** Alvos das habilidades recorrentes (escolhidos automaticamente, sem clique). */
+export type RecurringTarget =
+  | 'self'
+  | 'combat_enemy'
+  | 'strongest_enemy'
+  | 'weakest_enemy'
+  | 'random_enemy'
+  | 'all_enemies'
+  | 'most_injured_ally'
+  | 'weakest_ally'
+  | 'all_allies'
+  | 'other_allies';
+
+export type RecurringEffect =
+  | { type: 'buff'; target: RecurringTarget; attack: number; health: number; permanent?: boolean }
+  | { type: 'damage'; target: RecurringTarget; amount: number }
+  | { type: 'heal'; target: RecurringTarget; amount: number }
+  | { type: 'stun'; target: RecurringTarget }
+  | { type: 'chakra_block'; target: RecurringTarget }
+  | { type: 'barrier'; target: RecurringTarget }
+  | { type: 'gate_damage'; amount: number }
+  | { type: 'gate_heal'; amount: number }
+  | { type: 'draw'; amount: number }
+  | { type: 'reserve'; amount: number }
+  | { type: 'drain_reserve'; amount: number }
+  | { type: 'summon'; tokenId: string }
+  | { type: 'progress'; amount: number }
+  /** Ganha uma palavra-chave até o início da próxima rodada (merge 4+5+7: Investida das Unidades). */
+  | { type: 'gain_keyword'; target: RecurringTarget; keyword: Keyword }
+  /** O dono paga Vida do próprio Portão (ex.: Selo Amaldiçoado da Anko). */
+  | { type: 'pay_gate'; amount: number };
+
+export interface RecurringCondition {
+  /** Mínimo de aliados em campo (contando esta unidade e Tokens). */
+  minAllies?: number;
+  /** Exige um aliado específico em campo (id da carta). */
+  allyCardId?: string;
+  /** Exige outro aliado desta facção em campo. */
+  allyFaction?: TeamFaction;
+  /** Exige que esta unidade esteja ferida. */
+  selfDamaged?: boolean;
+  /** Investida: só se esta unidade atacou sozinha. */
+  attackingAlone?: boolean;
+  /** Exige um Ninja aliado desta facção em campo (ex.: Tazuna com Time 7). */
+  allyNinjaFaction?: TeamFaction;
+  /** Exige o próprio Portão com mais que esta Vida (ex.: Anko paga 2 só com 5+). */
+  minOwnGate?: number;
+}
+
+export interface RecurringAbility {
+  trigger: RecurringTrigger;
+  effects: RecurringEffect[];
+  condition?: RecurringCondition;
+  /** Só 1 disparo por rodada (padrão: sem limite). */
+  oncePerRound?: boolean;
+  /** Texto curto exibido (sem o nome do gatilho). Se ausente, é gerado a partir dos efeitos. */
+  text?: string;
+}
+
+export interface NinjaCardDef extends CardMediaFields {
+  id: string;
+  kind: 'ninja';
+  name: string;
+  title: string;
+  faction: TeamFaction;
+  role: 'Genin' | 'Chunin' | 'Sensei' | 'Sannin' | 'Hokage' | 'Kazekage' | 'Nukenin';
+  cost: number;
+  /** Jutsu Exclusivo: não entra no baralho; é criado na mão quando o Ninja entra em campo. */
+  signatureJutsuId: string;
+  /**
+   * Token Exclusivo (opcional): se definido, cópias repetidas do Ninja (na mão, compradas
+   * ou invocadas por efeito enquanto ele está em campo) viram este Token em vez do Jutsu Exclusivo.
+   */
+  exclusiveTokenId?: string;
+  // Nível 1: Gennin
+  attack: number;
+  health: number;
+  keywords: Keyword[];
+  abilityText: string;
+  levelUpCondition: string;
+  levelUpTarget: number;
+  // Nível 2: Chuunin
+  chuuninTitle: string;
+  chuuninAttack: number;
+  chuuninHealth: number;
+  chuuninKeywords: Keyword[];
+  chuuninAbilityText: string;
+  chuuninLevelUpCondition: string;
+  chuuninLevelUpTarget: number;
+  /**
+   * Patente máxima (Parte 5 · Grupo 6): 1 = só Gennin (sem promoção), 2 = até Chuunin, 3 = até Jounnin.
+   * Padrão: 3. Acima dela o Ninja não é promovido.
+   */
+  maxRank?: 1 | 2 | 3;
+  /**
+   * Ninja sem Jutsu Exclusivo (Parte 5 · Grupo 6): a cópia repetida vira este Jutsu geral (que continua
+   * podendo entrar no baralho). Nesse caso `signatureJutsuId` fica vazio e nada é criado ao entrar em campo.
+   */
+  generalJutsuId?: string;
+  /** Custo para jogar já como Chuunin (memória de patente). Padrão: custo + 1. */
+  chuuninCost?: number;
+  /** Custo para jogar já como Jounnin (memória de patente). Padrão: custo + 2. */
+  jounninCost?: number;
+  // Nível 3: Jounnin
+  jounninTitle: string;
+  jounninAttack: number;
+  jounninHealth: number;
+  jounninKeywords: Keyword[];
+  jounninAbilityText: string;
+  /** Habilidades recorrentes por patente (Grupo 4). A patente atual usa só a lista dela. */
+  recurring?: Partial<Record<1 | 2 | 3, RecurringAbility[]>>;
+  /** Veneno X: valor de X quando a carta tem a palavra-chave Veneno (padrão 1). */
+  venenoX?: number;
+  aniListSearch: string;
+  aniListId?: number;
+  malId?: number;
+  wikiTitle: string;
+  /** Uma imagem por graduação: Gennin (Parte I), Chuunin, Jounnin (forma avançada). */
+  imageUrls?: RankImageUrls;
+  visualDNA: CharacterVisualDNA;
+}
+
+export interface UnitCardDef extends CardMediaFields {
+  id: string;
+  kind: 'unidade' | 'token';
+  name: string;
+  title: string;
+  faction: TeamFaction;
+  role: 'Genin' | 'Chunin' | 'Jounin' | 'Anbu' | 'Quarteto do Som' | 'Invocação' | 'Sensei';
+  cost: number;
+  attack: number;
+  health: number;
+  keywords: Keyword[];
+  abilityText: string;
+  /** Habilidades recorrentes (Grupo 4). */
+  recurring?: RecurringAbility[];
+  /** Veneno X: valor de X quando a carta tem a palavra-chave Veneno (padrão 1). */
+  venenoX?: number;
+  aniListSearch: string;
+  aniListId?: number;
+  malId?: number;
+  wikiTitle: string;
+  visualDNA: CharacterVisualDNA;
+}
+
+export type JutsuTargetMode = 'none' | 'ally_unit' | 'enemy_unit' | 'any_unit';
+
+export interface JutsuCardDef extends CardMediaFields {
+  id: string;
+  kind: 'jutsu';
+  name: string;
+  jpName?: string;
+  wikiTitle: string;
+  category: JutsuCategory;
+  faction: TeamFaction;
+  speed: JutsuSpeed;
+  cost: number;
+  targetMode: JutsuTargetMode;
+  effectText: string;
+  flavorText: string;
+  elementColor: string;
+  symbolType:
+    | 'rasengan'
+    | 'chidori'
+    | 'fire'
+    | 'shadow'
+    | 'medical'
+    | 'seal'
+    | 'taijutsu'
+    | 'wood'
+    | 'summon'
+    | 'water'
+    | 'byakugan'
+    | 'kunai'
+    | 'ice'
+    | 'sand';
+}
+
+export interface TrapCardDef extends CardMediaFields {
+  id: string;
+  kind: 'armadilha';
+  name: string;
+  jpName?: string;
+  wikiTitle: string;
+  faction: TeamFaction;
+  cost: number;
+  triggerType: 'on_enemy_attack' | 'on_enemy_jutsu' | 'on_enemy_summon';
+  effectText: string;
+  flavorText: string;
+  elementColor: string;
+}
+
+export interface EquipmentCardDef extends CardMediaFields {
+  id: string;
+  kind: 'equipamento';
+  name: string;
+  jpName?: string;
+  wikiTitle: string;
+  faction: TeamFaction;
+  cost: number;
+  bonusAttack: number;
+  bonusHealth: number;
+  grantedKeywords: Keyword[];
+  effectText: string;
+  flavorText: string;
+  accentColor: string;
+  /** Habilidades recorrentes dadas ao portador enquanto equipado (Grupo 4; usadas pelo Grupo 8). */
+  recurring?: RecurringAbility[];
+}
+
+export type CardDef =
+  | NinjaCardDef
+  | UnitCardDef
+  | JutsuCardDef
+  | TrapCardDef
+  | EquipmentCardDef;
+
+export interface ArenaDefinition {
+  id: ArenaId;
+  name: string;
+  subtitle: string;
+  imageUrl: string;
+  accentColor: string;
+  ruleSummary: string;
+  detailedRule: string;
+}
+
+export interface DeckPreset {
+  id: string;
+  name: string;
+  subtitle: string;
+  preferredArena: ArenaId;
+  cardIds: string[];
+}
+
+export interface BoardUnit {
+  uid: string;
+  cardId: string;
+  owner: 'player' | 'enemy';
+  attack: number;
+  health: number;
+  maxHealth: number;
+  tempAttackBonus: number;
+  tempHealthBonus: number;
+  keywords: Keyword[];
+  hasBarrier: boolean;
+  hasSpellShield: boolean;
+  stunned: boolean;
+  frozen: boolean;
+  silenced: boolean;
+  immortalUsed: boolean;
+  gloomStacks: number;
+  spiritStacks: number;
+  impactStacks: number;
+  destinedTriggeredThisRound: boolean;
+  equippedCardId: string | null;
+  equippedBonusAttack: number;
+  equippedBonusHealth: number;
+  capturedUnits: BoardUnit[];
+  evolutionLevel: 1 | 2 | 3;
+  evolved: boolean;
+  evolutionProgress: number;
+  evolutionTarget: number;
+  summonedRound: number;
+  canAttackThisRound: boolean;
+  activatedTrigger?: 'dawn' | 'nightfall';
+  /** Atacou ou bloqueou nesta rodada (Repouso). */
+  actedThisRound?: boolean;
+  /** Palavras-chave ganhas só até o início da próxima rodada (efeito recorrente gain_keyword). */
+  roundKeywords?: Keyword[];
+  /** Chaves de habilidades recorrentes "1 vez por rodada" já usadas. */
+  recurringUsed?: string[];
+  // Parte 5 · Grupo 5 (palavras-chave e estados)
+  /** Veneno: rodadas restantes; no início de cada rodada sofre 1 de dano e diminui 1. Não acumula (renova). */
+  poison?: number;
+  /** Genjutsu: > 0 = não ataca nem bloqueia. Aplicado com 2 (esta rodada e a próxima); Kai remove. */
+  genjutsu?: number;
+  /** Parceiro: uid do Ninja que este Token acompanha; se o Ninja sai de campo, o Parceiro vai junto. */
+  partnerOfUid?: string;
+  /** Formação: bônus +1/+1 aplicado agora (3+ aliados em campo). */
+  formationActive?: boolean;
+  /**
+   * Estado das habilidades de Ninja (Parte 5 · Grupo 6): contadores por unidade, como Portões abertos,
+   * usos 1 vez por partida/rodada e marcas temporárias (ex.: Selado até o fim da rodada).
+   */
+  ninjaState?: Record<string, number>;
+}
+
+export interface TrapSlot {
+  uid: string;
+  cardId: string;
+  owner: 'player' | 'enemy';
+  armedRound: number;
+}
+
+export interface CombatPair {
+  attackerUid: string;
+  blockerUid: string | null;
+  /** Bloqueador escolhido pelo atacante via Provocar/Exposto: o defensor não pode trocá-lo. */
+  forced?: boolean;
+}
+
+export interface StackEntry {
+  uid: string;
+  cardId: string;
+  caster: 'player' | 'enemy';
+  targetUid?: string;
+  kind?: 'jutsu' | 'trap_trigger';
+  trapTriggerContext?: {
+    eventType: 'attack' | 'jutsu' | 'summon';
+    attackerUids?: string[];
+    summonedUnitUid?: string;
+  };
+}
+
+export type TurnPhase = 'MULLIGAN' | 'MAIN' | 'DECLARE_BLOCK' | 'STACK_RESPONSE' | 'GAME_OVER';
+
+export interface CombatVisualFX {
+  unitFx: Record<
+    string,
+    {
+      type: 'lunge-up' | 'lunge-down' | 'hit' | 'heal' | 'jutsu' | 'evolve' | 'dawn' | 'nightfall';
+      label?: string;
+    }
+  >;
+  playerGateLabel?: string;
+  enemyGateLabel?: string;
+  /** Disparos de palavras-chave por unidade (animação curta + nome). */
+  keywordFx?: Record<string, KeywordBurstId[]>;
+}
+
+export type KeywordBurstId =
+  | 'substituicao'
+  | 'contra_jutsu'
+  | 'perfurante'
+  | 'golpe_veloz'
+  | 'combo'
+  | 'segunda_chance'
+  | 'absorcao'
+  | 'resistente'
+  | 'ataque_portao'
+  | 'sede_batalha'
+  | 'cura_natural'
+  | 'paralisia'
+  | 'bloqueio_chakra'
+  | 'selado'
+  | 'exposto'
+  | 'provocar'
+  | 'clone'
+  | 'muralha'
+  | 'intimidacao';
+
+/** Adiciona um disparo de palavra-chave ao FX de combate. */
+export function pushKeywordFx(fx: CombatVisualFX, uid: string, id: KeywordBurstId): void {
+  if (!fx.keywordFx) fx.keywordFx = {};
+  const list = fx.keywordFx[uid] || (fx.keywordFx[uid] = []);
+  if (!list.includes(id)) list.push(id);
+}
+
+export interface BattleLogEntry {
+  id: string;
+  round: number;
+  text: string;
+  tone: 'info' | 'combat' | 'jutsu' | 'evolution' | 'trap' | 'arena' | 'equip';
+  /** Quem agiu (ícone no Registro). Se ausente, é deduzido do texto. */
+  actor?: 'player' | 'enemy' | 'system';
+  /** Carta de origem do evento (para o destaque na tela). */
+  cardId?: string;
+  /** Pede um destaque visual (overlay) além da linha no Registro. */
+  cine?: 'trap' | 'created' | 'effect' | 'stack';
+  /** Unidade de origem (destacada) e alvos (seta) do efeito. */
+  originUid?: string;
+  targetUids?: string[];
+}
+
+export interface PlayerState {
+  hp: number;
+  maxHp: number;
+  mana: number;
+  maxMana: number;
+  spellMana: number;
+  hand: string[];
+  deck: string[];
+  board: BoardUnit[];
+  traps: TrapSlot[];
+  passed: boolean;
+  cardsPlayedThisRound: number;
+  spellsCastThisRound: number;
+  spellsCastLastRound: number;
+  damagedEnemyNexusThisRound: boolean;
+  scoutAttackUsedThisRound: boolean;
+  hallowedBonus: number;
+  keywordsPlayedSet: string[];
+  cursedHandIndices: Record<number, number>;
+  deckOut?: boolean;
+  /**
+   * Memória de patente (Parte 5 · Grupo 3): por Ninja, a patente e o progresso salvos quando ele saiu de campo.
+   * A próxima cópia entra nessa patente e paga o custo dela.
+   */
+  ninjaMemory?: Record<string, NinjaRankMemory>;
+  /** Quantas cópias deste Ninja estão transformadas na mão (Jutsu/Token Exclusivo ou Jutsu geral). */
+  ninjaCopies?: Record<string, number>;
+  /** Copiar (Grupo 5): cópias Fugazes na mão (ids); as que sobrarem são descartadas no fim da rodada. */
+  fleetingHand?: string[];
+  /** Copiar (Grupo 5): rodada em que este jogador já copiou um Jutsu (1 vez por rodada). */
+  copyUsedRound?: number;
+  /** Troca de Mente (Ino): rodada em que a carta revelada deixa de custar +1 (cursedHandIndices é limpo). */
+  cursedUntilRound?: number;
+  /** Marcas de "uma vez por partida" das habilidades de Ninja (ex.: Byakugō, Portão da Morte). */
+  ninjaFlags?: Record<string, number>;
+}
+
+export interface NinjaRankMemory {
+  level: 1 | 2 | 3;
+  progress: number;
+  target: number;
+  /** Ordem de gravação (desempate entre estados concorrentes). */
+  seq: number;
+}
+
+export interface MatchRecord {
+  id: string;
+  playedAt: string;
+  result: 'victory' | 'defeat';
+  initialArena: ArenaId;
+  finalArena: ArenaId;
+  durationSeconds: number;
+  rounds: number;
+  playerHpRemaining: number;
+  enemyHpRemaining: number;
+  evolutionsCount: number;
+  jutsusCastCount: number;
+  jutsuCounts: Record<string, number>;
+}

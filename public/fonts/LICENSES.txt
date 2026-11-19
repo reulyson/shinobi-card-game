@@ -1,0 +1,6 @@
+Fontes livres (SIL Open Font License 1.1), baixadas do Google Fonts:
+- Bangers (Vernon Adams)
+- Yuji Syuku (Kinuta Font Factory)
+- Plus Jakarta Sans (Tokotype)
+- JetBrains Mono (JetBrains)
+Licença: https://openfontlicense.org
