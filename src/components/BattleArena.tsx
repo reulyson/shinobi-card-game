@@ -3303,8 +3303,8 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     };
   })();
 
-  // Escala base das cartas: 84×116 (campo) e 100×140 (mão) multiplicados pelo zoom.
-  // Altura: HUDs+faixa da arena+espaços ≈ 160px fixos; fileiras = rival 0.85·116z + combate 116z + seu campo 116z + mão 140z (+84px de bordas e do leque).
+  // Escala base das cartas: 119×165 (campo v7o) e 100×140 (mão) multiplicados pelo zoom.
+  // Altura: HUDs+faixa da arena+espaços ≈ 160px fixos; fileiras = rival 0.85·165z + combate 165z + seu campo 165z + mão 140z.
   const compactHud = centerSize.h < 720;
   // Textos de HUD/painéis crescem um pouco em telas grandes (1920+).
   const vw = typeof window === 'undefined' ? 1280 : window.innerWidth;
@@ -3312,8 +3312,10 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
   const uiZoom = Math.max(1, Math.min(1.45, Math.min(vw / 1600, vh / 900)));
   // HUDs ficam em colunas ao lado do campo rival e da mão: a altura vai quase toda para as cartas.
   const hudW = Math.round(Math.max(200, Math.min(300, centerSize.w * 0.22)) * Math.max(1, uiZoom * 0.9));
-  // Altura: 3 espaços + bordas das fileiras + margem do leque ≈ 100px; fileiras = rival 0.85·116z + combate 116z + seu campo 116z + mão 1.1·140z.
+  // Altura: 3 espaços + bordas das fileiras + margem do leque ≈ 100px; fileiras = rival 0.85·165z + combate 165z + seu campo 165z + mão 1.1·140z.
   // Em telas baixas o HUD do rival fica largo e baixo (2 colunas) para não roubar altura das cartas.
+  const BOARD_CARD_H = 165;
+  const BOARD_ROW_W = 595; // 5 × 119
   const enemyHudCompact = centerSize.h < 700;
   const enemyHudW = enemyHudCompact ? Math.round(hudW * 1.6) : hudW;
   const enemyHudMinH = Math.round((enemyHudCompact ? 110 : 136) * uiZoom);
@@ -3321,19 +3323,19 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     0.7,
     Math.min(
       3,
-      (centerSize.h - 100) / (116 * 0.85 + 116 + 116 + 140 * 1.1),
+      (centerSize.h - 100) / (BOARD_CARD_H * 0.85 + BOARD_CARD_H + BOARD_CARD_H + 140 * 1.1),
       // quando a fileira do rival é limitada pela altura mínima do HUD dele
-      (centerSize.h - 94 - enemyHudMinH) / (116 + 116 + 140 * 1.1),
-      (centerSize.w - enemyHudW - 64) / (420 * 0.85),
-      (centerSize.w - 56) / 420,
+      (centerSize.h - 94 - enemyHudMinH) / (BOARD_CARD_H + BOARD_CARD_H + 140 * 1.1),
+      (centerSize.w - enemyHudW - 64) / (BOARD_ROW_W * 0.85),
+      (centerSize.w - 56) / BOARD_ROW_W,
       (centerSize.w - 160) / 470
     )
   );
   const enemyZoom = boardZoom * 0.85;
   const handZoom = boardZoom * 1.1;
-  const enemyRowH = Math.max(Math.round(116 * enemyZoom + 6), enemyHudMinH);
+  const enemyRowH = Math.max(Math.round(BOARD_CARD_H * enemyZoom + 6), enemyHudMinH);
   // Altura que sobra para a fileira da mão; se for baixa, o seu HUD vira 2 colunas (mais largo e mais baixo).
-  const handRowH = centerSize.h - 15 - enemyRowH - Math.round(116 * boardZoom + 46) - Math.round(116 * boardZoom + 6);
+  const handRowH = centerSize.h - 15 - enemyRowH - Math.round(BOARD_CARD_H * boardZoom + 46) - Math.round(BOARD_CARD_H * boardZoom + 6);
   const playerHudCompact = handRowH < 235 * uiZoom;
   const HAND_CARD_W = 100 * handZoom;
   const handCount = player.hand.length;
@@ -3652,7 +3654,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
               }
             }}
             onDrop={(e) => handleDropOnZone('combat_zone', e)}
-            style={{ height: Math.round(116 * boardZoom + 46) }}
+            style={{ height: Math.round(BOARD_CARD_H * boardZoom + 46) }}
             className={`relative shrink-0 rounded-xl border px-3 py-1 flex flex-col gap-1 transition-colors ${
               isDraggingAllyUnit && canPlayerAttack
                 ? 'border-red-400/90 bg-red-950/30 border-dashed'
@@ -3939,7 +3941,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
               }
             }}
             onDrop={(e) => handleDropOnZone('player_board', e)}
-            style={{ height: Math.round(116 * boardZoom + 6) }}
+            style={{ height: Math.round(BOARD_CARD_H * boardZoom + 6) }}
             className={`relative shrink-0 rounded-xl border px-2 py-[2px] flex flex-nowrap items-center justify-center gap-2.5 transition-colors ${
               isDraggingHandUnit || isDraggingUntargetedJutsu || isDraggingTrap
                 ? 'border-sky-400 bg-sky-950/40 border-dashed ring-2 ring-sky-400/40'

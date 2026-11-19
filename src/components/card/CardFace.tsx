@@ -2,7 +2,7 @@ import React from 'react';
 import { BoardUnit, CardDef } from '../../types/game';
 import { getSignatureOwner, SIGNATURE_JUTSU_IDS } from '../../data/cards';
 import { NINJA_CREATED_ONLY_IDS } from '../../data/ninjaExtras';
-import { getUnitHealth, getUnitPower } from '../../engine/battleEngine';
+import { getNinjaPatenteCost, getUnitHealth, getUnitPower } from '../../engine/battleEngine';
 import { AnimePortrait } from '../AnimePortrait';
 import { CardIcon } from './CardIcon';
 import {
@@ -303,7 +303,9 @@ export const CardFace: React.FC<CardFaceProps> = ({
   const fitEnabled = size === 'hand' || size === 'zoom' || size === 'collection' || size === 'inspector';
   const rank = (rankLevel ?? unit?.evolutionLevel ?? 1) as 1 | 2 | 3;
   const frame: CardRankFrame = rankFrameOf(rank, card.kind);
-  const cost = effectiveCost ?? card.cost;
+  const cost =
+    effectiveCost ??
+    (card.kind === 'ninja' ? getNinjaPatenteCost(card, rank) : card.cost);
 
   const isExclusiveJutsu =
     exclusive || (card.kind === 'jutsu' && SIGNATURE_JUTSU_IDS.has(card.id));

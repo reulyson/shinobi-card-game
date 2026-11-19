@@ -348,3 +348,10 @@
 
 /* Gallery field wrap */
 .sc-gallery-field-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+
+/* Thumb do deck: footprint 28×39; o scale(0.179) fica só no DeckBuilderView */
+.sc-deck-thumb {
+  width: 28px;
+  height: 39px;
+  display: inline-block;
+}
