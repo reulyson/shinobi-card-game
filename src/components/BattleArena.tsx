@@ -95,6 +95,8 @@ import { CardInspector } from './CardInspector';
 import { AnimePortrait } from './AnimePortrait';
 import { ArenaBanner } from './ArenaBanner';
 import { AudioMixerPopover } from './AudioMixerPopover';
+import { HistoricoScroll, TurnChakraHud } from './combat';
+import type { TurnCoinHandle } from './combat';
 import { getNinjaLevelUpQuote } from '../data/voiceLines';
 import { formatDuration, recordMatchResult } from '../utils/matchHistory';
 import { soundFX } from '../utils/sound';
@@ -3214,6 +3216,16 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     if (el) el.scrollTop = el.scrollHeight;
   }, [logs]);
 
+  /** Parte 4: moeda + timer (pausável pelo motor durante cinemáticas). */
+  const turnCoinRef = useRef<TurnCoinHandle | null>(null);
+  const battleScrollOpen = phase !== 'MULLIGAN';
+  const turnConfirmLabel =
+    phase === 'DECLARE_BLOCK' ? 'CONFIRMAR BLOQUEIOS' : 'CONFIRMAR ATAQUE';
+  const handleTurnTimeout = () => {
+    if (activeTurn !== 'player') return;
+    handlePassTurnButton();
+  };
+
   // Mão em leque: mede a largura disponível para calcular a sobreposição.
   const handRowRef = useRef<HTMLDivElement | null>(null);
   const [handRowWidth, setHandRowWidth] = useState(900);
@@ -4212,31 +4224,40 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
                 <RotateCcw className="w-4 h-4" />
               </button>
 
-              <button
-                type="button"
+              {/* Parte 4: moeda + anel de chakra (Parte 3 reposiciona na coluna direita B4). */}
+              <div
                 data-testid="main-action"
-                disabled={mainAction.disabled}
-                onClick={handlePassTurnButton}
+                className="relative flex justify-center w-full"
                 onDragOver={(e) => {
                   if (mainAction.dropTarget) e.preventDefault();
                 }}
                 onDrop={(e) => {
                   if (mainAction.dropTarget) handleDropOnZone('player_board', e);
                 }}
-                className={`relative w-full h-11 px-3 rounded-lg text-xs font-bold leading-none transition-colors whitespace-nowrap flex flex-col items-center justify-center gap-0.5 disabled:cursor-not-allowed ${
-                  MAIN_ACTION_TONE[mainAction.tone]
-                } ${mainAction.glow ? 'main-btn-glow' : ''}`}
                 title={mainAction.sub ?? mainAction.label}
               >
-                {mainAction.ring && (
-                  <svg className="main-btn-ring absolute left-1.5 top-1/2 -translate-y-1/2 w-5 h-5" viewBox="0 0 20 20" aria-hidden="true">
-                    <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(148,163,184,0.25)" strokeWidth="2.5" />
-                    <circle cx="10" cy="10" r="8" fill="none" stroke="#fca5a5" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="50.3" className="main-btn-ring-arc" />
-                  </svg>
-                )}
-                <span className={`font-display text-sm tracking-wider font-normal ${mainAction.ring ? 'pl-4' : ''}`}>{mainAction.label}</span>
-                {mainAction.sub && <span className="text-[9px] font-semibold opacity-80">{mainAction.sub}</span>}
-              </button>
+                <TurnChakraHud
+                  ref={turnCoinRef}
+                  side={activeTurn === 'player' ? 'player' : 'rival'}
+                  confirmLabel={turnConfirmLabel}
+                  paused={isBusy || phase === 'MULLIGAN' || phase === 'GAME_OVER'}
+                  resetKey={round}
+                  disabled={mainAction.disabled}
+                  onConfirm={handlePassTurnButton}
+                  onTimeout={handleTurnTimeout}
+                  size={72}
+                  player={{
+                    filled: player.mana,
+                    unlocked: Math.min(10, Math.max(player.maxMana, player.mana)),
+                    reserve: player.spellMana,
+                  }}
+                  rival={{
+                    filled: enemy.mana,
+                    unlocked: Math.min(10, Math.max(enemy.maxMana, enemy.mana)),
+                    reserve: enemy.spellMana,
+                  }}
+                />
+              </div>
             </div>
           </div>
 
@@ -4278,8 +4299,13 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
                   </button>
                 </div>
               </div>
-              <div ref={logScrollRef} className="flex-1 min-h-0 overflow-y-auto pr-1 select-text">
-                <BattleLogList logs={logs} />
+              <div ref={logScrollRef} className="flex-1 min-h-0 overflow-y-auto pr-1 select-text flex justify-center">
+                {/* Parte 4: pergaminho Histórico (API limpa p/ coluna 214×588 @ 1178,128 na B4). */}
+                <HistoricoScroll entries={logs} open={battleScrollOpen} />
+                {/* Fallback acessível mantido fora da tela se o pergaminho falhar no CSS antigo */}
+                <div className="sr-only">
+                  <BattleLogList logs={logs} />
+                </div>
               </div>
             </div>
           </aside>

@@ -7,6 +7,7 @@ import { DeckBuilderView } from './components/DeckBuilderView';
 import { RulesView } from './components/RulesView';
 import { MatchHistoryView } from './components/MatchHistoryView';
 import { BattleArena } from './components/BattleArena';
+import { Part4Demo } from './components/combat/Part4Demo';
 import { soundFX } from './utils/sound';
 import { OFFICIAL_ART } from './data/officialArt';
 import { OfficialImage, VillageSymbol } from './components/OfficialImage';
@@ -16,7 +17,19 @@ type ActiveScreen = 'lobby' | 'battle' | 'collection' | 'builder' | 'rules' | 'h
 const STORAGE_DECK_KEY = 'shinobi_chronicles_deck_v4';
 const STORAGE_ARENA_KEY = 'shinobi_chronicles_arena_v1';
 
+function isPart4Demo(): boolean {
+  if (typeof window === 'undefined') return false;
+  return new URLSearchParams(window.location.search).get('demo') === 'part4';
+}
+
 export default function App() {
+  // Demo Parte 4: ramo separado antes de qualquer hook do App principal.
+  if (isPart4Demo()) return <Part4Demo />;
+
+  return <AppMain />;
+}
+
+function AppMain() {
   const [screen, setScreen] = useState<ActiveScreen>('lobby');
 
   const [activeDeckIds, setActiveDeckIds] = useState<string[]>(() => {
