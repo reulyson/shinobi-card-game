@@ -106,16 +106,60 @@ function levelUpCounter(
   return `${card.chuuninLevelUpCondition} (${cur}/${target})`;
 }
 
-/** Destaca gatilhos já presentes no texto; não inventa conteúdo. */
+/** Destaca termos-chave e números como no gen_v7o (não só a 1ª palavra). */
 function formatRulesHtml(text: string): string {
-  return text
+  const escaped = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(
-      /\b(Entrada|Passiva|Último Desejo|Teimosia|Início da rodada|Sharingan|Selo Amaldiçoado|Ao abater|Quando|Enquanto|Remova|Cause|Aplique|O portador ganha|Sem baixada)\b/g,
-      '<em>$1</em>',
-    );
+    .replace(/>/g, '&gt;');
+
+  // Como no gen_v7o: nomes de mecânica + números; rótulos Entrada/Passiva ficam sem <em>.
+  const patterns: RegExp[] = [
+    /\+\d+\/\+\d+/g,
+    /-?\d+\/-?\d+/g,
+    /\d+\s+de\s+dano/gi,
+    /\bSede de Batalha\b/gi,
+    /\bClone das Sombras\b/gi,
+    /\bAtaque em Área\b/gi,
+    /\bAtaque Individual\b/gi,
+    /\bGolpe Veloz\b/gi,
+    /\bKubikiribōchō\b/gi,
+    /\bSelo Amaldiçoado\b/gi,
+    /\bSubstituição\b/gi,
+    /\bPerfurante\b/gi,
+    /\bFormação\b/gi,
+    /\bVeneno\b/gi,
+    /\bGenjutsu\b/gi,
+    /\bSelado\b/gi,
+    /\bFurtivo\b/gi,
+    /\bPreparado\b/gi,
+    /\bSharingan\b/gi,
+    /\bParceiro\b/gi,
+  ];
+
+  type Span = { start: number; end: number };
+  const spans: Span[] = [];
+  for (const re of patterns) {
+    re.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(escaped)) !== null) {
+      const start = m.index;
+      const end = start + m[0].length;
+      if (spans.some((s) => start < s.end && end > s.start)) continue;
+      spans.push({ start, end });
+    }
+  }
+  spans.sort((a, b) => a.start - b.start);
+
+  let out = '';
+  let cursor = 0;
+  for (const s of spans) {
+    out += escaped.slice(cursor, s.start);
+    out += `<em>${escaped.slice(s.start, s.end)}</em>`;
+    cursor = s.end;
+  }
+  out += escaped.slice(cursor);
+  return out;
 }
 
 function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
@@ -232,34 +276,38 @@ function KeywordRow({
   field?: boolean;
 }) {
   if (pills.length === 0) return null;
-  if (pills.length === 1 && !field) {
-    const p = pills[0];
+  // Campo: ícones compactos; mão/zoom: pílulas rotuladas como no v7o de referência
+  if (field) {
+    const tile = 24;
     return (
-      <div className="pill" title={p.label}>
-        {p.id && <CardIcon id={p.id} size={18} />}
-        <span>{p.label}</span>
+      <div className="tiles">
+        {pills.map((p, i) =>
+          p.id ? (
+            <div
+              key={`${p.label}-${i}`}
+              className="tile"
+              style={{ width: tile, height: tile }}
+              title={p.label}
+            >
+              <CardIcon id={p.id} size={tile - 6} />
+            </div>
+          ) : (
+            <div key={`${p.label}-${i}`} className="pill" title={p.label}>
+              <span>{p.label}</span>
+            </div>
+          ),
+        )}
       </div>
     );
   }
-  const tile = field ? 24 : 30;
   return (
-    <div className="tiles">
-      {pills.map((p, i) =>
-        p.id ? (
-          <div
-            key={`${p.label}-${i}`}
-            className="tile"
-            style={{ width: tile, height: tile }}
-            title={p.label}
-          >
-            <CardIcon id={p.id} size={tile - 6} />
-          </div>
-        ) : (
-          <div key={`${p.label}-${i}`} className="pill" title={p.label}>
-            <span>{p.label}</span>
-          </div>
-        ),
-      )}
+    <div className={pills.length > 1 ? 'prow' : undefined}>
+      {pills.map((p, i) => (
+        <div key={`${p.label}-${i}`} className="pill" title={p.label}>
+          {p.id && <CardIcon id={p.id} size={18} />}
+          <span>{p.label}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -483,7 +531,8 @@ export const CardFace: React.FC<CardFaceProps> = ({
               <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
                 {card.name}
               </div>
-              <div className="rule" />
+              {/* Jutsu/armadilha: sem linha sob o nome (v7o — só a pílula de velocidade) */}
+              {!isJutsuFace && !isTrap && <div className="rule" />}
 
               {!field &&
                 card.kind !== 'unidade' &&
