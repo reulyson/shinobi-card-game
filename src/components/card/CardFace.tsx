@@ -5,7 +5,6 @@ import { NINJA_CREATED_ONLY_IDS } from '../../data/ninjaExtras';
 import { getUnitHealth, getUnitPower } from '../../engine/battleEngine';
 import { AnimePortrait } from '../AnimePortrait';
 import { CardIcon } from './CardIcon';
-import { StatPlaque } from './StatPlaque';
 import {
   CardIconId,
   CardRankFrame,
@@ -18,6 +17,7 @@ import {
   StatColorState,
   typeBandFor,
 } from './theme';
+import { useFitCardPanel } from './useFitCardPanel';
 import './card-v7o.css';
 
 export type CardFaceSize = 'hand' | 'field' | 'zoom' | 'collection' | 'inspector';
@@ -113,12 +113,11 @@ function formatRulesHtml(text: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(
-      /\b(Entrada|Passiva|Último Desejo|Teimosia|Início da rodada|Sharingan|Selo Amaldiçoado|Ao abater|Quando|Enquanto|Remova|Cause|Aplique|O portador ganha)\b/g,
+      /\b(Entrada|Passiva|Último Desejo|Teimosia|Início da rodada|Sharingan|Selo Amaldiçoado|Ao abater|Quando|Enquanto|Remova|Cause|Aplique|O portador ganha|Sem baixada)\b/g,
       '<em>$1</em>',
     );
 }
 
-/** Traço curto sob o nome (v7o): patente / role — nunca o title longo. */
 function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
   switch (card.kind) {
     case 'ninja':
@@ -139,43 +138,88 @@ function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
   }
 }
 
-function FamilySeal({ family }: { family: ReturnType<typeof jutsuFamilyOf> }) {
+function nameFontSize(name: string, field: boolean): number {
+  const ln = name.length;
+  if (field) return ln > 16 ? 14 : 17;
+  return ln > 16 ? 15 : 21;
+}
+
+const STAR_BURST_PATH =
+  'M32.00 1.00L36.49 9.44L43.86 3.36L44.78 12.88L53.92 10.08L51.12 19.22L60.64 20.14L54.56 27.51L63.00 32.00L54.56 36.49L60.64 43.86L51.12 44.78L53.92 53.92L44.78 51.12L43.86 60.64L36.49 54.56L32.00 63.00L27.51 54.56L20.14 60.64L19.22 51.12L10.08 53.92L12.88 44.78L3.36 43.86L9.44 36.49L1.00 32.00L9.44 27.51L3.36 20.14L12.88 19.22L10.08 10.08L19.22 12.88L20.14 3.36L27.51 9.44Z';
+
+function ShinobiSeal({ field }: { field?: boolean }) {
+  const sz = field ? 44 : 62;
+  return (
+    <div className={`seal6${field ? ' f' : ''}`}>
+      <div className="sb" style={{ width: sz, height: sz }}>
+        <svg viewBox="0 0 64 64" width={sz} height={sz}>
+          <defs>
+            <radialGradient id="sc-sg" cx=".4" cy=".35">
+              <stop stopColor="#FFF3B0" />
+              <stop offset=".6" stopColor="#F5C542" />
+              <stop offset="1" stopColor="#B9791A" />
+            </radialGradient>
+          </defs>
+          <path
+            d={STAR_BURST_PATH}
+            fill="url(#sc-sg)"
+            stroke="#7C4A0A"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <circle cx="32" cy="32" r="19" fill="none" stroke="#7C4A0A" strokeWidth="1" opacity=".5" />
+        </svg>
+        <span className="sb-in">
+          <i className="k">忍</i>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function FamilySeal({
+  family,
+  field,
+}: {
+  family: 'selo-ninjutsu' | 'selo-genjutsu' | 'selo-taijutsu';
+  field?: boolean;
+}) {
   const labels: Record<typeof family, [string, string]> = {
     'selo-ninjutsu': ['忍', '術'],
     'selo-genjutsu': ['幻', '術'],
     'selo-taijutsu': ['体', '術'],
   };
   const [a, b] = labels[family];
+  const sz = field ? 44 : 62;
+  const fs = sz * 0.4;
   return (
-    <div className="sc-seal-family" title={family}>
-      <span>{a}</span>
-      <span>{b}</span>
-      <i className="sc-hanko" />
+    <div className={`seal6${field ? ' f' : ''}`}>
+      <div className="ksl" style={{ width: sz, height: sz }}>
+        <svg viewBox="0 0 64 64" className="ens" aria-hidden="true">
+          <path
+            d="M32 5C17 4 5 15 6 32C7 49 19 60 34 58C48 56 59 45 58 30C57.5 22 54 15 49 11"
+            fill="none"
+            stroke="#14110C"
+            strokeWidth="3.6"
+            strokeLinecap="round"
+            opacity=".85"
+          />
+        </svg>
+        <span style={{ fontSize: fs }}>{a}</span>
+        <span style={{ fontSize: fs }}>{b}</span>
+        <i className="hk" />
+      </div>
     </div>
   );
 }
 
-function ShinobiSeal() {
+function EquipSeal({ field }: { field?: boolean }) {
+  const sz = field ? 44 : 58;
   return (
-    <div className="sc-seal-starburst" title="Shinobi">
-      <span className="sc-kanji">忍</span>
-    </div>
-  );
-}
-
-function EquipSeal() {
-  return (
-    <div
-      className="sc-seal-starburst"
-      title="Equipamento"
-      style={{
-        background: 'radial-gradient(circle at 35% 30%, #E5E7EB, #4B5563)',
-        borderColor: '#1F2937',
-      }}
-    >
-      <span className="sc-kanji" style={{ color: '#111827' }}>
+    <div className={`seal6${field ? ' f' : ''}`}>
+      <div className="stamp steel" style={{ width: sz, height: sz, fontSize: Math.round(sz * 0.62) }}>
         武
-      </span>
+      </div>
     </div>
   );
 }
@@ -188,30 +232,30 @@ function KeywordRow({
   field?: boolean;
 }) {
   if (pills.length === 0) return null;
-  const wrapClass = field ? 'sc-field-kw' : '';
-
-  if (pills.length === 1) {
+  if (pills.length === 1 && !field) {
     const p = pills[0];
     return (
-      <div className={`sc-pill-row ${wrapClass}`}>
-        <div className="sc-pill" title={p.label}>
-          {p.id && <CardIcon id={p.id} size={field ? 10 : 14} />}
-          <span>{p.label}</span>
-        </div>
+      <div className="pill" title={p.label}>
+        {p.id && <CardIcon id={p.id} size={18} />}
+        <span>{p.label}</span>
       </div>
     );
   }
-
-  // 2+: só ícones (como gen_v7o); sem ícone → pílula compacta
+  const tile = field ? 24 : 30;
   return (
-    <div className={`sc-tiles ${wrapClass}`}>
+    <div className="tiles">
       {pills.map((p, i) =>
         p.id ? (
-          <div key={`${p.label}-${i}`} className="sc-tile" title={p.label}>
-            <CardIcon id={p.id} size={field ? 9 : 13} />
+          <div
+            key={`${p.label}-${i}`}
+            className="tile"
+            style={{ width: tile, height: tile }}
+            title={p.label}
+          >
+            <CardIcon id={p.id} size={tile - 6} />
           </div>
         ) : (
-          <div key={`${p.label}-${i}`} className="sc-pill" title={p.label}>
+          <div key={`${p.label}-${i}`} className="pill" title={p.label}>
             <span>{p.label}</span>
           </div>
         ),
@@ -220,9 +264,22 @@ function KeywordRow({
   );
 }
 
+const SHUR_GEM = (
+  <svg className="gem" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+    <path
+      d="M12 1L15.6 8.4L23 12L15.6 15.6L12 23L8.4 15.6L1 12L8.4 8.4Z M12 10A2 2 0 1 0 12 14A2 2 0 1 0 12 10Z"
+      fill="#D1D5DB"
+      stroke="#1F2937"
+      strokeWidth="1.2"
+      strokeLinejoin="round"
+      fillRule="evenodd"
+    />
+  </svg>
+);
+
 /**
- * Face frontal v7o (arte ~55% + painel sólido; pergaminho para Jutsu; campo 95×132).
- * Renderiza apenas textos já presentes em `CardDef` / `BoardUnit`.
+ * Face frontal v7o — DOM/CSS espelham gen_v7o.py (card6).
+ * Mão 156×219 e campo 119×165 via scale 0.5 sobre 312×438 / 238×330.
  */
 export const CardFace: React.FC<CardFaceProps> = ({
   card,
@@ -243,6 +300,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
   createdByCard = false,
 }) => {
   const field = size === 'field';
+  const fitEnabled = size === 'hand' || size === 'zoom' || size === 'collection' || size === 'inspector';
   const rank = (rankLevel ?? unit?.evolutionLevel ?? 1) as 1 | 2 | 3;
   const frame: CardRankFrame = rankFrameOf(rank, card.kind);
   const cost = effectiveCost ?? card.cost;
@@ -274,66 +332,84 @@ export const CardFace: React.FC<CardFaceProps> = ({
   const pills = keywordPills(kws);
   const rules = abilityTextFor(card, rank);
   const lvlCounter = levelUpCounter(card, rank, levelProgress ?? unit?.evolutionProgress);
-  const family = card.kind === 'jutsu' ? jutsuFamilyOf(card) : null;
+  const family =
+    card.kind === 'jutsu'
+      ? jutsuFamilyOf(card)
+      : card.kind === 'armadilha'
+        ? ('selo-ninjutsu' as const)
+        : null;
   const traits = shortTraits(card, rank);
 
-  const sizeClass =
-    size === 'field'
-      ? 'sc-card--size-field'
-      : size === 'zoom' || size === 'inspector'
-        ? 'sc-card--size-zoom'
-        : size === 'collection'
-          ? 'sc-card--size-collection'
-          : 'sc-card--size-hand';
-
-  const kindClass =
-    card.kind === 'ninja'
-      ? 'sc-card--lor'
-      : card.kind === 'jutsu' || card.kind === 'armadilha'
-        ? 'sc-card--jutsu'
-        : card.kind === 'equipamento'
-          ? 'sc-card--equip'
-          : 'sc-card--unit';
-
-  const famClass =
-    family === 'selo-ninjutsu'
-      ? 'sc-card--fam-ninjutsu'
-      : family === 'selo-genjutsu'
-        ? 'sc-card--fam-genjutsu'
-        : family === 'selo-taijutsu'
-          ? 'sc-card--fam-taijutsu'
-          : '';
-
-  const rankClass =
-    frame === 'gennin'
-      ? 'sc-card--rank-gennin'
-      : frame === 'chuunin'
-        ? 'sc-card--rank-chuunin'
-        : frame === 'jounnin'
-          ? 'sc-card--rank-jounnin'
-          : '';
-
-  const costMod =
-    cost < card.cost ? 'sc-card__cost--down' : cost > card.cost ? 'sc-card__cost--up' : '';
+  const isJutsuFace =
+    (card.kind === 'jutsu' || card.kind === 'armadilha') && !field;
+  const isTrap = card.kind === 'armadilha';
+  const isLor = card.kind === 'ninja';
+  const isEquip = card.kind === 'equipamento';
+  const isUnitPlate =
+    card.kind === 'unidade' || card.kind === 'token' || card.kind === 'ninja';
 
   const showBandStats =
-    !field &&
-    ((isCharacter && shownPower != null && shownVitality != null) ||
-      card.kind === 'equipamento');
+    (isCharacter && shownPower != null && shownVitality != null) || isEquip;
+  const iconSz = field ? 15 : 19;
+
+  const boxRef = useFitCardPanel(fitEnabled && !field, [
+    card.id,
+    rank,
+    rules,
+    traits,
+    lvlCounter,
+    pills.length,
+    size,
+  ]);
+
+  const scaleClass =
+    size === 'field'
+      ? 'sc-v7o-scale--field'
+      : size === 'zoom' || size === 'inspector'
+        ? 'sc-v7o-scale--zoom'
+        : size === 'collection'
+          ? 'sc-v7o-scale--collection'
+          : 'sc-v7o-scale--hand';
+
+  const cardClasses = [
+    'card6',
+    field && 'field',
+    isExclusiveJutsu && 'ex',
+    isJutsuFace && 'jut',
+    isJutsuFace && family === 'selo-ninjutsu' && 'fam-ninjutsu',
+    isJutsuFace && family === 'selo-genjutsu' && 'fam-genjutsu',
+    isJutsuFace && family === 'selo-taijutsu' && 'fam-taijutsu',
+    isTrap && 'trap',
+    isEquip && 'equip',
+    isLor && 'lor',
+    frame === 'gennin' && 'rank-gennin',
+    frame === 'chuunin' && 'rank-chuunin',
+    frame === 'jounnin' && 'rank-jounnin',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const bandClass = [
+    'band',
+    field && 'f',
+    band.gold && 'gold',
+    !band.gold && card.kind === 'token' && 'b-TOKEN',
+    !band.gold && card.kind === 'ninja' && 'b-NINJA',
+    !band.gold && card.kind === 'unidade' && 'b-UNIDADE',
+    !band.gold && (card.kind === 'jutsu' || card.kind === 'armadilha') && 'b-JUTSU',
+    !band.gold && card.kind === 'equipamento' && 'b-EQUIP',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div
       className={[
-        'sc-card',
-        sizeClass,
-        kindClass,
-        famClass,
-        rankClass,
-        isExclusiveJutsu && 'sc-card--exclusive',
-        field && 'sc-card--field',
-        selected && 'sc-card--selected',
-        dimmed && 'sc-card--dimmed',
-        playable && 'sc-card--playable',
+        'sc-v7o-scale',
+        scaleClass,
+        selected && 'is-selected',
+        dimmed && 'is-dimmed',
+        playable && 'is-playable',
         className,
       ]
         .filter(Boolean)
@@ -342,143 +418,134 @@ export const CardFace: React.FC<CardFaceProps> = ({
       data-card-kind={card.kind}
       data-card-size={size}
     >
-      <div className="sc-card__clip">
-        <div className="sc-card__art">
-          <AnimePortrait
-            card={card}
-            evolved={rank >= 2}
-            evolutionLevel={rank}
-            className="sc-card__art-fill"
-          />
-        </div>
-        <div className="sc-card__shade" />
+      <div className={cardClasses}>
+        <div className="clip">
+          <div className="art">
+            <AnimePortrait
+              card={card}
+              evolved={rank >= 2}
+              evolutionLevel={rank}
+              className="sc-card__art-fill"
+            />
+          </div>
+          <div className="shade" />
 
-        <div className="sc-card__flow">
-          <div className="sc-card__box">
-            {field ? (
-              <div className="sc-card__name-banner">
-                <div className="sc-card__name">{card.name}</div>
-              </div>
-            ) : (
-              <div className="sc-card__name">{card.name}</div>
-            )}
-
-            {!field && traits && <div className="sc-card__traits">{traits}</div>}
-            {!field && (card.kind === 'unidade' || card.kind === 'token' || card.kind === 'equipamento') && (
-              <div className="sc-card__rule" />
-            )}
-
-            {card.kind === 'jutsu' && !field && (
+          <div
+            className={bandClass}
+            style={band.gold ? undefined : { background: band.color }}
+          >
+            {showBandStats && isEquip && (
               <>
-                <div className="sc-card__rule" />
-                <div className="sc-pill-row">
-                  <div className="sc-pill">
-                    <CardIcon id={speedPill(card.speed).id} size={14} />
-                    <span>{speedPill(card.speed).label}</span>
-                  </div>
+                <div className="bst l">
+                  <CardIcon id="poder" size={iconSz} />
+                  <b>+{card.bonusAttack}</b>
+                </div>
+                <div className="bst r">
+                  <b>+{card.bonusHealth}</b>
+                  <CardIcon id="vida" size={iconSz} />
                 </div>
               </>
             )}
-
-            {card.kind === 'armadilha' && !field && (
+            {showBandStats && isCharacter && shownPower != null && shownVitality != null && (
               <>
-                <div className="sc-card__rule" />
-                <div className="sc-pill">
-                  <CardIcon id="oculto" size={14} />
+                <div className="bst l">
+                  <CardIcon id="poder" size={iconSz} />
+                  <b className={`sc-stat-${pState}`}>{shownPower}</b>
+                </div>
+                <div className="bst r">
+                  <b className={`sc-stat-${vState}`}>{shownVitality}</b>
+                  <CardIcon id="vida" size={iconSz} />
+                </div>
+              </>
+            )}
+            {band.gold && <CardIcon id="coroa" size={16} />}
+            <span>{band.label}</span>
+          </div>
+
+          <div className="flow6">
+            <div className="box" ref={boxRef}>
+              {isUnitPlate && !isJutsuFace && !isEquip && (
+                <>
+                  <i className="rv a" />
+                  <i className="rv b" />
+                  <i className="rv c" />
+                  <i className="rv d" />
+                </>
+              )}
+
+              <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
+                {card.name}
+              </div>
+              <div className="rule" />
+
+              {!field &&
+                card.kind !== 'unidade' &&
+                card.kind !== 'token' &&
+                card.kind !== 'jutsu' &&
+                card.kind !== 'armadilha' &&
+                traits && <div className="traits">{traits}</div>}
+
+              {isJutsuFace && card.kind === 'jutsu' && (
+                <div className="pill">
+                  <CardIcon id={speedPill(card.speed).id} size={18} />
+                  <span>{speedPill(card.speed).label}</span>
+                </div>
+              )}
+
+              {isTrap && !field && (
+                <div className="pill trig">
+                  <CardIcon id="oculto" size={18} />
                   <span>OCULTO</span>
                 </div>
-              </>
-            )}
+              )}
 
-            {(card.kind === 'ninja' ||
-              card.kind === 'unidade' ||
-              card.kind === 'token' ||
-              card.kind === 'equipamento') && (
-              <KeywordRow pills={pills} field={field} />
-            )}
+              {(card.kind === 'ninja' ||
+                card.kind === 'unidade' ||
+                card.kind === 'token' ||
+                card.kind === 'equipamento') && (
+                <KeywordRow pills={pills} field={field} />
+              )}
 
-            {!field && rules ? (
-              <div
-                className="sc-card__rules"
-                dangerouslySetInnerHTML={{ __html: formatRulesHtml(rules) }}
-              />
-            ) : null}
+              {!field && rules ? (
+                <div
+                  className="rules"
+                  dangerouslySetInnerHTML={{ __html: formatRulesHtml(rules) }}
+                />
+              ) : null}
 
-            {!field && signatureOwner && (
-              <div className="sc-card__cap">Jutsu Exclusivo de {signatureOwner.name}</div>
-            )}
+              {!field && signatureOwner && (
+                <div className="cap">Jutsu Exclusivo de {signatureOwner.name}</div>
+              )}
 
-            {!field && card.kind === 'ninja' && lvlCounter && (
-              <>
-                <div className="sc-lvlbar">
-                  <i />
-                  <b>SUBIR DE NÍVEL</b>
-                  <i />
-                </div>
-                <div className="sc-card__req">{lvlCounter}</div>
-              </>
-            )}
+              {!field && card.kind === 'ninja' && lvlCounter && (
+                <>
+                  <div className="lvlbar">
+                    <i />
+                    <b>SUBIR DE NÍVEL</b>
+                    <i />
+                  </div>
+                  <div className="req">{lvlCounter}</div>
+                </>
+              )}
+            </div>
           </div>
+
+          {isJutsuFace && <div className="gemabs">{SHUR_GEM}</div>}
         </div>
 
-        <div
-          className={`sc-card__band ${band.gold ? 'sc-card__band--gold' : ''}`}
-          style={band.gold ? undefined : { background: band.color }}
-        >
-          {showBandStats && card.kind === 'equipamento' && (
-            <>
-              <div className="sc-card__bst sc-card__bst--l">
-                <CardIcon id="poder" size={14} />
-                <b>+{card.bonusAttack}</b>
-              </div>
-              <div className="sc-card__bst sc-card__bst--r">
-                <b>+{card.bonusHealth}</b>
-                <CardIcon id="vida" size={14} />
-              </div>
-            </>
-          )}
-          {showBandStats && isCharacter && shownPower != null && shownVitality != null && (
-            <>
-              <div className="sc-card__bst sc-card__bst--l">
-                <CardIcon id="poder" size={14} />
-                <b style={pState === 'up' ? { color: '#4ade80' } : pState === 'down' ? { color: '#ff5252' } : undefined}>
-                  {shownPower}
-                </b>
-              </div>
-              <div className="sc-card__bst sc-card__bst--r">
-                <b style={vState === 'up' ? { color: '#4ade80' } : vState === 'down' ? { color: '#ff5252' } : undefined}>
-                  {shownVitality}
-                </b>
-                <CardIcon id="vida" size={14} />
-              </div>
-            </>
-          )}
-          {band.gold && <CardIcon id="coroa" size={12} />}
-          <span>{band.label}</span>
+        <div className="cost" title="Custo de Chakra">
+          <CardIcon id="orbe-chakra" size={field ? 44 : 64} className="orb" />
+          <b>{cost}</b>
         </div>
-      </div>
 
-      <div className={`sc-card__cost ${costMod}`} title="Custo de Chakra">
-        <CardIcon id="orbe-chakra" size={field ? 30 : 48} />
-        <b>{cost}</b>
-      </div>
-
-      <div className="sc-card__seal">
-        {card.kind === 'equipamento' ? (
-          <EquipSeal />
-        ) : family ? (
-          <FamilySeal family={family} />
+        {isEquip ? (
+          <EquipSeal field={field} />
+        ) : family && isJutsuFace ? (
+          <FamilySeal family={family} field={field} />
         ) : (
-          <ShinobiSeal />
+          <ShinobiSeal field={field} />
         )}
       </div>
-
-      {field && isCharacter && shownPower != null && shownVitality != null && (
-        <>
-          <StatPlaque kind="power" value={shownPower} colorState={pState} field />
-          <StatPlaque kind="vitality" value={shownVitality} colorState={vState} field />
-        </>
-      )}
     </div>
   );
 };

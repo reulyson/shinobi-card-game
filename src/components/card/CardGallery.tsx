@@ -16,8 +16,18 @@ const HAND_IDS = [
   'equip_kubikiribocho',
 ] as const;
 
+const COMPARE_IDS = [
+  { id: 'sasuke_uchiha', label: 'Ninja' },
+  { id: 'unit_anbu_konoha', label: 'Unidade' },
+  { id: 'jutsu_chidori', label: 'Jutsu Exclusivo' },
+  { id: 'jutsu_rasengan', label: 'Ninjutsu' },
+  { id: 'jutsu_magen_kurenai', label: 'Genjutsu' },
+  { id: 'jutsu_omote_renge', label: 'Taijutsu' },
+  { id: 'equip_kubikiribocho', label: 'Equipamento' },
+] as const;
+
 /**
- * Galeria de verificação visual (frente v7o, verso-v3, campo com estados de cor).
+ * Galeria de verificação visual v7o.
  * Abra com ?gallery=cartas
  */
 export const CardGallery: React.FC = () => {
@@ -34,9 +44,42 @@ export const CardGallery: React.FC = () => {
           Shinobi Chronicles — Cartas v7o
         </h1>
         <p className="text-slate-400 text-sm mt-1">
-          Mão 156×219 · Zoom 312×438 · Campo 95×132 · Verso v3
+          Mão 156×219 · Zoom 312×438 · Campo 119×165 · Verso v7o · CSS verbatim gen_v7o
+        </p>
+        <p className="text-slate-500 text-xs mt-2">
+          Referência HTML:{' '}
+          <a className="text-sky-400 underline" href="/v7o-ref/v7o.html" target="_blank" rel="noreferrer">
+            /v7o-ref/v7o.html
+          </a>
         </p>
       </header>
+
+      <section data-section="compare-zoom">
+        <h2 className="text-orange-300 font-semibold mb-2">
+          Comparação lado a lado · zoom 312×438 (React)
+        </h2>
+        <p className="text-slate-500 text-xs mb-6">
+          Abra a referência v7o numa aba e compare pixel a pixel com estas cartas no mesmo tamanho.
+        </p>
+        <div className="flex flex-wrap gap-12 items-start">
+          {COMPARE_IDS.map(({ id, label }) => {
+            const card = getCardById(id);
+            if (!card) return null;
+            return (
+              <div key={id} className="flex flex-col gap-2 items-center" data-compare={id}>
+                <CardFace card={card} size="zoom" />
+                <span className="text-xs text-slate-400">
+                  {label} · {card.name}
+                </span>
+              </div>
+            );
+          })}
+          <div className="flex flex-col gap-2 items-center" data-compare="verso">
+            <CardBack size="zoom" />
+            <span className="text-xs text-slate-400">Verso</span>
+          </div>
+        </div>
+      </section>
 
       <section data-section="frente-mao">
         <h2 className="text-orange-300 font-semibold mb-6">Frente · mão 156×219</h2>
@@ -69,22 +112,22 @@ export const CardGallery: React.FC = () => {
       </section>
 
       <section data-section="verso">
-        <h2 className="text-orange-300 font-semibold mb-6">Verso universal · v3</h2>
+        <h2 className="text-orange-300 font-semibold mb-6">Verso universal · v7o</h2>
         <div className="flex gap-8 items-end">
           <div className="flex flex-col gap-2 items-center">
             <CardBack sized />
-            <span className="text-xs text-slate-400">mão</span>
+            <span className="text-xs text-slate-400">mão 156×219</span>
           </div>
           <div className="flex flex-col gap-2 items-center">
             <CardBack field sized />
-            <span className="text-xs text-slate-400">campo</span>
+            <span className="text-xs text-slate-400">campo 119×165</span>
           </div>
         </div>
       </section>
 
       <section data-section="campo">
         <h2 className="text-orange-300 font-semibold mb-6">
-          Campo 95×132 · plaquinhas (branco / verde / vermelho)
+          Campo 119×165 · stats na faixa (branco / verde / vermelho)
         </h2>
         <div className="flex flex-wrap gap-14 items-end">
           {anbu && (

@@ -15,7 +15,7 @@ interface CardViewProps {
   card?: CardDef;
   unit?: BoardUnit;
   /**
-   * hand = mão (156×219); board/field = campo compacto 95×132 com plaquinhas;
+   * hand = mão (156×219); board/field = campo 119×165 (stats na faixa);
    * collection = grid do deck builder; inspector/zoom = detalhe grande.
    */
   size?: 'hand' | 'board' | 'field' | 'collection' | 'inspector' | 'zoom';
@@ -134,10 +134,10 @@ export const CardView: React.FC<CardViewProps> = ({
   const isField = faceSize === 'field';
 
   if (faceDown) {
-    // Mão mantém footprint 100×140 (compatível com BattleArena); campo expõe 95×132.
+    // Mão mantém footprint 100×140 (compatível com BattleArena); campo 119×165 (v7o).
     const wrap =
       isField
-        ? 'w-[95px] h-[132px] shrink-0'
+        ? 'w-[119px] h-[165px] shrink-0'
         : size === 'hand'
           ? 'w-[100px] h-[140px] shrink-0'
           : 'w-20 h-28';
@@ -227,7 +227,7 @@ export const CardView: React.FC<CardViewProps> = ({
       style={wrapStyle}
       className={`group relative transition-transform duration-150 select-none ${
         isField
-          ? 'w-[95px] h-[132px] shrink-0'
+          ? 'w-[119px] h-[165px] shrink-0'
           : size === 'hand'
             ? 'w-[100px] h-[140px] shrink-0'
             : 'w-full'
