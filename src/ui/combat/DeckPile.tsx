@@ -1,4 +1,4 @@
-import CardBack from '../../components/CardBack';
+import { UzumakiCardBack } from './UzumakiCardBack';
 import { ZONES } from './grid';
 
 export interface DeckPileProps {
@@ -25,7 +25,7 @@ export function DeckPile({ side, remaining, total }: DeckPileProps) {
           className="absolute inset-0 translate-x-[1.5px] translate-y-[1.5px] rounded-md bg-black/40"
           aria-hidden
         />
-        <CardBack className="relative h-full w-full" />
+        <UzumakiCardBack className="relative h-full w-full" />
       </div>
       <div className="rounded border border-white/30 bg-black/75 px-2 py-0.5 text-center">
         <div className="font-mono-num text-sm font-bold text-white">

@@ -1,4 +1,4 @@
-import CardBack from '../../components/CardBack';
+import { UzumakiCardBack } from './UzumakiCardBack';
 import {
   MAX_OCULTO,
   OCULTO_MY_YS,
@@ -67,7 +67,7 @@ function OcultoColumn({
             boxShadow: i < filled ? '0 0 0 1px #fff' : undefined,
           }}
         >
-          {i < filled ? <CardBack className="h-full w-full" /> : null}
+          {i < filled ? <UzumakiCardBack className="h-full w-full" /> : null}
         </div>
       ))}
     </div>

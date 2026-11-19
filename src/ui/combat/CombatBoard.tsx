@@ -4,11 +4,13 @@ import {
   BLK_Y,
   BOARD,
   COL_CX,
+  LINE_Y,
   MAX_UNITS_PER_SIDE,
   MY_BACK_Y,
   RIVAL_BACK_Y,
   SLOT_H,
   SLOT_W,
+  STK_BAND,
   ZONES,
   colX,
 } from './grid';
@@ -106,9 +108,13 @@ export function CombatBoard({
   const rivalField = rb.filter(Boolean).length;
   const myField = mb.filter(Boolean).length;
 
+  // Faixas e linha central: x 205→1395 em coords de tela (= 5→1195 relativos ao tabuleiro).
+  const bandLeft = STK_BAND.x - BOARD.x;
+  const bandWidth = STK_BAND.w;
+
   return (
     <div
-      className="absolute overflow-hidden"
+      className="absolute"
       data-combat-board
       style={{
         left: BOARD.x,
@@ -120,6 +126,7 @@ export function CombatBoard({
         border: '5px solid #111',
         boxShadow:
           '0 0 0 3px #fff, 0 0 0 9px #F97316, 0 0 0 12px #111, 0 14px 30px rgba(0,0,0,0.75)',
+        overflow: 'hidden',
       }}
     >
       {/* Espiral Uzumaki */}
@@ -133,7 +140,6 @@ export function CombatBoard({
             fill="none"
             stroke="#F97316"
             strokeWidth={1.2}
-            style={{ transformOrigin: '50px 50px', transform: 'scale(1)' }}
           />
           <path
             d="M50 50 Q 70 30 78 50 Q 70 78 50 72 Q 28 64 32 48 Q 38 32 50 36"
@@ -145,35 +151,53 @@ export function CombatBoard({
         </svg>
       </div>
 
-      {/* Faixas de borda a borda (continuam atrás do Histórico). */}
+      {/* Faixas de borda a borda — passam ATRÁS do Histórico (coluna direita). */}
       <div
         className="pointer-events-none absolute"
+        data-band="rival"
         style={{
-          left: 5,
+          left: bandLeft,
           top: RIVAL_BACK_Y - BOARD.y,
-          width: BOARD.w - 10,
+          width: bandWidth,
           height: 144,
-          background: '#B91C1C33',
+          background: 'rgba(185,28,28,0.28)',
         }}
       />
       <div
         className="pointer-events-none absolute"
+        data-band="combat"
         style={{
-          left: 5,
+          left: bandLeft,
           top: ZONES.combat.y - BOARD.y,
-          width: BOARD.w - 10,
+          width: bandWidth,
           height: ZONES.combat.h,
-          background: '#FFD23F14',
+          background: 'rgba(255,210,63,0.08)',
         }}
       />
       <div
         className="pointer-events-none absolute"
+        data-band="player"
         style={{
-          left: 5,
+          left: bandLeft,
           top: MY_BACK_Y - BOARD.y,
-          width: BOARD.w - 10,
+          width: bandWidth,
           height: 144,
-          background: '#1D5FD633',
+          background: 'rgba(29,95,214,0.28)',
+        }}
+      />
+
+      {/* Linha central da Pilha (205→1395), atrás do Histórico. */}
+      <div
+        className="pointer-events-none absolute"
+        data-pilha-line
+        style={{
+          left: bandLeft,
+          top: LINE_Y - BOARD.y - 1,
+          width: bandWidth,
+          height: 3,
+          background: 'linear-gradient(90deg,#F97316,#FFD23F,#F97316)',
+          boxShadow: '0 0 10px rgba(255,210,63,0.55), 0 0 0 1px rgba(255,255,255,0.35)',
+          zIndex: 1,
         }}
       />
 

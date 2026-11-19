@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { STAT_COLORS, statTone } from './combatPreview';
 import { SLOT_H, SLOT_W } from './grid';
 import type { ArenaCardRef, FieldCardPreview } from './types';
-import CardBack from '../../components/CardBack';
+import { UzumakiCardBack } from './UzumakiCardBack';
 
 /**
  * Única porta de renderização de carta de campo na Arena B4.
@@ -62,7 +62,7 @@ export function FieldCard({ card, preview, onClick, style, className = '' }: Fie
         data-uid={card.uid}
         data-face-down
       >
-        <CardBack className="h-full w-full" />
+        <UzumakiCardBack className="h-full w-full" />
       </div>
     );
   }
@@ -74,13 +74,13 @@ export function FieldCard({ card, preview, onClick, style, className = '' }: Fie
       data-field-card={card.uid}
       data-uid={card.uid}
       data-card-id={card.cardId}
+      data-dying={dying ? 'true' : undefined}
       className={`relative block overflow-visible rounded-md border-0 p-0 text-left ${
         dying ? 'arena-b4-dying' : ''
       } ${card.selected ? 'ring-2 ring-amber-300' : ''} ${card.dimmed ? 'opacity-55' : ''} ${className}`}
       style={{
         width: SLOT_W,
         height: SLOT_H,
-        filter: dying ? 'grayscale(1) brightness(0.5)' : undefined,
         ...style,
       }}
     >
@@ -92,6 +92,7 @@ export function FieldCard({ card, preview, onClick, style, className = '' }: Fie
             card.owner === 'enemy'
               ? 'linear-gradient(180deg,#3f1218,#1a0a0e)'
               : 'linear-gradient(180deg,#12304a,#0a1524)',
+          filter: dying ? 'grayscale(0.75) brightness(0.48)' : undefined,
         }}
       >
         {card.artUrl ? (
@@ -118,6 +119,29 @@ export function FieldCard({ card, preview, onClick, style, className = '' }: Fie
         <div className="absolute inset-x-1 bottom-7 truncate text-center font-display text-[10px] text-white drop-shadow">
           {card.name}
         </div>
+        {dying && (
+          <svg
+            className="pointer-events-none absolute inset-0"
+            width={SLOT_W}
+            height={SLOT_H}
+            viewBox={`0 0 ${SLOT_W} ${SLOT_H}`}
+            aria-hidden
+          >
+            <path
+              d="M60 0L48 30 62 44 40 74 54 92 36 132"
+              fill="none"
+              stroke="#000"
+              strokeWidth="3.5"
+            />
+            <path
+              d="M60 0L48 30 62 44 40 74 54 92 36 132"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="1.2"
+              opacity="0.8"
+            />
+          </svg>
+        )}
       </div>
 
       {pv && (
@@ -134,10 +158,20 @@ export function FieldCard({ card, preview, onClick, style, className = '' }: Fie
         <div
           className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
           aria-label="Unidade morre na prévia"
+          style={{ filter: 'drop-shadow(0 2px 3px #000)' }}
         >
-          <span className="text-3xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)]" aria-hidden>
-            ☠
-          </span>
+          <svg width="38" height="42" viewBox="0 0 38 42" aria-hidden>
+            <path
+              d="M19 2C9 2 3 9 3 18c0 6 3 9 6 11v7h20v-7c3-2 6-5 6-11C35 9 29 2 19 2z"
+              fill="#F3F4F6"
+              stroke="#111"
+              strokeWidth="2.5"
+            />
+            <circle cx="12.5" cy="18" r="4.5" fill="#111" />
+            <circle cx="25.5" cy="18" r="4.5" fill="#111" />
+            <path d="M19 24l-2.5 5h5z" fill="#111" />
+            <path d="M13 36v-5M19 36v-5M25 36v-5" stroke="#111" strokeWidth="2" />
+          </svg>
         </div>
       )}
 

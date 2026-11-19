@@ -1,4 +1,4 @@
-import CardBack from '../../components/CardBack';
+import { UzumakiCardBack } from './UzumakiCardBack';
 import { ZONES } from './grid';
 
 /** Mão do rival: leque de versos 760×108 @ (420,0). Sem banner de turno. */
@@ -30,7 +30,7 @@ export function RivalHand({ count }: { count: number }) {
                 transform: `rotate(${rot}deg) translateY(8px)`,
               }}
             >
-              <CardBack className="h-full w-full" />
+              <UzumakiCardBack className="h-full w-full" />
             </div>
           );
         })}

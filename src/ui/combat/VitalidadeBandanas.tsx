@@ -9,8 +9,8 @@ export interface VitalidadeBandanasProps {
 }
 
 /**
- * Bandanas (hitai-ate) ampliadas — placa metálica rebitada, pano vermelho (rival) / azul (eu).
- * Sem símbolo de vila; vitalidade como atual/previsto; TURNO N entre elas, centrado em y=416.
+ * Hitai-ate ampliadas (×1.28): faixa de pano com dobras + placa metálica rebitada + caudas.
+ * Vermelho = rival (cima); azul = eu (baixo). Sem símbolo de vila. TURNO N em y=416.
  */
 export function VitalidadeBandanas({ rival, mine, round }: VitalidadeBandanasProps) {
   const z = ZONES.hudLeft;
@@ -20,18 +20,16 @@ export function VitalidadeBandanas({ rival, mine, round }: VitalidadeBandanasPro
   return (
     <div
       className="absolute"
-      style={{ left: z.x, top: z.y, width: z.w, height: z.h, zIndex: 18 }}
+      style={{ left: 6, top: z.y, width: z.w + 8, height: z.h, zIndex: 18 }}
       data-hud="vitalidade"
     >
-      <Bandana
-        cloth="#B91C1C"
+      <HitaiAte
+        variant="rival"
         value={rivalFmt}
         style={{
           position: 'absolute',
-          left: 8,
-          top: LINE_Y - z.y - 118,
-          transform: 'scale(1.28)',
-          transformOrigin: 'left center',
+          left: 4,
+          top: LINE_Y - z.y - 108,
         }}
       />
       <div
@@ -44,100 +42,157 @@ export function VitalidadeBandanas({ rival, mine, round }: VitalidadeBandanasPro
       >
         <span style={{ display: 'inline-block', transform: 'skewX(12deg)' }}>TURNO {round}</span>
       </div>
-      <Bandana
-        cloth="#1D4ED8"
+      <HitaiAte
+        variant="player"
         value={myFmt}
         style={{
           position: 'absolute',
-          left: 8,
-          top: LINE_Y - z.y + 28,
-          transform: 'scale(1.28)',
-          transformOrigin: 'left center',
+          left: 4,
+          top: LINE_Y - z.y + 22,
         }}
       />
     </div>
   );
 }
 
-function Bandana({
-  cloth,
+function HitaiAte({
+  variant,
   value,
   style,
 }: {
-  cloth: string;
+  variant: 'rival' | 'player';
   value: { text: string; predictedLower: boolean };
   style?: CSSProperties;
 }) {
+  const rival = variant === 'rival';
+  const c1 = rival ? '#A81818' : '#1B3A94';
+  const c2 = rival ? '#DC2626' : '#2F5FD0';
+  const c3 = rival ? '#5E0F0F' : '#0E224F';
   const parts = value.text.split('/');
   const current = parts[0] ?? value.text;
   const predicted = parts.length > 1 ? parts[1] : undefined;
 
+  const fold =
+    'repeating-linear-gradient(98deg,transparent 0 13px,#00000030 13px 16px,#ffffff1c 16px 19px)';
+
   return (
-    <div style={style} className="relative" aria-label={`Vitalidade ${value.text}`}>
+    <div
+      style={{
+        ...style,
+        width: 128,
+        height: 62,
+        transform: 'scale(1.28)',
+        transformOrigin: 'left center',
+      }}
+      className="relative"
+      aria-label={`Vitalidade ${value.text}`}
+      data-hitai-ate={variant}
+    >
+      {/* caudas de nó */}
+      <div
+        className="absolute"
+        style={{
+          left: 100,
+          top: 34,
+          width: 20,
+          height: 44,
+          background: `linear-gradient(100deg,${c1},${c2})`,
+          clipPath: 'polygon(0 0,100% 0,80% 100%,28% 86%)',
+          transform: 'rotate(-8deg)',
+          borderRadius: '0 0 4px 4px',
+          filter: 'drop-shadow(0 3px 2px #0009)',
+        }}
+      />
+      <div
+        className="absolute"
+        style={{
+          left: 110,
+          top: 34,
+          width: 20,
+          height: 34,
+          background: `linear-gradient(100deg,${c2},${c1})`,
+          clipPath: 'polygon(0 0,100% 0,100% 70%,40% 100%)',
+          transform: 'rotate(10deg)',
+          filter: 'drop-shadow(0 3px 2px #0009)',
+        }}
+      />
+
+      {/* faixa de pano com dobras */}
       <div
         className="absolute"
         style={{
           left: -6,
-          top: 18,
-          width: 78,
-          height: 28,
-          background: `linear-gradient(90deg, ${cloth}, ${cloth}cc)`,
-          borderRadius: '2px 14px 14px 2px',
-          boxShadow: '2px 3px 6px rgba(0,0,0,0.45)',
-          transform: 'rotate(-8deg)',
+          width: 148,
+          top: 12,
+          height: 40,
+          background: `${fold},linear-gradient(180deg,${c2},${c1} 35%,${c1} 70%,${c3})`,
+          borderTop: `2px solid ${c3}`,
+          borderBottom: `2px solid ${c3}`,
+          boxShadow: '0 4px 8px #000a, inset 0 6px 8px #ffffff25, inset 0 -8px 8px #0006',
         }}
       />
       <div
-        className="absolute"
+        className="absolute box-border"
         style={{
-          left: 48,
-          top: 22,
-          width: 70,
-          height: 22,
-          background: `linear-gradient(90deg, ${cloth}dd, ${cloth}88)`,
-          borderRadius: '2px 16px 16px 2px',
-          transform: 'rotate(14deg)',
+          left: -6,
+          width: 148,
+          top: 16,
+          height: 32,
+          borderTop: '1.5px dashed #ffffff44',
+          borderBottom: '1.5px dashed #ffffff44',
         }}
       />
+
+      {/* placa metálica */}
       <div
-        className="relative flex items-center justify-center"
+        className="absolute flex flex-col items-center justify-center"
         style={{
-          width: 118,
-          height: 64,
-          marginLeft: 4,
-          background: 'linear-gradient(160deg,#d7dbe3 0%,#9aa3b2 45%,#6b7280 100%)',
-          border: '3px solid #1a1a1a',
-          borderRadius: 6,
-          boxShadow: '0 0 0 2px #e5e7eb, 0 6px 12px rgba(0,0,0,0.5)',
+          left: 10,
+          top: 7,
+          width: 108,
+          height: 48,
+          borderRadius: 7,
+          background: 'linear-gradient(165deg,#F6F7F9,#B7BEC8 40%,#7C8591 85%,#5E6672)',
+          border: '2px solid #2B323C',
+          boxShadow: '0 4px 8px #000b, inset 0 0 0 2px #FFFFFF70, inset 0 -5px 8px #0004',
         }}
       >
-        {(
-          [
-            [8, 8],
-            [102, 8],
-            [8, 48],
-            [102, 48],
-          ] as const
-        ).map(([x, y]) => (
-          <span
-            key={`${x}-${y}`}
-            className="absolute rounded-full"
-            style={{
-              left: x,
-              top: y,
-              width: 7,
-              height: 7,
-              background: 'radial-gradient(circle at 30% 30%,#f3f4f6,#4b5563)',
-              border: '1px solid #111',
-            }}
-          />
-        ))}
-        <span className="font-bandana text-[28px] leading-none" style={{ color: '#111', textShadow: '0 1px 0 #fff8' }}>
+        {([13, 102] as const).flatMap((l) =>
+          ([9, 19, 29, 39] as const).map((tp) => (
+            <span
+              key={`${l}-${tp}`}
+              className="absolute rounded-full"
+              style={{
+                left: l - 10,
+                top: tp - 7,
+                width: 5,
+                height: 5,
+                background: 'radial-gradient(circle at 35% 30%,#fff,#9CA3AF 55%,#4B5563)',
+                boxShadow: '0 1px 1px #000a',
+              }}
+            />
+          ))
+        )}
+        <span
+          className="font-bandana leading-none"
+          style={{
+            fontSize: 36,
+            color: '#111',
+            textShadow: '0 1px 0 #fff, 0 0 3px #fff9',
+          }}
+        >
           {current}
           {predicted !== undefined ? (
             <span>
               <span style={{ color: '#333' }}>{'/'}</span>
-              <span style={{ color: value.predictedLower ? '#DC2626' : '#111' }}>{predicted}</span>
+              <span
+                style={{
+                  color: value.predictedLower ? '#DC2626' : '#111',
+                  WebkitTextStroke: value.predictedLower ? '0.6px #7F1D1D' : undefined,
+                }}
+              >
+                {predicted}
+              </span>
             </span>
           ) : null}
         </span>
