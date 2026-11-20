@@ -102,4 +102,4 @@ export interface ArenaB4Model {
   combatBusy?: boolean;
 }
 
-export type ArenaB4DemoId = 'meu-ataque' | 'preview' | 'pilha';
+export type ArenaB4DemoId = 'meu-ataque' | 'preview' | 'pilha' | 'campo';

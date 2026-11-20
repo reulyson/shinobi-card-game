@@ -23,6 +23,7 @@ import {
   TeamFaction,
 } from '../types/game';
 import { CardView } from './CardView';
+import { CardFace } from './card/CardFace';
 import { CardInspector } from './CardInspector';
 
 interface DeckBuilderViewProps {
@@ -377,8 +378,10 @@ export const DeckBuilderView: React.FC<DeckBuilderViewProps> = ({
                   onClick={() => setInspectedCard(card)}
                   className="flex items-center gap-2 min-w-0 text-left hover:text-amber-300"
                 >
-                  <span className="w-5 h-5 rounded bg-slate-800 text-sky-300 font-mono-num font-bold flex items-center justify-center shrink-0">
-                    {card.cost}
+                  <span className="sc-deck-thumb relative overflow-hidden rounded border border-slate-700/80 bg-slate-950 shrink-0">
+                    <span className="absolute inset-0 origin-top-left" style={{ transform: 'scale(0.179)' }}>
+                      <CardFace card={card} size="hand" />
+                    </span>
                   </span>
                   <span className="truncate text-slate-200">{card.name}</span>
                 </button>

@@ -730,7 +730,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Rapida',
     cost: 3,
     targetMode: 'enemy_unit',
-    effectText: 'Paralise um inimigo. Ele recebe -2/-0 nesta rodada.',
+    effectText: 'Aplique Genjutsu a um inimigo. Ele recebe -2/-0 nesta rodada.',
     flavorText: 'Kurenai Yūhi, jōnin líder do Time 8, é mestra em genjutsu e prende o inimigo numa ilusão antes que ele perceba.',
     elementColor: '#E11D48',
     symbolType: 'shadow',

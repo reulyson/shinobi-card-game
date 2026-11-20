@@ -45,17 +45,96 @@ function unit(
   return partial;
 }
 
-/** HAND5 do mockup: Naruto, Anbu, Katon, Fūma, Kubikiribōchō. */
+/** HAND5 do mockup — ids canônicos do catálogo (CardFace). */
 const HAND = [
-  { cardId: 'naruto', name: 'Naruto Uzumaki', cost: 3, artUrl: art('naruto') },
-  { cardId: 'anbu', name: 'Anbu de Konoha', cost: 2, artUrl: art('anbu') },
-  { cardId: 'katon', name: 'Katon: Gōkakyū no Jutsu', cost: 4, artUrl: art('katon') },
-  { cardId: 'fuma', name: 'Fūma Shuriken', cost: 2, artUrl: art('fuma') },
-  { cardId: 'equip', name: 'Kubikiribōchō', cost: 3, artUrl: art('chidori') },
+  { cardId: 'naruto_uzumaki', name: 'Naruto Uzumaki', cost: 3, artUrl: art('naruto') },
+  { cardId: 'unit_anbu_konoha', name: 'Anbu de Konoha', cost: 2, artUrl: art('anbu') },
+  { cardId: 'jutsu_bola_de_fogo', name: 'Katon: Gōkakyū no Jutsu', cost: 4, artUrl: art('katon') },
+  { cardId: 'jutsu_fuma_shuriken', name: 'Fūma Shuriken', cost: 2, artUrl: art('fuma') },
+  { cardId: 'equip_kubikiribocho', name: 'Kubikiribōchō', cost: 3, artUrl: art('chidori') },
 ];
 
 /** Fixtures visuais Part 3 — composição idêntica a gen_b4prev S5/S7/S8. */
 export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
+  // Campo quieto — retaguardas, sem combate/prévia.
+  campo: {
+    round: 3,
+    rivalVitality: { current: 20 },
+    myVitality: { current: 20 },
+    rivalDeck: { remaining: 24, total: 30 },
+    myDeck: { remaining: 22, total: 30 },
+    rivalHandCount: 5,
+    myHand: HAND,
+    rivalBackrow: [
+      unit({
+        uid: 'rb1',
+        cardId: 'unit_anbu_konoha',
+        artUrl: art('anbu'),
+        name: 'Anbu de Konoha',
+        owner: 'enemy',
+        column: 1,
+        cost: 2,
+        band: 'UNIDADE',
+        keywords: [KW.furtivo],
+        preview: pv(2, 2, 2, 2),
+      }),
+      unit({
+        uid: 'rb2',
+        cardId: 'zabuza_momochi',
+        artUrl: art('zabuza'),
+        name: 'Zabuza Momochi',
+        owner: 'enemy',
+        column: 3,
+        cost: 5,
+        rank: 'gennin',
+        band: 'NINJA',
+        keywords: [KW.furtivo, KW.golpe],
+        preview: pv(5, 5, 5, 5),
+      }),
+    ],
+    myBackrow: [
+      unit({
+        uid: 'mb1',
+        cardId: 'sasuke_uchiha',
+        artUrl: art('sasuke'),
+        name: 'Sasuke Uchiha',
+        owner: 'player',
+        column: 1,
+        cost: 3,
+        rank: 'gennin',
+        band: 'NINJA',
+        keywords: [KW.golpe],
+        preview: pv(3, 4, 3, 4),
+      }),
+      unit({
+        uid: 'mb2',
+        cardId: 'naruto_uzumaki',
+        artUrl: art('naruto'),
+        name: 'Naruto Uzumaki',
+        owner: 'player',
+        column: 2,
+        cost: 3,
+        rank: 'gennin',
+        band: 'NINJA',
+        keywords: [KW.perfurante],
+        preview: pv(3, 5, 3, 5),
+      }),
+    ],
+    rivalCombat: [],
+    myCombat: [],
+    rivalOculto: 1,
+    myOculto: 1,
+    pilha: [],
+    arrows: [],
+    previaLabel: 'PRÉVIA - NADA FOI APLICADO',
+    myTurn: true,
+    mainActionLabel: 'CONFIRMAR ATAQUE',
+    rivalChakra: { current: 5, max: 7, reserve: 1 },
+    myChakra: { current: 6, max: 8, reserve: 2 },
+    historicoLines: ['R3 · Ambos invocaram unidades na retaguarda.'],
+    combatBusy: false,
+  },
+
   // S8 — MEU ATAQUE: 3 mortes (2 bloqueadores rivais + 1 atacante meu).
   'meu-ataque': {
     round: 4,
@@ -70,7 +149,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     rivalCombat: [
       unit({
         uid: 'e1',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -83,7 +162,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e2',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -96,7 +175,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e3',
-        cardId: 'zabuza',
+        cardId: 'zabuza_momochi',
         artUrl: art('zabuza'),
         artPos: '50% 20%',
         name: 'Zabuza Momochi',
@@ -113,7 +192,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     myCombat: [
       unit({
         uid: 'p1',
-        cardId: 'sasuke',
+        cardId: 'sasuke_uchiha',
         artUrl: art('sasuke'),
         artPos: '50% 25%',
         name: 'Sasuke Uchiha',
@@ -127,7 +206,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p2',
-        cardId: 'naruto',
+        cardId: 'naruto_uzumaki',
         artUrl: art('naruto'),
         artPos: '50% 20%',
         name: 'Naruto Uzumaki',
@@ -141,7 +220,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p3',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -154,7 +233,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p4',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -202,7 +281,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     rivalCombat: [
       unit({
         uid: 'e1',
-        cardId: 'zabuza',
+        cardId: 'zabuza_momochi',
         artUrl: art('zabuza'),
         artPos: '50% 20%',
         name: 'Zabuza Momochi',
@@ -216,7 +295,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e2',
-        cardId: 'naruto',
+        cardId: 'naruto_uzumaki',
         artUrl: art('naruto'),
         artPos: '50% 20%',
         name: 'Naruto Uzumaki',
@@ -230,7 +309,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e3',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -243,7 +322,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e4',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -258,7 +337,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     myCombat: [
       unit({
         uid: 'p1',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -271,7 +350,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p2',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -284,7 +363,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p3',
-        cardId: 'sasuke',
+        cardId: 'sasuke_uchiha',
         artUrl: art('sasuke'),
         artPos: '50% 25%',
         name: 'Sasuke Uchiha',
@@ -332,7 +411,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     myBackrow: [
       unit({
         uid: 'mb1',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -347,7 +426,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     rivalCombat: [
       unit({
         uid: 'e1',
-        cardId: 'zabuza',
+        cardId: 'zabuza_momochi',
         artUrl: art('zabuza'),
         artPos: '50% 20%',
         name: 'Zabuza Momochi',
@@ -361,7 +440,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e2',
-        cardId: 'naruto',
+        cardId: 'naruto_uzumaki',
         artUrl: art('naruto'),
         artPos: '50% 20%',
         name: 'Naruto Uzumaki',
@@ -375,7 +454,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e3',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -388,7 +467,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e4',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -401,7 +480,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'e5',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -416,7 +495,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     myCombat: [
       unit({
         uid: 'p1',
-        cardId: 'anbu',
+        cardId: 'unit_anbu_konoha',
         artUrl: art('anbu'),
         artPos: '50% 20%',
         name: 'Anbu de Konoha',
@@ -429,7 +508,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p2',
-        cardId: 'clone',
+        cardId: 'token_kage_bunshin',
         artUrl: art('clone'),
         artPos: '50% 30%',
         name: 'Clone das Sombras',
@@ -442,7 +521,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p3',
-        cardId: 'sasuke',
+        cardId: 'sasuke_uchiha',
         artUrl: art('sasuke'),
         artPos: '50% 25%',
         name: 'Sasuke Uchiha',
@@ -456,7 +535,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
       }),
       unit({
         uid: 'p4',
-        cardId: 'naruto',
+        cardId: 'naruto_uzumaki',
         artUrl: art('naruto'),
         artPos: '50% 20%',
         name: 'Naruto Uzumaki',
@@ -504,6 +583,6 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
 };
 
 export function parseDemoId(raw: string | null | undefined): ArenaB4DemoId | null {
-  if (raw === 'meu-ataque' || raw === 'preview' || raw === 'pilha') return raw;
+  if (raw === 'meu-ataque' || raw === 'preview' || raw === 'pilha' || raw === 'campo') return raw;
   return null;
 }

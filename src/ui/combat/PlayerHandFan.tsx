@@ -1,5 +1,5 @@
 import { MAX_HAND, ZONES } from './grid';
-import { FieldCard } from './FieldCard';
+import { ArenaFieldCard } from './ArenaFieldCard';
 import { TabLabel } from './TabLabel';
 
 export interface HandCardModel {
@@ -10,7 +10,7 @@ export interface HandCardModel {
   playable?: boolean;
 }
 
-/** Sua mão — gen_combate.fan(hand, 800, 726, 0.56, spread/drop/gap). */
+/** Sua mão — leque com CardFace size="hand" (156×219). */
 export function PlayerHandFan({
   cards,
   onCardClick,
@@ -21,9 +21,8 @@ export function PlayerHandFan({
   const z = ZONES.hand;
   const list = cards.slice(0, MAX_HAND);
   const n = list.length;
-  const zoom = 0.56;
-  const cardW = 312 * zoom;
-  const cardH = 438 * zoom;
+  const cardW = 156;
+  const cardH = 219;
   const [spread, drop, gap] = n <= 6 ? [7, 6, 92] : [5, 4, 84];
   const cx = 800;
   const base = 726;
@@ -60,25 +59,22 @@ export function PlayerHandFan({
               zIndex: i,
             }}
           >
-            <FieldCard
-                  variant="compact"
-                  card={{
-                    uid: `hand-${i}`,
-                    cardId: c.cardId,
-                    name: c.name,
-                    owner: 'player',
-                    artUrl: c.artUrl,
-                    cost: c.cost,
-                    preview: undefined,
-                  }}
-                  onClick={() => onCardClick?.(c.cardId, i)}
-                  className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
-                  style={{ width: cardW, height: cardH }}
-                />
+            <ArenaFieldCard
+              size="hand"
+              card={{
+                uid: `hand-${i}`,
+                cardId: c.cardId,
+                name: c.name,
+                owner: 'player',
+                artUrl: c.artUrl,
+                cost: c.cost,
+              }}
+              onClick={() => onCardClick?.(c.cardId, i)}
+              className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
+            />
           </div>
         );
       })}
-      {/* footprint da zona (debug/layout) */}
       <div
         className="pointer-events-none absolute"
         style={{ left: z.x, top: z.y, width: z.w, height: z.h }}

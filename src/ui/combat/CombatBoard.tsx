@@ -12,7 +12,7 @@ import {
   ZONES,
   colX,
 } from './grid';
-import { FieldCard } from './FieldCard';
+import { ArenaFieldCard } from './ArenaFieldCard';
 import { TabLabel, type TabTone } from './TabLabel';
 import type { ArenaCardRef } from './types';
 
@@ -234,7 +234,7 @@ function Row({
             data-col={i}
             data-col-cx={COL_CX[i]}
           >
-            <FieldCard card={card} onClick={() => onCardClick?.(card)} />
+            <ArenaFieldCard card={card} onClick={() => onCardClick?.(card)} />
           </div>
         );
       })}

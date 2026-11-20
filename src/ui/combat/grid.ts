@@ -6,10 +6,10 @@
 export const SCREEN_W = 1600;
 export const SCREEN_H = 900;
 
-/** Zoom das cartas de campo (238×330 → 95×132). */
-export const SLOT_ZOOM = 0.4;
-export const SLOT_W = 95;
-export const SLOT_H = 132;
+/** Cartas de campo = CardFace size="field" (238×330 @ 0.5 → 119×165). */
+export const SLOT_ZOOM = 0.5;
+export const SLOT_W = 119;
+export const SLOT_H = 165;
 export const COL_PITCH = 135;
 
 /** Centros das 5 colunas: 530, 665, 800, 935, 1070. */
