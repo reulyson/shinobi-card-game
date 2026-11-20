@@ -82,10 +82,10 @@ Técnicas ninjas que afetam o campo, unidades ou a Vitalidade. Podem ter famíli
 
 **Oculto** é uma **velocidade de Jutsu** (não um tipo de baralho). A carta é jogada **virada para baixo**, só **fora de combate e com a Pilha vazia**, e só ativa quando o **gatilho** acontece. Máximo **3** em jogo por jogador. Na carta aparece a pílula "Oculto". Kai/detecção (Byakugan) revelam/anulam.
 
-Cartas Oculto com gatilho no repositório:
+Cartas Oculto com gatilho no repositório (Jutsus, velocidade Oculto):
 
-- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri)
-- Ao Conjurar Jutsu (Gogyō Fūin)
+- Ao Declarar Ataque (Kibaku Fuda, **Kagemane no Jutsu**, Dokugiri)
+- Ao Conjurar Jutsu (**Gogyō Fūin**)
 - Ao Invocar Unidade (Magen: Jubaku Satsu)
 
 Também listadas como Oculto (gatilho face-down ainda pendente de confirmação): Kawarimi no Jutsu, Kirigakure no Jutsu.

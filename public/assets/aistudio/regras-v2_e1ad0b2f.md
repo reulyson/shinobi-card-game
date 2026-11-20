@@ -62,8 +62,8 @@ Técnicas ninjas que afetam o campo, unidades ou Portões. Dividem-se por catego
 
 Cartas secretas armadas face para baixo (até 2 simultâneas). O oponente sabe quantas ocultos existem, mas não qual técnica foi ocultada. Disparam automaticamente quando o inimigo executa o gatilho específico:
 
-- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri)
-- Ao Conjurar Jutsu (Gogyō Fūin)
+- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri) — Jutsus velocidade Oculto
+- Ao Conjurar Jutsu (Gogyō Fūin) — Jutsu velocidade Oculto
 - Ao Invocar Unidade (Magen: Jubaku Satsu)
 
 Regras de Ocultos:

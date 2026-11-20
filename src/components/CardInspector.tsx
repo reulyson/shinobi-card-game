@@ -100,24 +100,30 @@ export const CardInspector: React.FC<CardInspectorProps> = ({ card, unit, onClos
         : card.keywords;
   const chips: { key: string; label: string; help: string; icon?: React.ComponentType<{ className?: string }>; cls: string }[] = [];
   if (card.kind === 'jutsu') {
+    const isOculta = card.speed === 'Oculta';
     chips.push({
       key: 'speed',
       label: SPEED_DISPLAY_NAME[card.speed],
+      icon: isOculta ? EyeOff : undefined,
       help: (() => {
+        if (isOculta && card.triggerType) {
+          return 'Jogada virada para baixo; ativa no gatilho. Máx. 3 em jogo.';
+        }
         const h = SPEED_FULL_LABEL[card.speed].split('—')[1]?.trim() ?? '';
         return h ? h.charAt(0).toUpperCase() + h.slice(1) + '.' : '';
       })(),
-      cls: 'border-sky-500/50 bg-sky-950/50 text-sky-200',
+      cls: isOculta
+        ? 'border-purple-500/50 bg-purple-950/50 text-purple-200'
+        : 'border-sky-500/50 bg-sky-950/50 text-sky-200',
     });
-  }
-  if (isOcultoJutsu(card) && card.triggerType) {
-    chips.push({
-      key: 'trap',
-      label: 'Oculto',
-      icon: EyeOff,
-      help: 'Jogada virada para baixo; ativa no gatilho. Máx. 3 em jogo.',
-      cls: 'border-purple-500/50 bg-purple-950/50 text-purple-200',
-    });
+    if (card.family) {
+      chips.push({
+        key: 'family',
+        label: card.family,
+        help: `Família ${card.family}.`,
+        cls: 'border-slate-500/50 bg-slate-900/60 text-slate-200',
+      });
+    }
   }
   if (card.kind === 'equipamento') {
     chips.push({

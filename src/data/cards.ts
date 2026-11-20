@@ -1055,7 +1055,7 @@ export const OCULTO_JUTSU_CARDS: TrapCardDef[] = [
   },
 ];
 
-/** @deprecated Use OCULTO_JUTSU_CARDS — tipo Oculto removido no Grupo 8. */
+/** @deprecated Use OCULTO_JUTSU_CARDS — tipo Armadilha removido no Grupo 8. */
 export const TRAP_CARDS = OCULTO_JUTSU_CARDS;
 
 // ================= EQUIPAMENTOS =================

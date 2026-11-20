@@ -12,17 +12,19 @@ import {
   JUTSU_CARDS,
 } from '../src/data/cards';
 import {
+  createBoardUnit,
   createInitialPlayerState,
+  getMatchingTraps,
   getUnplayableReason,
   isOcultoArmable,
   MAX_BOARD_UNITS,
   MAX_HAND_SIZE,
   MAX_OCULTO_IN_PLAY,
   resolveJutsuEffect,
+  resolveTrapEffect,
   STARTING_VITALIDADE,
 } from '../src/engine/battleEngine';
 import { applyGenjutsu, applyKai, isInGenjutsu } from '../src/engine/keywords';
-import { createBoardUnit } from '../src/engine/battleEngine';
 import { isOcultoJutsu, KEYWORD_DISPLAY_NAME, SPEED_DISPLAY_NAME } from '../src/types/game';
 import type { JutsuCardDef, UnitCardDef } from '../src/types/game';
 
@@ -134,4 +136,52 @@ test('Fūma resolve: causa 2 de dano (TODO valor)', () => {
 test('JUTSU_CARDS inclui Fūma e Kai', () => {
   assert.ok(JUTSU_CARDS.some((j) => j.id === 'jutsu_fuma_shuriken'));
   assert.ok(JUTSU_CARDS.some((j) => j.id === 'jutsu_kai'));
+});
+
+test('Kagemane no Jutsu: Oculto Ninjutsu, gatilho ataque, Paralisa (custo/efeito intactos)', () => {
+  const card = getCardById('trap_possessao_sombras') as JutsuCardDef;
+  assert.equal(card.kind, 'jutsu');
+  assert.equal(card.speed, 'Oculta');
+  assert.equal(card.family, 'Ninjutsu');
+  assert.equal(card.category, 'Enfraquecer');
+  assert.equal(card.cost, 2);
+  assert.equal(card.triggerType, 'on_enemy_attack');
+  assert.match(card.effectText, /Paralise o atacante mais forte/);
+  assert.equal(isOcultoArmable(card), true);
+  assert.doesNotMatch(card.effectText, /Armadilha|Portão/);
+
+  const unitDef = getCardById('unit_anbu_konoha') as UnitCardDef;
+  const p = createInitialPlayerState([]);
+  const e = createInitialPlayerState([]);
+  const att = createBoardUnit(unitDef, 'enemy', 1, ARENA);
+  e.board = [att];
+  p.traps = [{ uid: 'k1', cardId: card.id, owner: 'player', armedRound: 1 }];
+  assert.equal(getMatchingTraps('attack', p).length, 1);
+  const r = resolveTrapEffect(card.id, 'player', p, e, [{ attackerUid: att.uid, blockerUid: null }], ARENA, 1);
+  assert.equal(r.enemy.board[0]?.stunned, true);
+  assert.equal(r.attackPairs.length, 0);
+  assert.ok(r.logs.some((l) => /Oculto · Kagemane/.test(l.text) && l.cardId === card.id));
+});
+
+test('Gogyō Fūin: Oculto Ninjutsu, gatilho jutsu, −2 Reserva / +2 Vitalidade (intactos)', () => {
+  const card = getCardById('trap_selo_cinco_elementos') as JutsuCardDef;
+  assert.equal(card.kind, 'jutsu');
+  assert.equal(card.speed, 'Oculta');
+  assert.equal(card.family, 'Ninjutsu');
+  assert.equal(card.category, 'Enfraquecer');
+  assert.equal(card.cost, 2);
+  assert.equal(card.triggerType, 'on_enemy_jutsu');
+  assert.match(card.effectText, /perde 2 de Reserva/);
+  assert.match(card.effectText, /Vitalidade/);
+  assert.doesNotMatch(card.effectText, /Armadilha|Portão/);
+  assert.equal(isOcultoArmable(card), true);
+
+  const p = { ...createInitialPlayerState([]), hp: 10, maxHp: 20 };
+  const e = { ...createInitialPlayerState([]), spellMana: 3 };
+  p.traps = [{ uid: 'g1', cardId: card.id, owner: 'player', armedRound: 1 }];
+  assert.equal(getMatchingTraps('jutsu', p).length, 1);
+  const r = resolveTrapEffect(card.id, 'player', p, e, [], ARENA, 1);
+  assert.equal(r.enemy.spellMana, 1);
+  assert.equal(r.player.hp, 12);
+  assert.ok(r.logs.some((l) => /Oculto · Gogyō Fūin/.test(l.text) && /Vitalidade/.test(l.text)));
 });

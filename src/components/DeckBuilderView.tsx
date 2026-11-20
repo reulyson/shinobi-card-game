@@ -185,7 +185,7 @@ export const DeckBuilderView: React.FC<DeckBuilderViewProps> = ({
               {mode === 'collection' ? 'Grimório Ninja' : 'Construtor de Deck'}
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              {ALL_CARDS.length} cartas · {NINJA_CARDS.length} Ninjas · {UNIT_CARDS.length} Unidades · {JUTSU_CARDS.length} Jutsus · {OCULTO_JUTSU_CARDS.length} Ocultos · {EQUIPMENT_CARDS.length} Equipamentos
+              {ALL_CARDS.length} cartas · {NINJA_CARDS.length} Ninjas · {UNIT_CARDS.length} Unidades · {JUTSU_CARDS.length + OCULTO_JUTSU_CARDS.length} Jutsus ({OCULTO_JUTSU_CARDS.length} Oculto armáveis) · {EQUIPMENT_CARDS.length} Equipamentos
             </p>
           </div>
 

@@ -1172,8 +1172,10 @@ export function resolveTrapEffect(
     logs.push({
       id: nextUid('log'),
       round,
-      text: 'Kagemane no Jutsu: o atacante mais forte foi Paralisado e saiu do ataque!',
+      text: 'Oculto · Kagemane no Jutsu: o atacante mais forte foi Paralisado e saiu do ataque!',
       tone: 'trap',
+      actor: trapOwnerSide,
+      cardId: trapCardId,
     });
   } else if (trapCardId === 'trap_nevoa_venenosa' && activeAttackerUids.length > 0) {
     const attackerIds = new Set(activeAttackerUids);
@@ -1202,8 +1204,10 @@ export function resolveTrapEffect(
     logs.push({
       id: nextUid('log'),
       round,
-      text: 'Gogyō Fūin: o rival perdeu 2 de Reserva e sua Vitalidade curou 2!',
+      text: 'Oculto · Gogyō Fūin: o rival perdeu 2 de Reserva e sua Vitalidade curou 2!',
       tone: 'trap',
+      actor: trapOwnerSide,
+      cardId: trapCardId,
     });
   } else if (trapCardId === 'trap_arvore_genjutsu') {
     const targetUid =
@@ -1238,7 +1242,7 @@ export function resolveTrapEffect(
 }
 
 /**
- * IA: entre várias ocultos com o mesmo gatilho, escolhe a que mais rende.
+ * IA: entre vários Ocultos com o mesmo gatilho, escolhe o que mais rende.
  * Heurística simples: simula cada oculto e pontua o estrago no lado inimigo
  * (Poder/Vida perdidos, abates, atacantes retirados do ataque, Reserva de Jutsu
  * drenada) e o ganho de Vida da Vitalidade do dono.
