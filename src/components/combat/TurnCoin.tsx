@@ -146,20 +146,28 @@ const PoofCloud: React.FC<{ p: number }> = ({ p }) => {
   );
 };
 
+/** logo() de gen_b4.py — centro óptico −0.08/−0.10·size. */
 const ShinobiKanji: React.FC<{ size: number }> = ({ size }) => (
   <span
-    className="turn-coin-kanji"
     style={{
-      fontSize: size,
+      display: 'inline-block',
       transform: `translate(${(-0.08 * size).toFixed(1)}px, ${(-0.1 * size).toFixed(1)}px)`,
     }}
     aria-hidden="true"
   >
-    忍
+    <span className="turn-coin-lgw" style={{ fontSize: size }}>
+      <i className="a">忍</i>
+      <i className="b">忍</i>
+      <b className="c">忍</b>
+    </span>
   </span>
 );
 
-const SwirlIcon: React.FC<{ size: number; color?: string }> = ({ size, color = '#1F2937' }) => (
+const SwirlIcon: React.FC<{ size: number; color?: string; strokeWidth?: number }> = ({
+  size,
+  color = '#1F2937',
+  strokeWidth = 10,
+}) => (
   <svg
     className="turn-coin-swirl"
     width={size}
@@ -168,7 +176,7 @@ const SwirlIcon: React.FC<{ size: number; color?: string }> = ({ size, color = '
     fill="none"
     aria-hidden="true"
   >
-    <path d={SWIRL_PATH} stroke={color} strokeWidth="10" strokeLinecap="round" />
+    <path d={SWIRL_PATH} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
   </svg>
 );
 
@@ -346,7 +354,8 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
   const activeBtn = isPlayerVisual && !disabled;
   const label = isPlayerVisual ? confirmLabel : 'AGUARDE O RIVAL';
   const topPct = (1 - level) * 100;
-  const kanjiSize = Math.round(size * 0.48);
+  // gen_timer: logo('忍', 50) com CR=52 (moeda 104px)
+  const kanjiSize = size >= 100 ? 50 : Math.round(size * 0.48);
 
   return (
     <div
@@ -372,11 +381,12 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
             />
           ) : null}
         </div>
+        {/* gen_timer sobrepõe a moeda líquida sem marca d'água; swirl branco só no B4 estático */}
         <div className="turn-coin-symbol">
           {showKanji ? (
             <ShinobiKanji size={kanjiSize} />
           ) : (
-            <SwirlIcon size={size - 26} />
+            <SwirlIcon size={size - 26} color="#1F2937" strokeWidth={10} />
           )}
         </div>
         {poof != null ? <PoofCloud p={poof} /> : null}

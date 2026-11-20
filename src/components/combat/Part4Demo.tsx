@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HistoricoScroll } from './HistoricoScroll';
 import { TurnChakraHud } from './TurnChakraHud';
 import type { BattleLogEntry } from '../../types/game';
@@ -29,13 +29,15 @@ export const Part4Demo: React.FC = () => {
   const [side, setSide] = useState<'player' | 'rival'>('player');
   const [label, setLabel] = useState<'CONFIRMAR ATAQUE' | 'CONFIRMAR BLOQUEIOS'>('CONFIRMAR ATAQUE');
   const [forceProgress, setForceProgress] = useState<number | undefined>(undefined);
+  const [paused, setPaused] = useState(false);
+  const [durationMs, setDurationMs] = useState(8000);
 
   useEffect(() => {
     const t = window.setTimeout(() => setOpen(true), 200);
     return () => window.clearTimeout(t);
   }, []);
 
-  // Query helpers: ?demo=part4&scroll=0.45&side=rival&fast=1
+  // Query: ?demo=part4&scroll=0.45&side=rival&paused=1&ms=5000&block=1
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const q = new URLSearchParams(window.location.search);
@@ -44,13 +46,9 @@ export const Part4Demo: React.FC = () => {
     const s = q.get('side');
     if (s === 'rival' || s === 'player') setSide(s);
     if (q.get('block') === '1') setLabel('CONFIRMAR BLOQUEIOS');
-  }, []);
-
-  const durationMs = useMemo(() => {
-    if (typeof window === 'undefined') return 8000;
-    const q = new URLSearchParams(window.location.search);
-    if (q.get('realtime') === '1') return 60_000;
-    return Number(q.get('ms') || 8000);
+    setPaused(q.get('paused') === '1');
+    if (q.get('realtime') === '1') setDurationMs(60_000);
+    else if (q.get('ms')) setDurationMs(Number(q.get('ms')));
   }, []);
 
   return (
@@ -78,6 +76,7 @@ export const Part4Demo: React.FC = () => {
           side={side}
           confirmLabel={label}
           durationMs={durationMs}
+          paused={paused}
           size={104}
           player={{ filled: 7, unlocked: 9, reserve: 2 }}
           rival={{ filled: 6, unlocked: 8, reserve: 1 }}

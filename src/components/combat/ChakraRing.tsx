@@ -15,13 +15,12 @@ export interface ChakraSideStats {
 export interface ChakraRingProps {
   player: ChakraSideStats;
   rival: ChakraSideStats;
-  /** Raio do anel de pips (px a partir do centro). Default 68. */
+  /** Raio do anel de pips (px). Default 68 — gen_b4prev. */
   radius?: number;
   /** Raio dos losangos de reserva (opção B). Default 88. */
   reserveRadius?: number;
-  /** Diâmetro da moeda central (só para layout). Default 104. */
+  /** Diâmetro da moeda central. Default 104 (CR=52). */
   coinSize?: number;
-  /** Mostra etiquetas `n/m`. Default true. */
   showLabels?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -62,7 +61,7 @@ function pipPositions(
   return out;
 }
 
-/** Opção B: 3 losangos no arco externo (105° / 90° / 75°). */
+/** Opção B: 3 losangos no arco externo (105° / 90° / 75°) — gen_b4prev. */
 function reservePositions(
   cx: number,
   cy: number,
@@ -87,6 +86,7 @@ const ChakraPip: React.FC<{
 }> = ({ x, y, state, tone }) => {
   const c1 = tone === 'rival' ? '#FF5A5A' : '#4FB3FF';
   const c2 = tone === 'rival' ? '#B91C1C' : '#1D4ED8';
+  const emptyBorder = tone === 'rival' ? '#FF5A5A99' : '#4FB3FF99';
   return (
     <div
       className={`chakra-pip chakra-pip--${state} chakra-pip--${tone}`}
@@ -96,6 +96,7 @@ const ChakraPip: React.FC<{
           top: y - 7,
           ['--pip-c1' as string]: c1,
           ['--pip-c2' as string]: c2,
+          ['--pip-empty-border' as string]: emptyBorder,
         } as React.CSSProperties
       }
       aria-hidden="true"
@@ -123,9 +124,9 @@ const ReserveDiamond: React.FC<{ x: number; y: number; on: boolean; size?: numbe
 );
 
 /**
- * Anel de chakra em volta da moeda (opção B).
- * Rival = arco superior vermelho; você = arco inferior azul.
- * Reserva = 3 losangos no arco externo. Slots além de `unlocked` ficam selados (X).
+ * Anel de chakra em volta da moeda (opção B — gen_b4prev.py::chakra_ring).
+ * Rival = arco superior vermelho; você = inferior azul.
+ * Reserva = 3 losangos no arco externo (R2=88).
  */
 export const ChakraRing: React.FC<ChakraRingProps> = ({
   player,
@@ -140,9 +141,14 @@ export const ChakraRing: React.FC<ChakraRingProps> = ({
 }) => {
   const me = clampStats(player);
   const rv = clampStats(rival);
-  const size = Math.max(coinSize + reserveRadius * 2 + 36, 200);
-  const cx = size / 2;
-  const cy = size / 2;
+
+  // Canvas largo o bastante p/ etiquetas em cy±152 (gen_b4prev B)
+  const padY = 160;
+  const padX = Math.max(reserveRadius + 24, 100);
+  const sizeW = coinSize + padX * 2;
+  const sizeH = coinSize + padY * 2;
+  const cx = sizeW / 2;
+  const cy = sizeH / 2;
 
   const layout = useMemo(() => {
     return {
@@ -153,10 +159,14 @@ export const ChakraRing: React.FC<ChakraRingProps> = ({
     };
   }, [cx, cy, radius, reserveRadius]);
 
+  // Posições de etiqueta idênticas ao mockup B: ty_r=cy-152, ty_m=cy+100+10
+  const labelRivalTop = cy - 152;
+  const labelPlayerTop = cy + 110;
+
   return (
     <div
       className={`chakra-ring${className ? ` ${className}` : ''}`}
-      style={{ width: size, height: size }}
+      style={{ width: sizeW, height: sizeH }}
       data-testid={testId}
       role="group"
       aria-label={`Chakra: você ${me.filled}/${me.unlocked} (reserva ${me.reserve}), rival ${rv.filled}/${rv.unlocked} (reserva ${rv.reserve})`}
@@ -189,17 +199,19 @@ export const ChakraRing: React.FC<ChakraRingProps> = ({
 
       {showLabels ? (
         <>
-          <div
-            className="chakra-label chakra-label--rival"
-            style={{ left: cx - 36, top: cy - reserveRadius - 40 }}
-          >
-            <span>{rv.filled}/{rv.unlocked}</span>
+          <div className="chakra-label chakra-label--rival" style={{ left: cx - 72, top: labelRivalTop }}>
+            <span>
+              <i>
+                {rv.filled}/{rv.unlocked}
+              </i>
+            </span>
           </div>
-          <div
-            className="chakra-label chakra-label--player"
-            style={{ left: cx - 36, top: cy + reserveRadius + 14 }}
-          >
-            <span>{me.filled}/{me.unlocked}</span>
+          <div className="chakra-label chakra-label--player" style={{ left: cx - 72, top: labelPlayerTop }}>
+            <span>
+              <i>
+                {me.filled}/{me.unlocked}
+              </i>
+            </span>
           </div>
         </>
       ) : null}

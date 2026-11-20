@@ -1,9 +1,12 @@
 .historico-scroll {
   position: relative;
   flex: none;
-  overflow: visible;
+  width: 214px;
+  height: 588px;
+  overflow: hidden;
   pointer-events: auto;
   user-select: text;
+  box-sizing: border-box;
 }
 
 .historico-paper {

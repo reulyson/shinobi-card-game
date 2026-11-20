@@ -23,11 +23,18 @@ export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(func
     [confirmLabel, isPlayer]
   );
 
+  // Botão a ~142px abaixo do centro da moeda (gen_b4prev B) → gap após o anel
   return (
     <div
       className={`turn-chakra-hud${className ? ` ${className}` : ''}`}
       data-testid="turn-chakra-hud"
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 0,
+        width: 210,
+      }}
     >
       <ChakraRing player={player} rival={rival} coinSize={coinSize}>
         <TurnCoin
@@ -41,12 +48,15 @@ export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(func
           hideButton
         />
       </ChakraRing>
-      <TurnCoinButton
-        active={isPlayer && !disabled}
-        disabled={disabled}
-        label={label}
-        onClick={onConfirm}
-      />
+      {/* cy+142 a partir do centro da moeda ≈ logo abaixo do anel (gen_b4prev B) */}
+      <div style={{ marginTop: -28, position: 'relative', zIndex: 5 }}>
+        <TurnCoinButton
+          active={isPlayer && !disabled}
+          disabled={disabled}
+          label={label}
+          onClick={onConfirm}
+        />
+      </div>
     </div>
   );
 });
