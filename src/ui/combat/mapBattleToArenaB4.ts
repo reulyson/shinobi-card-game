@@ -3,6 +3,7 @@ import { getUnitHealth, getUnitPower } from '../../engine/battleEngine';
 import type {
   BoardUnit,
   CombatPair,
+  Keyword,
   PlayerState,
   StackEntry,
   TurnPhase,
@@ -18,17 +19,29 @@ function baseStats(cardId: string): { power: number; vitality: number } {
   };
 }
 
-function shortChips(unit: BoardUnit): string[] {
-  const chips: string[] = [];
+/** Mapa Keyword do engine → ícone v7o (null = sem ícone no set). */
+const V7O_ICON: Partial<Record<Keyword, string>> = {
+  'Ataque Rápido': 'golpe-veloz',
+  Elusivo: 'furtivo',
+  'Visão Aguçada': 'visao-ninja',
+  Veneno: 'veneno',
+  Formação: 'formacao',
+};
+
+function keywordVisual(kw: Keyword): { id: string | null; label: string } {
+  return {
+    id: V7O_ICON[kw] ?? null,
+    label: getKeywordLabel(kw).toUpperCase(),
+  };
+}
+
+function fieldKeywords(unit: BoardUnit): NonNullable<ArenaCardRef['keywords']> {
+  const out: NonNullable<ArenaCardRef['keywords']> = [];
   for (const kw of unit.keywords) {
-    const label = getKeywordLabel(kw);
-    if (label === 'Golpe Veloz') chips.push('GOLPE VELOZ');
-    else if (label === 'Perfurante') chips.push('PERFURANTE');
-    else if (label === 'Clone') chips.push('CLONE');
-    else if (label === 'Furtivo') chips.push('FURTIVO');
-    if (chips.length >= 2) break;
+    out.push(keywordVisual(kw));
+    if (out.length >= 3) break;
   }
-  return chips;
+  return out;
 }
 
 function toCardRef(
@@ -48,7 +61,6 @@ function toCardRef(
     basePower: base.power,
     baseVitality: base.vitality,
     dying,
-    keywordChips: shortChips(src),
   };
   return {
     uid: unit.uid,
@@ -57,6 +69,7 @@ function toCardRef(
     owner: unit.owner,
     cost: card && 'cost' in card ? (card.cost as number) : undefined,
     column,
+    keywords: fieldKeywords(src),
     preview,
     dimmed: dying,
   };

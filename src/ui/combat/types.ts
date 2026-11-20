@@ -14,8 +14,6 @@ export interface FieldCardPreview {
   baseVitality: number;
   /** Unidade morre na prévia. */
   dying?: boolean;
-  /** Chips curtos sob a carta (já rotulados). */
-  keywordChips?: string[];
 }
 
 export type CardRank = 'gennin' | 'chuunin' | 'jounnin';
@@ -36,10 +34,11 @@ export interface ArenaCardRef {
   rank?: CardRank;
   /** Faixa de tipo (NINJA / UNIDADE). */
   band?: FieldBand;
-  /** Pílula de texto no box (ex.: CLONE, PERFURANTE). */
-  pill?: string;
-  /** Ícones de palavra-chave no box (ex.: golpe-veloz, furtivo). */
-  kwIcons?: string[];
+  /**
+   * Palavras-chave da carta (ícones v7o).
+   * 1 → pílula ícone+nome; 2+ → só ícones.
+   */
+  keywords?: Array<{ id: string | null; label: string }>;
   /** Coluna 0–4; omitido = preenchimento sequencial. */
   column?: number;
   preview?: FieldCardPreview;

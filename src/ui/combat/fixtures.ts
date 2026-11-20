@@ -6,7 +6,6 @@ function pv(
   vitality: number,
   basePower: number,
   baseVitality: number,
-  chips?: string[],
   dying?: boolean
 ): FieldCardPreview {
   return {
@@ -14,10 +13,18 @@ function pv(
     vitality,
     basePower,
     baseVitality,
-    keywordChips: chips,
     dying: dying ?? vitality <= 0,
   };
 }
+
+/** Ícones v7o — 1 kw = pílula ícone+nome; 2+ = só ícones. */
+const KW = {
+  golpe: { id: 'golpe-veloz', label: 'GOLPE VELOZ' },
+  furtivo: { id: 'furtivo', label: 'FURTIVO' },
+  /** Sem ícone v7o (kwtext no mock). */
+  clone: { id: null, label: 'CLONE' },
+  perfurante: { id: null, label: 'PERFURANTE' },
+} as const;
 
 const ART: Record<string, string> = {
   naruto: assetUrl('art/cards/naruto.jpg'),
@@ -72,8 +79,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 0,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
-        preview: pv(2, 0, 2, 2, undefined, true),
+        keywords: [KW.furtivo],
+        preview: pv(2, 0, 2, 2, true),
       }),
       unit({
         uid: 'e2',
@@ -85,9 +92,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 1,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
-        // STAT_EX Clone (1,2) − dmg 3 → (1,0)
-        preview: pv(1, 0, 2, 2, undefined, true),
+        keywords: [KW.clone],
+        preview: pv(1, 0, 2, 2, true),
       }),
       unit({
         uid: 'e3',
@@ -100,8 +106,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 5,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['furtivo', 'golpe-veloz'],
-        // STAT_EX (5,3) − dmg 2 → (5,1)
+        // 2 palavras-chave → só ícones
+        keywords: [KW.furtivo, KW.golpe],
         preview: pv(5, 1, 5, 5),
       }),
     ],
@@ -117,9 +123,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['golpe-veloz'],
-        // STAT_EX (3,4) vs base 3/2
-        preview: pv(3, 4, 3, 2, ['GOLPE VELOZ']),
+        keywords: [KW.golpe],
+        preview: pv(3, 4, 3, 2),
       }),
       unit({
         uid: 'p2',
@@ -132,9 +137,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        pill: 'PERFURANTE',
-        // STAT_EX (4,3) − dmg 2 → (4,1) vs base 3/3
-        preview: pv(4, 1, 3, 3, ['PERFURANTE +1']),
+        keywords: [KW.perfurante],
+        preview: pv(4, 1, 3, 3),
       }),
       unit({
         uid: 'p3',
@@ -146,8 +150,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 2,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
-        preview: pv(2, 0, 2, 2, undefined, true),
+        keywords: [KW.furtivo],
+        preview: pv(2, 0, 2, 2, true),
       }),
       unit({
         uid: 'p4',
@@ -159,8 +163,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 3,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
-        // put() usa STAT_EX (1,2)
+        keywords: [KW.clone],
         preview: pv(1, 2, 2, 2),
       }),
     ],
@@ -187,7 +190,6 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     combatBusy: true,
   },
 
-  // S5 — PREVIEW (ataque do rival).
   preview: {
     round: 4,
     rivalVitality: { current: 18 },
@@ -210,8 +212,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 5,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['furtivo', 'golpe-veloz'],
-        preview: pv(5, 3, 5, 5, ['GOLPE VELOZ']),
+        keywords: [KW.furtivo, KW.golpe],
+        preview: pv(5, 3, 5, 5),
       }),
       unit({
         uid: 'e2',
@@ -224,8 +226,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        pill: 'PERFURANTE',
-        preview: pv(4, 1, 3, 3, ['PERFURANTE +1']),
+        keywords: [KW.perfurante],
+        preview: pv(4, 1, 3, 3),
       }),
       unit({
         uid: 'e3',
@@ -237,8 +239,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 2,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
-        preview: pv(1, 0, 2, 2, undefined, true),
+        keywords: [KW.clone],
+        preview: pv(1, 0, 2, 2, true),
       }),
       unit({
         uid: 'e4',
@@ -250,7 +252,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 3,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
+        keywords: [KW.furtivo],
         preview: pv(2, 2, 2, 2),
       }),
     ],
@@ -265,8 +267,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 0,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
-        preview: pv(2, 0, 2, 2, undefined, true),
+        keywords: [KW.furtivo],
+        preview: pv(2, 0, 2, 2, true),
       }),
       unit({
         uid: 'p2',
@@ -278,8 +280,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 1,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
-        preview: pv(1, 0, 2, 2, undefined, true),
+        keywords: [KW.clone],
+        preview: pv(1, 0, 2, 2, true),
       }),
       unit({
         uid: 'p3',
@@ -292,8 +294,8 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['golpe-veloz'],
-        preview: pv(3, 0, 3, 2, undefined, true),
+        keywords: [KW.golpe],
+        preview: pv(3, 0, 3, 2, true),
       }),
     ],
     rivalOculto: 2,
@@ -319,7 +321,6 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
     combatBusy: true,
   },
 
-  // S7 — pilha cheia em combate (miniaturas 36px).
   pilha: {
     round: 6,
     rivalVitality: { current: 18 },
@@ -340,7 +341,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 2,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
+        keywords: [KW.furtivo],
         preview: pv(2, 2, 2, 2),
       }),
     ],
@@ -356,7 +357,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 5,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['furtivo', 'golpe-veloz'],
+        keywords: [KW.furtivo, KW.golpe],
         preview: pv(5, 3, 5, 5),
       }),
       unit({
@@ -370,7 +371,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        pill: 'PERFURANTE',
+        keywords: [KW.perfurante],
         preview: pv(4, 3, 3, 3),
       }),
       unit({
@@ -383,7 +384,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 2,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
+        keywords: [KW.clone],
         preview: pv(1, 2, 2, 2),
       }),
       unit({
@@ -396,7 +397,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 3,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
+        keywords: [KW.furtivo],
         preview: pv(2, 2, 2, 2),
       }),
       unit({
@@ -409,7 +410,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 4,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
+        keywords: [KW.clone],
         preview: pv(1, 2, 2, 2),
       }),
     ],
@@ -424,7 +425,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 0,
         cost: 2,
         band: 'UNIDADE',
-        kwIcons: ['furtivo'],
+        keywords: [KW.furtivo],
         preview: pv(2, 2, 2, 2),
       }),
       unit({
@@ -437,7 +438,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         column: 1,
         cost: 1,
         band: 'TOKEN',
-        pill: 'CLONE',
+        keywords: [KW.clone],
         preview: pv(1, 2, 2, 2),
       }),
       unit({
@@ -451,7 +452,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        kwIcons: ['golpe-veloz'],
+        keywords: [KW.golpe],
         preview: pv(3, 4, 3, 2),
       }),
       unit({
@@ -465,7 +466,7 @@ export const ARENA_B4_FIXTURES: Record<ArenaB4DemoId, ArenaB4Model> = {
         cost: 3,
         rank: 'gennin',
         band: 'NINJA',
-        pill: 'PERFURANTE',
+        keywords: [KW.perfurante],
         preview: pv(4, 3, 3, 3),
       }),
     ],

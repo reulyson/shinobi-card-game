@@ -89,6 +89,43 @@ function CostOrb({ cost }: { cost: number }) {
   );
 }
 
+/**
+ * Regra v7o: 1 palavra-chave → pílula ícone+nome; 2+ → só ícones.
+ */
+function KeywordRow({
+  keywords,
+}: {
+  keywords: NonNullable<ArenaCardRef['keywords']>;
+}) {
+  if (keywords.length === 0) return null;
+
+  if (keywords.length === 1) {
+    const kw = keywords[0]!;
+    return (
+      <div className="fc-pill" data-kw-count="1">
+        {kw.id ? <img src={assetUrl(`art/icons/${kw.id}.svg`)} alt="" width={14} height={14} /> : null}
+        <span>{kw.label}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fc-tiles" data-kw-count={keywords.length}>
+      {keywords.map((kw, i) =>
+        kw.id ? (
+          <div key={`${kw.id}-${i}`} className="fc-tile" title={kw.label}>
+            <img src={assetUrl(`art/icons/${kw.id}.svg`)} alt="" />
+          </div>
+        ) : (
+          <div key={`txt-${i}`} className="fc-pill" title={kw.label}>
+            <span>{kw.label}</span>
+          </div>
+        )
+      )}
+    </div>
+  );
+}
+
 export function FieldCard({
   card,
   preview,
@@ -100,8 +137,7 @@ export function FieldCard({
   const pv = preview ?? card.preview;
   const dying = Boolean(pv?.dying || (pv && pv.vitality <= 0));
   const artPos = card.artPos ?? '50% 25%';
-  const chips = pv?.keywordChips?.filter(Boolean) ?? [];
-  const icons = card.kwIcons ?? [];
+  const keywords = card.keywords ?? [];
 
   if (card.faceDown) {
     return (
@@ -158,9 +194,6 @@ export function FieldCard({
     );
   }
 
-  const chipTone = (label: string) =>
-    /golpe\s*veloz/i.test(label) ? 'fc-chip--ok' : '';
-
   const face = (
     <div className={`fc-card ${rankClass(card.rank)}`}>
       <div className="fc-clip">
@@ -180,17 +213,7 @@ export function FieldCard({
               {card.name}
             </div>
             <div className="fc-rule" />
-            {card.pill ? (
-              <div className="fc-pill">{card.pill}</div>
-            ) : icons.length > 0 ? (
-              <div className="fc-tiles">
-                {icons.map((id) => (
-                  <div key={id} className="fc-tile">
-                    <img src={assetUrl(`art/icons/${id}.svg`)} alt="" />
-                  </div>
-                ))}
-              </div>
-            ) : null}
+            <KeywordRow keywords={keywords} />
           </div>
         </div>
       </div>
@@ -257,16 +280,6 @@ export function FieldCard({
             </svg>
           </div>
         </>
-      )}
-
-      {chips.length > 0 && !dying && (
-        <div className="fc-chip" style={{ left: chips[0] && /golpe/i.test(chips[0]) ? 9 : 5, transform: 'none' }}>
-          {chips.slice(0, 2).map((chip) => (
-            <span key={chip} className={chipTone(chip)}>
-              {chip}
-            </span>
-          ))}
-        </div>
       )}
     </button>
   );
