@@ -10,7 +10,7 @@
  * - Kai (efeito de Jutsu): remove Genjutsu ou Selado de um aliado.
  * - Copiar: quando um Jutsu rival resolve (não Exclusivo, não cópia), cria uma cópia Fugaz na mão
  *   (1 vez por rodada por jogador). A cópia que ficar na mão é descartada no fim da rodada.
- * - Visão Ninja (ajuste): também vê as Armadilhas ocultas do rival.
+ * - Visão Ninja (ajuste): também vê as cartas Oculto do rival.
  *
  * Palavras-chave cortadas neste grupo: Instável (Fugaz), Pilhagem (Saquear), Iniciativa (Amanhecer),
  * Sequência (Anoitecer), Emboscada (Espreitar) e Batedor (Patrulheiro). Os bônus de cartas que as usavam

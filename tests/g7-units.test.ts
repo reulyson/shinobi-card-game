@@ -78,7 +78,7 @@ if (existsSync(specPath)) {
 // ---------- Efeitos de Entrada (todas as 44, dos dois lados) ----------
 const mk = (ids: string[], side: 'player' | 'enemy'): PlayerState => {
   const s = createInitialPlayerState([]);
-  return { ...s, deck: ['equip_shuriken', 'jutsu_rasengan', 'unit_anbu_konoha'], hand: ['jutsu_rasengan', 'unit_tazuna'], board: ids.map((id) => createBoardUnit(getCardById(id) as UnitCardDef, side, 1, A)) };
+  return { ...s, deck: ['jutsu_fuma_shuriken', 'jutsu_rasengan', 'unit_anbu_konoha'], hand: ['jutsu_rasengan', 'unit_tazuna'], board: ids.map((id) => createBoardUnit(getCardById(id) as UnitCardDef, side, 1, A)) };
 };
 let crashes = 0;
 const tokenCount: Record<string, number> = {
@@ -146,9 +146,9 @@ ok(crashes === 0, 'Entrada das 44 Unidades (jogador e rival) sem erro, Tokens ce
   ok(r.opp.hand.length === 1 && Object.keys(r.opp.cursedHandIndices).length === 0, `Ibiki: rival descartou a carta de menor custo e a marca de maldição saiu junto (sobrou ${r.opp.hand.join(',')})`);
   r = run('unit_mizuki', empty, foe);
   const mz = r.caster.board.find((u) => u.uid === r.nu.uid)!;
-  ok(mz.equippedCardId === 'equip_shuriken' && !r.caster.deck.includes('equip_shuriken'), 'Mizuki equipa a Fūma Shuriken do deck');
+  ok(r.caster.hand.includes('jutsu_fuma_shuriken') && !r.caster.deck.includes('jutsu_fuma_shuriken'), 'Mizuki pega a Fūma Shuriken (Taijutsu) do deck para a mão');
   r = run('unit_sasame_fuma', empty, foe);
-  ok(r.caster.hand.includes('equip_shuriken') && (r.caster.fleetingHand ?? []).includes('equip_shuriken'), 'Sasame cria Fūma Shuriken Fugaz na mão');
+  ok(r.caster.hand.includes('jutsu_fuma_shuriken') && (r.caster.fleetingHand ?? []).includes('jutsu_fuma_shuriken'), 'Sasame cria Fūma Shuriken Fugaz na mão');
   r = run('unit_ebisu', mk(['naruto_uzumaki'], 'player'), foe);
   ok(r.caster.hand.length === 3, 'Ebisu com Gennin em campo compra 1');
   r = run('unit_konohamaru', mk(['naruto_uzumaki'], 'player'), foe);
@@ -158,7 +158,7 @@ ok(crashes === 0, 'Entrada das 44 Unidades (jogador e rival) sem erro, Tokens ce
   ok(r.caster.board.every((u) => u.attack === (getCardById(u.cardId) as UnitCardDef).attack + 1), 'Ranmaru + Raiga: ambos +1/+1');
   const lb = logs.length;
   r = run('unit_bikochu', empty, { ...foe, traps: [{ uid: 't', cardId: 'trap_selo_explosivo', owner: 'enemy', armedRound: 1 }] });
-  ok(logs.slice(lb).some((l) => l.text.includes('farejou: o rival armou')), 'Bikōchū revela a Armadilha (log só para o jogador)');
+  ok(logs.slice(lb).some((l) => l.text.includes('farejou: o rival armou')), 'Bikōchū revela o Oculto (log só para o jogador)');
 }
 
 // Ao atacar, Início/Fim da rodada, Ao morrer, golpes
@@ -179,14 +179,14 @@ ok(crashes === 0, 'Entrada das 44 Unidades (jogador e rival) sem erro, Tokens ce
   a2 = atk(a, [idate.uid, anko.uid]);
   ok(a2.board[1].tempAttackBonus === 0 && a2.board[2].tempAttackBonus === 3 && a2.hp === a.hp - 2, `Anko: paga 2 de Vida, +3/+0; Idate acompanhado sem bônus (hp ${a2.hp})`);
   const low = atk({ ...a, hp: 4 }, [anko.uid]);
-  ok(low.hp === 4 && low.board[2].tempAttackBonus === 0, 'Anko com Portão 4: não paga');
+  ok(low.hp === 4 && low.board[2].tempAttackBonus === 0, 'Anko com Vitalidade 4: não paga');
 
   let p = mk(['unit_policia_uchiha'], 'player');
   p = runRecurringTrigger('inicio_rodada', p, d, { round: 2, arenaId: A, logs }).owner;
   ok(p.board[0].hasBarrier, 'Policial Uchiha ganha Substituição no início da rodada');
 
   const t0 = { ...mk(['unit_tazuna', 'naruto_uzumaki'], 'player'), hp: 15 };
-  ok(runRecurringTrigger('fim_rodada', t0, d, { round: 1, arenaId: A, logs }).owner.hp === 16, 'Tazuna com Naruto (Time 7): cura 1 do Portão no fim da rodada');
+  ok(runRecurringTrigger('fim_rodada', t0, d, { round: 1, arenaId: A, logs }).owner.hp === 16, 'Tazuna com Naruto (Time 7): cura 1 da Vitalidade no fim da rodada');
   const t1 = { ...mk(['unit_tazuna', 'unit_anbu_konoha'], 'player'), hp: 15 };
   ok(runRecurringTrigger('fim_rodada', t1, d, { round: 1, arenaId: A, logs }).owner.hp === 15, 'Tazuna sem Ninja do Time 7: não cura');
   let sz = mk(['unit_shizune', 'unit_capitao_jonin'], 'player');

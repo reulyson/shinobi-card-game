@@ -145,7 +145,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
   unit({
     id: 'unit_tazuna', name: 'Tazuna', title: 'Construtor de Pontes', faction: 'Neutro', role: 'Genin',
     cost: 1, attack: 1, health: 2, keywords: ['Desafiador'],
-    abilityText: 'Fim da rodada: se houver um Ninja do Time 7 em campo, cure 1 do seu Portão.',
+    abilityText: 'Fim da rodada: se houver um Ninja do Time 7 em campo, cure 1 da sua Vitalidade.',
     recurring: [
       { trigger: 'fim_rodada', condition: { allyNinjaFaction: 'Time 7' }, effects: [{ type: 'gate_heal', amount: 1 }] },
     ],
@@ -162,7 +162,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
   unit({
     id: 'unit_bikochu', name: 'Besouro Bikōchū', title: 'Farejador do Time 8', faction: 'Time 8', role: 'Invocação',
     cost: 1, attack: 1, health: 1,
-    abilityText: 'Entrada: revele 1 Armadilha oculta do rival (só para você).',
+    abilityText: 'Entrada: revele 1 carta Oculto do rival (só para você).',
     wikiTitle: 'Bik%C5%8Dch%C5%AB', img: IMG.bikochu, aniListSearch: 'Bikochu',
     dna: { skinTone: '#1E293B', hairColor: '#0F172A', hairStyle: 'dark_hood', hasHeadband: false, outfitColor: '#334155', accentColor: '#22C55E', evolvedAura: '#22C55E' },
   }),
@@ -208,7 +208,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
     dna: { skinTone: '#E2E8F0', hairColor: '#475569', hairStyle: 'dark_hood', outfitColor: '#57534E', accentColor: '#A855F7', evolvedAura: '#A855F7' },
   }),
   unit({
-    id: 'unit_kotetsu_izumo', name: 'Kotetsu & Izumo', title: 'Guardas do Portão', faction: 'Hokages', role: 'Chunin',
+    id: 'unit_kotetsu_izumo', name: 'Kotetsu & Izumo', title: 'Guardas da Vitalidade', faction: 'Hokages', role: 'Chunin',
     cost: 2, attack: 2, health: 3, keywords: ['Desafiador'],
     abilityText: 'Entrada: crie Izumo 1/2 (Provocar).',
     wikiTitle: 'Kotetsu_Hagane', img: IMG.kotetsu, aniListSearch: 'Kotetsu Hagane',
@@ -238,7 +238,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
   unit({
     id: 'unit_mizuki', name: 'Mizuki', title: 'Instrutor Traidor', faction: 'Time 7', role: 'Chunin',
     cost: 2, attack: 2, health: 2,
-    abilityText: 'Entrada: equipe 1 Fūma Shuriken do deck (se houver).',
+    abilityText: 'Entrada: pegue 1 Fūma Shuriken do deck e coloque na mão (se houver).',
     wikiTitle: 'Mizuki', img: IMG.mizuki,
     dna: { hairColor: '#CBD5E1', hairStyle: 'silver_ponytail' },
   }),
@@ -290,7 +290,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
   unit({
     id: 'unit_sasame_fuma', name: 'Sasame Fūma', title: 'Herdeira do Clã Fūma', faction: 'Som & Sannin', role: 'Genin',
     cost: 2, attack: 2, health: 2,
-    abilityText: 'Entrada: crie 1 Fūma Shuriken Fugaz (Equipamento) na mão.',
+    abilityText: 'Entrada: crie 1 Fūma Shuriken Fugaz (Taijutsu) na mão.',
     wikiTitle: 'Sasame', img: IMG.sasame,
     dna: { hairColor: '#EA580C', hairStyle: 'orange_spiky', outfitColor: '#1E3A8A' },
   }),
@@ -364,7 +364,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
   unit({
     id: 'unit_anko_mitarashi', name: 'Anko Mitarashi', title: 'Examinadora da Floresta da Morte', faction: 'Hokages', role: 'Jounin',
     cost: 3, attack: 3, health: 2, keywords: ['Veneno'],
-    abilityText: 'Veneno 1 (quem ela golpeia fica envenenado). Investida (Selo Amaldiçoado): 1 vez por rodada, se o Portão tiver 5+, pague 2 de Vida: +3/+0.',
+    abilityText: 'Veneno 1 (quem ela golpeia fica envenenado). Investida (Selo Amaldiçoado): 1 vez por rodada, se a Vitalidade tiver 5+, pague 2 de Vida: +3/+0.',
     venenoX: 1,
     recurring: [
       {
@@ -372,7 +372,7 @@ export const UNIT_CARDS_G7: UnitCardDef[] = [
         oncePerRound: true,
         condition: { minOwnGate: 4 },
         effects: [{ type: 'pay_gate', amount: 2 }, { type: 'buff', target: 'self', attack: 3, health: 0 }],
-        text: 'Selo Amaldiçoado: pague 2 de Vida do seu Portão e ganhe +3/+0 nesta rodada (1 vez por rodada).',
+        text: 'Selo Amaldiçoado: pague 2 de Vida da sua Vitalidade e ganhe +3/+0 nesta rodada (1 vez por rodada).',
       },
     ],
     wikiTitle: 'Anko_Mitarashi', img: IMG.anko,

@@ -9,11 +9,19 @@ import {
   EQUIPMENT_CARDS,
   JUTSU_CARDS,
   NINJA_CARDS,
-  TRAP_CARDS,
+  OCULTO_JUTSU_CARDS,
   UNIT_CARDS,
   getCardById,
 } from '../data/cards';
-import { ArenaId, CardDef, formatKeywords, JutsuSpeed, SPEED_DISPLAY_NAME, TeamFaction } from '../types/game';
+import {
+  ArenaId,
+  CardDef,
+  formatKeywords,
+  isOcultoJutsu,
+  JutsuSpeed,
+  SPEED_DISPLAY_NAME,
+  TeamFaction,
+} from '../types/game';
 import { CardView } from './CardView';
 import { CardInspector } from './CardInspector';
 
@@ -45,7 +53,7 @@ type TypeFilter =
   | 'Ninja'
   | 'Unidade'
   | 'Equipamento'
-  | 'Armadilha'
+  | 'Oculto'
   | JutsuSpeed;
 
 const TYPE_FILTERS: { id: TypeFilter; label: string }[] = [
@@ -53,11 +61,12 @@ const TYPE_FILTERS: { id: TypeFilter; label: string }[] = [
   { id: 'Ninja', label: 'Ninjas (Promoção)' },
   { id: 'Unidade', label: 'Unidades' },
   { id: 'Equipamento', label: 'Equipamentos' },
-  { id: 'Armadilha', label: 'Armadilhas' },
+  { id: 'Oculto', label: 'Ocultos' },
   { id: 'Imediata', label: SPEED_DISPLAY_NAME.Imediata },
   { id: 'Rapida', label: SPEED_DISPLAY_NAME.Rapida },
   { id: 'Focada', label: SPEED_DISPLAY_NAME.Focada },
   { id: 'Lenta', label: SPEED_DISPLAY_NAME.Lenta },
+  { id: 'Oculta', label: SPEED_DISPLAY_NAME.Oculta },
 ];
 
 const MAX_DECK_SIZE = 24;
@@ -81,12 +90,13 @@ export const DeckBuilderView: React.FC<DeckBuilderViewProps> = ({
       if (typeFilter === 'Ninja' && card.kind !== 'ninja') return false;
       if (typeFilter === 'Unidade' && card.kind !== 'unidade') return false;
       if (typeFilter === 'Equipamento' && card.kind !== 'equipamento') return false;
-      if (typeFilter === 'Armadilha' && card.kind !== 'armadilha') return false;
+      if (typeFilter === 'Oculto' && !isOcultoJutsu(card)) return false;
       if (
         (typeFilter === 'Imediata' ||
           typeFilter === 'Rapida' ||
           typeFilter === 'Focada' ||
-          typeFilter === 'Lenta') &&
+          typeFilter === 'Lenta' ||
+          typeFilter === 'Oculta') &&
         (card.kind !== 'jutsu' || card.speed !== typeFilter)
       ) {
         return false;
@@ -97,7 +107,7 @@ export const DeckBuilderView: React.FC<DeckBuilderViewProps> = ({
         const text =
           card.kind === 'jutsu'
             ? `${card.name} ${card.effectText} ${SPEED_DISPLAY_NAME[card.speed]} ${card.category} ${card.faction}`
-            : card.kind === 'armadilha' || card.kind === 'equipamento'
+            : card.kind === 'equipamento'
               ? `${card.name} ${card.effectText} ${card.faction}`
               : `${card.name} ${card.title} ${card.abilityText} ${formatKeywords(card.keywords, ' ')} ${card.faction}`;
         if (!text.toLowerCase().includes(q)) return false;
@@ -175,7 +185,7 @@ export const DeckBuilderView: React.FC<DeckBuilderViewProps> = ({
               {mode === 'collection' ? 'Grimório Ninja' : 'Construtor de Deck'}
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              {ALL_CARDS.length} cartas · {NINJA_CARDS.length} Ninjas · {UNIT_CARDS.length} Unidades · {JUTSU_CARDS.length} Jutsus · {TRAP_CARDS.length} Armadilhas · {EQUIPMENT_CARDS.length} Equipamentos
+              {ALL_CARDS.length} cartas · {NINJA_CARDS.length} Ninjas · {UNIT_CARDS.length} Unidades · {JUTSU_CARDS.length + OCULTO_JUTSU_CARDS.length} Jutsus ({OCULTO_JUTSU_CARDS.length} Oculto armáveis) · {EQUIPMENT_CARDS.length} Equipamentos
             </p>
           </div>
 

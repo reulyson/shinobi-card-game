@@ -90,7 +90,7 @@ set(medico, [{ trigger: 'ultimo_desejo', effects: [{ type: 'gate_heal', amount: 
   const opp = st([foe], { hp: 10 });
   const r = processBoardDeaths(owner, opp, R, A, logs);
   const av = r.ownerState.board.find((u: any) => u.uid === avenger.uid)!;
-  ok(r.ownerState.hp === 12, 'Último Desejo: Portão curado em 2');
+  ok(r.ownerState.hp === 12, 'Último Desejo: Vitalidade curado em 2');
   ok(av.attack === avenger.attack + 1 && av.maxHealth === avenger.maxHealth + 1, 'Vingança: +1/+1 permanente no aliado');
   ok(r.oppState.board.length === 0 && r.oppState.hp === 12, 'Morte em cadeia: inimigo morreu pela Vingança e o Último Desejo dele disparou');
   ok(logs.some((l) => l.text.startsWith('Vingança · ')) && logs.some((l) => l.text.startsWith('Último Desejo · ')), 'logs de Vingança e Último Desejo');
@@ -114,15 +114,15 @@ set(anbu, [{ trigger: 'ao_golpear', effects: [{ type: 'gate_heal', amount: 1 }] 
   const b2 = res.enemy.board.find((u: any) => u.uid === blk.uid)!;
   ok(a2.health === 3 - 1 - 1, `Ao bloquear: atacante sofreu 1 antes do golpe (+1 do golpe) → ${a2.health}`);
   ok(b2.health === 5 - 2, 'golpe normal após Ao bloquear');
-  ok(res.player.hp === 11, 'Ao golpear: atacante curou 1 do Portão');
+  ok(res.player.hp === 11, 'Ao golpear: atacante curou 1 da Vitalidade');
   ok(Boolean(a2.actedThisRound) && Boolean(b2.actedThisRound), 'atacante e bloqueador marcados como "agiu"');
   // Ao bloquear mata o atacante → sem golpes
   const frag = mk(anbu, 'player', { attack: 4, health: 1, maxHealth: 1 });
   const res2 = resolveCombatPairs([{ attackerUid: frag.uid, blockerUid: blk.uid }], 'player', st([frag], { hp: 10 }), st([blk], { hp: 20 }), A, R);
   ok(res2.player.board.length === 0 && res2.enemy.board[0].health === 5 && res2.player.hp === 10, 'Ao bloquear que mata o atacante cancela o combate do par');
-  // Golpe no Portão (sem bloqueio)
+  // Golpe na Vitalidade (sem bloqueio)
   const res3 = resolveCombatPairs([{ attackerUid: att.uid, blockerUid: null }], 'player', st([att], { hp: 10 }), st([], { hp: 20 }), A, R);
-  ok(res3.player.hp === 11 && res3.enemy.hp === 18, 'Ao golpear também dispara golpeando o Portão');
+  ok(res3.player.hp === 11 && res3.enemy.hp === 18, 'Ao golpear também dispara golpeando a Vitalidade');
 }
 
 // 5) Fim da rodada e Repouso
@@ -158,7 +158,7 @@ setNinja(naruto, { 2: [{ trigger: 'ao_atacar', effects: [{ type: 'gate_damage', 
   const c = { ...g, evolutionLevel: 2 };
   ok(getRecurringAbilities(g).length === 0 && getRecurringAbilities(c).length === 1, 'Ninja: habilidades por patente (Gennin 0, Chuunin 1)');
   const r = runRecurringTrigger('ao_atacar', st([c]), st([], { hp: 20 }), { round: R, arenaId: A, sourceUids: [c.uid] });
-  ok(r.opp.hp === 19 && r.owner.damagedEnemyNexusThisRound, 'Investida: 1 de dano ao Portão rival');
+  ok(r.opp.hp === 19 && r.owner.damagedEnemyNexusThisRound, 'Investida: 1 de dano à Vitalidade rival');
   ok(runRecurringTrigger('ao_atacar', st([c]), st([], { hp: 20 }), { round: R, arenaId: A, sourceUids: [] }).fired === 0, 'Investida só para atacantes declarados');
   const eq: any = EQUIPMENT_CARDS[0];
   const prev = eq.recurring;
