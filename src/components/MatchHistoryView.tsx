@@ -31,6 +31,7 @@ const SPEED_ICON: Record<JutsuSpeed, React.ReactNode> = {
   Lenta: <Hourglass className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
   Imediata: <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
   Focada: <Sparkles className="w-3.5 h-3.5 text-teal-400 shrink-0" />,
+  Oculta: <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />,
 };
 
 function formatDateTime(iso: string): string {
@@ -392,7 +393,7 @@ export const MatchHistoryView: React.FC<MatchHistoryViewProps> = ({ onStartMatch
                           <span className="font-mono-num">{formatDateTime(match.playedAt)}</span>
                           <span className="text-slate-600">·</span>
                           <span className="font-mono-num">
-                            Portão: Você {match.playerHpRemaining} × Rival {match.enemyHpRemaining}
+                            Vitalidade: Você {match.playerHpRemaining} × Rival {match.enemyHpRemaining}
                           </span>
                           {topMatchJutsuName && (
                             <>

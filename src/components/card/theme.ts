@@ -44,7 +44,6 @@ export const TYPE_BAND: Record<string, { label: string; color: string }> = {
   unidade: { label: 'UNIDADE', color: '#64748B' },
   token: { label: 'UNIDADE', color: '#0F766E' },
   jutsu: { label: 'JUTSU', color: '#0EA5E9' },
-  armadilha: { label: 'JUTSU', color: '#0EA5E9' },
   equipamento: { label: 'EQUIPAMENTO', color: '#475569' },
 };
 
@@ -87,6 +86,7 @@ const SPEED_ICON: Record<JutsuSpeed, CardIconId> = {
   Lenta: 'preparado',
   Imediata: 'rapido',
   Focada: 'ampulheta',
+  Oculta: 'oculto',
 };
 
 /** Mapeia symbolType / nome existente → selo de família (sem alterar dados). */

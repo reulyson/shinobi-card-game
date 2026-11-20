@@ -97,7 +97,7 @@ const def = (id: string) => getCardById(id) as NinjaCardDef;
   const haku = { ...unit('haku', 'player', 2), health: 0 };
   const st = { ...base(), hp: 10, board: [haku] };
   const d = processBoardDeaths(st, base(), 1, A, []);
-  ok(d.ownerState.hp === 13, `Haku Chuunin Último Desejo: cura 3 do Portão (hp ${d.ownerState.hp})`);
+  ok(d.ownerState.hp === 13, `Haku Chuunin Último Desejo: cura 3 da Vitalidade (hp ${d.ownerState.hp})`);
   const tay = { ...unit('tayuya', 'player', 2), health: 0 };
   const d2 = processBoardDeaths({ ...base(), board: [tay] }, { ...base(), board: [unit('unit_anbu_konoha', 'enemy')] }, 1, A, []);
   ok(d2.oppState.board[0].stunned, 'Tayuya Chuunin Último Desejo: paralisa 1 inimigo');

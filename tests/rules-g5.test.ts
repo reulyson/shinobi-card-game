@@ -77,7 +77,7 @@ test('ícone e ajuda curta para toda palavra-chave (inclui as 4 novas)', () => {
     assert.ok((KEYWORD_SHORT_HELP[k] ?? '').length > 10, `sem ajuda: ${k}`);
   }
   for (const k of ['Veneno', 'Parceiro', 'Formação', 'Copiar'] as Keyword[]) assert.ok(k in KEYWORD_DISPLAY_NAME);
-  assert.match(KEYWORD_SHORT_HELP['Visão Aguçada'], /Armadilhas/);
+  assert.match(KEYWORD_SHORT_HELP['Visão Aguçada'], /Ocultos/);
 });
 
 // ---------------------------------------------------------------- Formação

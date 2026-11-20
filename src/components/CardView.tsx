@@ -179,6 +179,7 @@ export const CardView: React.FC<CardViewProps> = ({
         : triggerGlow ?? unit?.activatedTrigger ?? null;
 
   const liftClass = selected ? '-translate-y-2' : playable ? 'hover:-translate-y-2' : '';
+
   const fxClass =
     fxState?.type === 'lunge-up'
       ? 'animate-lunge-up'

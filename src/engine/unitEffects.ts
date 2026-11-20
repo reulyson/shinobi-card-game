@@ -32,13 +32,17 @@ import {
   summonPartner,
   summonUnitByEffect,
 } from './battleEngine';
+import { MAX_HAND_SIZE } from './limits';
 
-/** Fūma Shuriken: hoje Equipamento; no Grupo 8 vira Taijutsu Rápido (decisão 2026-11-19). */
-export const FUMA_SHURIKEN_IDS = ['equip_shuriken', 'jutsu_fuma_shuriken'] as const;
-/** Espada do Deus do Trovão (Equipamento do Grupo 8). Enquanto não existir, Aoi não cria nada. */
+/** Fūma Shuriken: Taijutsu Rápido (Grupo 8). equip_shuriken removido. */
+export const FUMA_SHURIKEN_IDS = ['jutsu_fuma_shuriken'] as const;
+/**
+ * TODO Grupo 8: Espada do Deus do Trovão / Samehada / Pergaminho Proibido / Bastão Adamantino
+ * — nomes aprovados, textos NÃO aprovados. Não adicionar cartas.
+ */
 export const THUNDER_SWORD_ID = 'equip_espada_deus_trovao';
 
-const MAX_HAND = 9;
+const MAX_HAND = MAX_HAND_SIZE;
 
 type Side = 'player' | 'enemy';
 
@@ -270,10 +274,10 @@ export function applyUnitEntryEffect(ctx: UnitEntryContext): { caster: PlayerSta
     case 'unit_bikochu': {
       const trap = opp.traps[0];
       if (!trap) {
-        log(logs, round, side, card.id, 'Bikōchū não farejou nenhuma Armadilha.');
+        log(logs, round, side, card.id, 'Bikōchū não farejou nenhum Oculto.');
         break;
       }
-      // Só o dono do Bikōchū vê o nome da Armadilha.
+      // Só o dono do Bikōchū vê o nome do Oculto.
       log(
         logs,
         round,
@@ -281,7 +285,7 @@ export function applyUnitEntryEffect(ctx: UnitEntryContext): { caster: PlayerSta
         card.id,
         side === 'player'
           ? `Bikōchū farejou: o rival armou ${cardName(trap.cardId)}.`
-          : 'O Bikōchū do rival farejou uma das suas Armadilhas.',
+          : 'O Bikōchū do rival farejou uma das suos Ocultos.',
         { cine: side === 'player' ? 'effect' : undefined }
       );
       break;

@@ -62,7 +62,6 @@ function abilityTextFor(card: CardDef, rank: 1 | 2 | 3): string {
       raw = card.abilityText;
       break;
     case 'jutsu':
-    case 'armadilha':
     case 'equipamento':
       raw = card.effectText;
       break;
@@ -185,7 +184,6 @@ function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
     case 'equipamento':
       return 'EQUIPAMENTO';
     case 'jutsu':
-    case 'armadilha':
       return null;
     default: {
       const _never: never = card;
@@ -397,17 +395,11 @@ export const CardFace: React.FC<CardFaceProps> = ({
     levelProgress ??
       (unit && unit.evolutionLevel === rank ? unit.evolutionProgress : undefined),
   );
-  const family =
-    card.kind === 'jutsu'
-      ? jutsuFamilyOf(card)
-      : card.kind === 'armadilha'
-        ? ('selo-ninjutsu' as const)
-        : null;
+  const family = card.kind === 'jutsu' ? jutsuFamilyOf(card) : null;
   const traits = shortTraits(card, rank);
 
-  const isJutsuFace =
-    (card.kind === 'jutsu' || card.kind === 'armadilha') && !field;
-  const isTrap = card.kind === 'armadilha';
+  const isTrap = card.kind === 'jutsu' && card.speed === 'Oculta';
+  const isJutsuFace = card.kind === 'jutsu' && !field;
   const isLor = card.kind === 'ninja';
   const isEquip = card.kind === 'equipamento';
   const isUnitPlate =
@@ -461,7 +453,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
     !band.gold && card.kind === 'token' && 'b-TOKEN',
     !band.gold && card.kind === 'ninja' && 'b-NINJA',
     !band.gold && card.kind === 'unidade' && 'b-UNIDADE',
-    !band.gold && (card.kind === 'jutsu' || card.kind === 'armadilha') && 'b-JUTSU',
+    !band.gold && card.kind === 'jutsu' && 'b-JUTSU',
     !band.gold && card.kind === 'equipamento' && 'b-EQUIP',
   ]
     .filter(Boolean)
@@ -541,27 +533,26 @@ export const CardFace: React.FC<CardFaceProps> = ({
               <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
                 {card.name}
               </div>
-              {/* Jutsu/armadilha: sem linha sob o nome (v7o — só a pílula de velocidade) */}
-              {!isJutsuFace && !isTrap && <div className="rule" />}
+              {/* Jutsu: sem linha sob o nome (v7o — só a pílula de velocidade / OCULTO) */}
+              {!isJutsuFace && <div className="rule" />}
 
               {!field &&
                 card.kind !== 'unidade' &&
                 card.kind !== 'token' &&
                 card.kind !== 'jutsu' &&
-                card.kind !== 'armadilha' &&
                 traits && <div className="traits">{traits}</div>}
 
-              {isJutsuFace && card.kind === 'jutsu' && (
-                <div className="pill">
-                  <CardIcon id={speedPill(card.speed).id} size={18} />
-                  <span>{speedPill(card.speed).label}</span>
-                </div>
-              )}
-
-              {isTrap && !field && (
+              {isJutsuFace && card.kind === 'jutsu' && card.speed === 'Oculta' && (
                 <div className="pill trig">
                   <CardIcon id="oculto" size={18} />
                   <span>OCULTO</span>
+                </div>
+              )}
+
+              {isJutsuFace && card.kind === 'jutsu' && card.speed !== 'Oculta' && (
+                <div className="pill">
+                  <CardIcon id={speedPill(card.speed).id} size={18} />
+                  <span>{speedPill(card.speed).label}</span>
                 </div>
               )}
 
