@@ -66,6 +66,36 @@ const def = (id: string) => getCardById(id) as NinjaCardDef;
   ok(!isInGenjutsu(rk.owner.board[0]), 'Sakura (Kai) remove o Genjutsu do aliado');
 }
 
+// Magen: Kurenai — Exclusivo aplica Genjutsu (não Paralisia) e conta na missão
+{
+  const magen = getCardById('jutsu_magen_kurenai') as JutsuCardDef;
+  ok(SIGNATURE_JUTSU_IDS.has('jutsu_magen_kurenai'), 'Magen continua Jutsu Exclusivo');
+  ok(
+    magen.effectText === 'Aplique Genjutsu a um inimigo. Ele recebe -2/-0 nesta rodada.',
+    `Texto Magen: ${magen.effectText}`,
+  );
+  const k = unit('kurenai_yuhi');
+  const foe = unit('unit_anbu_konoha', 'enemy');
+  const before = k.evolutionProgress;
+  const res = resolveJutsuEffect(
+    magen,
+    'player',
+    foe.uid,
+    { ...base(), board: [k] },
+    { ...base(), board: [foe] },
+    A,
+    1,
+  );
+  const hit = res.enemy.board[0];
+  const kur = res.player.board.find((u) => u.cardId === 'kurenai_yuhi');
+  ok(isInGenjutsu(hit) && !hit.stunned, `Magen aplica Genjutsu, não Paralisia (genjutsu=${hit.genjutsu}, stunned=${hit.stunned})`);
+  ok(hit.tempAttackBonus === -2, `Magen: -2/-0 nesta rodada (tempAtk=${hit.tempAttackBonus})`);
+  ok(
+    Boolean(kur && kur.evolutionProgress === before + 1),
+    `Magen conta na missão Aplicar Genjutsu (${before} → ${kur?.evolutionProgress})`,
+  );
+}
+
 // Kankurō Chuunin: Veneno do Grupo 5
 {
   const k = unit('kankuro', 'player', 2);

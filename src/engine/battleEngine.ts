@@ -10,6 +10,7 @@ import {
   applyNinjaPreStrike,
   applyNinjaSecondChance,
   gainNinjaProgress,
+  gainNinjaProgressOnBoard,
   getNinjaCostDiscount,
   sealUntilRoundEnd,
 } from './ninjaEffects';
@@ -34,6 +35,7 @@ import {
 import {
   SECOND_ATTACK_UNIT_ID,
   applyCopiarOnResolve,
+  applyGenjutsu,
   applyKai,
   isInGenjutsu,
   linkPartner,
@@ -2064,9 +2066,14 @@ export function resolveJutsuEffect(
       if (tid && !tryPopSpellShield(tid)) {
         opponent.board = opponent.board.map((u) => {
           if (u.uid !== tid) return u;
-          fx.unitFx[tid] = { type: 'hit', label: 'Paralisado -2/-0' };
-          return { ...u, stunned: true, tempAttackBonus: u.tempAttackBonus - 2 };
+          fx.unitFx[tid] = { type: 'jutsu', label: 'Genjutsu -2/-0' };
+          return {
+            ...applyGenjutsu(u),
+            tempAttackBonus: u.tempAttackBonus - 2,
+          };
         });
+        // Conta para a missão "Aplicar Genjutsu" da Kurenai (não usa Paralisia).
+        caster = gainNinjaProgressOnBoard(caster, { type: 'genjutsu' }, { arenaId: nextArena, onEvolve }, opponent);
       }
       break;
     }

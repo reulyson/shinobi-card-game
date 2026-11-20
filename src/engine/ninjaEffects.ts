@@ -303,7 +303,8 @@ export function getNinjaProgressGain(unit: BoardUnit, ev: NinjaProgressEvent, ow
       default:
         gain = 0;
     }
-    if (isSig) {
+    // Kurenai sobe só por eventos `genjutsu` (Entrada / Magen), não pelo cast do Exclusivo.
+    if (isSig && id !== 'kurenai_yuhi') {
       const sigGain = SIGNATURE_GAIN[id]?.[lvl as 1 | 2] ?? 1;
       gain = Math.max(gain, sigGain);
     }
