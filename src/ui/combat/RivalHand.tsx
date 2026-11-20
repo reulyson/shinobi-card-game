@@ -1,40 +1,47 @@
 import { UzumakiCardBack } from './UzumakiCardBack';
 import { ZONES } from './grid';
 
-/** Mão do rival: leque de versos 760×108 @ (420,0). Sem banner de turno. */
+/** Mão do rival — gen_combate.rfan(n, 800, -32, 0.28, 4, 54). */
 export function RivalHand({ count }: { count: number }) {
   const z = ZONES.rivalHand;
   const n = Math.max(0, Math.min(9, count));
-  const cardW = 87;
-  const cardH = 100;
-  const step = n <= 1 ? 0 : Math.min(cardW - 18, (z.w - cardW - 24) / (n - 1));
+  const zoom = 0.28;
+  const cardW = 312 * zoom;
+  const cardH = 438 * zoom;
+  const gap = 54;
+  const spread = 4;
+  const cx = 800;
 
   return (
     <div
       className="absolute overflow-visible"
-      style={{ left: z.x, top: z.y, width: z.w, height: z.h, zIndex: 15 }}
+      style={{ left: 0, top: 0, width: 1600, height: z.h + 40, zIndex: 15 }}
       data-hand="rival"
       aria-label={`Mão do rival: ${n}`}
     >
-      <div className="relative mx-auto h-full" style={{ width: Math.max(cardW, n * step + cardW) }}>
-        {Array.from({ length: n }).map((_, i) => {
-          const rot = (i - (n - 1) / 2) * 4;
-          return (
-            <div
-              key={i}
-              className="absolute bottom-0 origin-bottom"
-              style={{
-                left: i * step,
-                width: cardW,
-                height: cardH,
-                transform: `rotate(${rot}deg) translateY(8px)`,
-              }}
-            >
-              <UzumakiCardBack className="h-full w-full" />
-            </div>
-          );
-        })}
-      </div>
+      {Array.from({ length: n }).map((_, i) => {
+        const o = i - (n - 1) / 2;
+        const left = cx + o * gap - cardW / 2;
+        const top = -32 + Math.abs(o) ** 2 * 3;
+        const rot = -o * spread;
+        return (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left,
+              top,
+              width: cardW,
+              height: cardH,
+              transform: `rotate(${rot}deg)`,
+              transformOrigin: '50% 130%',
+              filter: 'drop-shadow(0 6px 10px #000b)',
+            }}
+          >
+            <UzumakiCardBack className="h-full w-full" />
+          </div>
+        );
+      })}
     </div>
   );
 }

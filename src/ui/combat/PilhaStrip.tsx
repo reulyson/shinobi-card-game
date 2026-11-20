@@ -1,4 +1,5 @@
 import { STK_BAND, STK_D, STK_D_COMBAT, stkCx } from './grid';
+import { TabLabel } from './TabLabel';
 import type { PilhaItem } from './types';
 
 /**
@@ -23,29 +24,10 @@ export function PilhaStrip({
   return (
     <div className="pointer-events-none absolute inset-0" data-pilha style={{ zIndex: 12 }}>
       {newestFirst.length > 0 && (
-        <div
-          className="absolute"
-          style={{
-            left: 300,
-            top: STK_BAND.y - 14,
-            transform: 'skewX(-12deg)',
-            zIndex: 2,
-          }}
-        >
-          <div
-            className="border-2 border-black px-2.5 py-0.5"
-            style={{
-              background: 'linear-gradient(180deg,#FFE55A,#F0501A)',
-              boxShadow: '0 0 0 2px #fff, 0 3px 6px rgba(0,0,0,0.45)',
-            }}
-          >
-            <span
-              className="font-display text-[12px] tracking-wider text-white"
-              style={{ display: 'inline-block', transform: 'skewX(12deg)' }}
-            >
-              PILHA
-            </span>
-          </div>
+        <div className="absolute" style={{ left: 300, top: STK_BAND.y - 12, zIndex: 2 }}>
+          <TabLabel tone="o" size={12}>
+            PILHA
+          </TabLabel>
         </div>
       )}
 

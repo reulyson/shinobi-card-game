@@ -4,7 +4,6 @@ import {
   BLK_Y,
   BOARD,
   COL_CX,
-  LINE_Y,
   MAX_UNITS_PER_SIDE,
   MY_BACK_Y,
   RIVAL_BACK_Y,
@@ -15,6 +14,7 @@ import {
   colX,
 } from './grid';
 import { FieldCard } from './FieldCard';
+import { TabLabel, type TabTone } from './TabLabel';
 import type { ArenaCardRef } from './types';
 
 function placeByColumn(cards: ArenaCardRef[]): Array<ArenaCardRef | null> {
@@ -39,47 +39,22 @@ function placeByColumn(cards: ArenaCardRef[]): Array<ArenaCardRef | null> {
 
 function SlantLabel({
   text,
-  sub,
   tone,
   style,
+  size = 12,
 }: {
   text: string;
-  sub?: string;
   tone: 'rival' | 'combat' | 'player' | 'previa';
   style: CSSProperties;
+  size?: number;
 }) {
-  const bg =
-    tone === 'rival'
-      ? 'linear-gradient(180deg,#FF7A7A,#C81E1E)'
-      : tone === 'player'
-        ? 'linear-gradient(180deg,#7DC4FF,#1D5FD6)'
-        : tone === 'previa'
-          ? 'linear-gradient(180deg,#FFE55A,#F97316)'
-          : 'linear-gradient(180deg,#FFE55A,#F0501A)';
+  const tabTone: TabTone =
+    tone === 'rival' ? 'r' : tone === 'player' ? 'b' : tone === 'previa' ? 'o' : 'o';
   return (
-    <div
-      className="absolute"
-      style={{ ...style, transform: 'skewX(-12deg)', zIndex: 11 }}
-    >
-      <div
-        className="border-2 border-black px-3 py-0.5"
-        style={{ background: bg, boxShadow: '0 0 0 2px #fff, 0 3px 6px rgba(0,0,0,0.45)' }}
-      >
-        <div
-          className="font-display text-[13px] tracking-wider text-white"
-          style={{ transform: 'skewX(12deg)', WebkitTextStroke: '2.5px #111', paintOrder: 'stroke fill' }}
-        >
-          {text}
-        </div>
-        {sub && (
-          <div
-            className="text-[8px] font-semibold uppercase tracking-wide text-white/85"
-            style={{ transform: 'skewX(12deg)' }}
-          >
-            {sub}
-          </div>
-        )}
-      </div>
+    <div className="absolute" style={{ ...style, zIndex: 11 }}>
+      <TabLabel tone={tabTone} size={size}>
+        {text}
+      </TabLabel>
     </div>
   );
 }
@@ -181,19 +156,7 @@ export function CombatBoard({
           background: 'rgba(29,95,214,0.34)',
         }}
       />
-      <div
-        className="pointer-events-none absolute box-border"
-        data-pilha-line-board
-        style={{
-          left: STK_BAND.x - BOARD.x,
-          top: LINE_Y - BOARD.y - 4,
-          width: STK_BAND.w,
-          height: 8,
-          background: 'linear-gradient(90deg,#F97316,#FFD23F 50%,#F97316)',
-          border: '2px solid #111',
-          boxShadow: '0 0 0 2px #fff, 0 0 12px rgba(255,210,63,0.55)',
-        }}
-      />
+      {/* Linha da Pilha: só em BoardBands (z=15) para não duplicar sob o Histórico. */}
 
       {/* Área info esquerda = footprint do Histórico (214×588), só labels. */}
       <div

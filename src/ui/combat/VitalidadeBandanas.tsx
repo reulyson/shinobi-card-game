@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { formatVitality } from './combatPreview';
-import { LINE_Y, ZONES } from './grid';
+import { LINE_Y } from './grid';
+import { TabLabel } from './TabLabel';
 
 export interface VitalidadeBandanasProps {
   rival: { current: number; predicted?: number };
@@ -9,47 +10,32 @@ export interface VitalidadeBandanasProps {
 }
 
 /**
- * Hitai-ate ampliadas (×1.28): faixa de pano com dobras + placa metálica rebitada + caudas.
- * Vermelho = rival (cima); azul = eu (baixo). Sem símbolo de vila. TURNO N em y=416.
+ * Hitai-ate ×1.28 (gen_b4prev.ate2) em (10, CY-118) / (10, CY+40).
+ * TURNO N via tab preto centrado em y=CY (gen_b4prev.chakra_ring).
  */
 export function VitalidadeBandanas({ rival, mine, round }: VitalidadeBandanasProps) {
-  const z = ZONES.hudLeft;
   const rivalFmt = formatVitality(rival.current, rival.predicted);
   const myFmt = formatVitality(mine.current, mine.predicted);
 
   return (
-    <div
-      className="absolute"
-      style={{ left: 6, top: z.y, width: z.w + 8, height: z.h, zIndex: 18 }}
-      data-hud="vitalidade"
-    >
+    <div className="pointer-events-none absolute inset-0" style={{ zIndex: 18 }} data-hud="vitalidade">
       <HitaiAte
         variant="rival"
         value={rivalFmt}
-        style={{
-          position: 'absolute',
-          left: 4,
-          top: LINE_Y - z.y - 108,
-        }}
+        style={{ position: 'absolute', left: 10, top: LINE_Y - 118 }}
       />
       <div
-        className="absolute left-1/2 border-2 border-white bg-black px-3 py-1 font-display text-sm tracking-wider text-white"
-        style={{
-          top: LINE_Y - z.y,
-          boxShadow: '0 0 0 2px #0b1030',
-          transform: 'translate(-50%, -50%) skewX(-12deg)',
-        }}
+        className="absolute flex justify-center"
+        style={{ left: 0, top: LINE_Y - 15, width: 190 }}
       >
-        <span style={{ display: 'inline-block', transform: 'skewX(12deg)' }}>TURNO {round}</span>
+        <TabLabel tone="k" size={16}>
+          TURNO {round}
+        </TabLabel>
       </div>
       <HitaiAte
         variant="player"
         value={myFmt}
-        style={{
-          position: 'absolute',
-          left: 4,
-          top: LINE_Y - z.y + 22,
-        }}
+        style={{ position: 'absolute', left: 10, top: LINE_Y + 40 }}
       />
     </div>
   );
@@ -71,7 +57,6 @@ function HitaiAte({
   const parts = value.text.split('/');
   const current = parts[0] ?? value.text;
   const predicted = parts.length > 1 ? parts[1] : undefined;
-
   const fold =
     'repeating-linear-gradient(98deg,transparent 0 13px,#00000030 13px 16px,#ffffff1c 16px 19px)';
 
@@ -82,13 +67,12 @@ function HitaiAte({
         width: 128,
         height: 62,
         transform: 'scale(1.28)',
-        transformOrigin: 'left center',
+        transformOrigin: '0 0',
       }}
       className="relative"
       aria-label={`Vitalidade ${value.text}`}
       data-hitai-ate={variant}
     >
-      {/* caudas de nó */}
       <div
         className="absolute"
         style={{
@@ -116,8 +100,6 @@ function HitaiAte({
           filter: 'drop-shadow(0 3px 2px #0009)',
         }}
       />
-
-      {/* faixa de pano com dobras */}
       <div
         className="absolute"
         style={{
@@ -142,8 +124,6 @@ function HitaiAte({
           borderBottom: '1.5px dashed #ffffff44',
         }}
       />
-
-      {/* placa metálica */}
       <div
         className="absolute flex flex-col items-center justify-center"
         style={{

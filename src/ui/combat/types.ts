@@ -82,8 +82,8 @@ export interface ArenaB4Model {
   /** Meu turno? (placeholder TurnCoin). */
   myTurn: boolean;
   mainActionLabel: string;
-  rivalChakra?: { current: number; max: number };
-  myChakra?: { current: number; max: number };
+  rivalChakra?: { current: number; max: number; reserve?: number };
+  myChakra?: { current: number; max: number; reserve?: number };
   historicoLines?: string[];
   /** Há unidades na zona de combate → miniaturas da pilha menores. */
   combatBusy?: boolean;

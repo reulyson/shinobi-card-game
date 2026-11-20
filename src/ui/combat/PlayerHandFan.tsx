@@ -1,5 +1,6 @@
 import { MAX_HAND, ZONES } from './grid';
 import { FieldCard } from './FieldCard';
+import { TabLabel } from './TabLabel';
 
 export interface HandCardModel {
   cardId: string;
@@ -9,7 +10,7 @@ export interface HandCardModel {
   playable?: boolean;
 }
 
-/** Sua mão: até 9 cartas em leque, zona 940×176 @ (330,724). */
+/** Sua mão — gen_combate.fan(hand, 800, 726, 0.56, spread/drop/gap). */
 export function PlayerHandFan({
   cards,
   onCardClick,
@@ -20,65 +21,68 @@ export function PlayerHandFan({
   const z = ZONES.hand;
   const list = cards.slice(0, MAX_HAND);
   const n = list.length;
-  const cardW = 100;
-  const cardH = 140;
-  const step = n <= 1 ? 0 : Math.min(cardW + 4, (z.w - cardW - 40) / Math.max(1, n - 1));
+  const zoom = 0.56;
+  const cardW = 312 * zoom;
+  const cardH = 438 * zoom;
+  const [spread, drop, gap] = n <= 6 ? [7, 6, 92] : [5, 4, 84];
+  const cx = 800;
+  const base = 726;
 
   return (
     <div
       className="absolute overflow-visible"
-      style={{ left: z.x, top: z.y, width: z.w, height: z.h, zIndex: 24 }}
+      style={{ left: 0, top: 0, width: 1600, height: 900, zIndex: 24 }}
       data-hand="player"
       aria-label={`Mão ${n}/${MAX_HAND}`}
     >
-      <div
-        className="absolute right-2 top-1 rounded bg-black/70 px-2 py-0.5 font-display text-[11px] tracking-wide text-amber-200"
-        style={{ border: '1px solid rgba(255,255,255,0.25)' }}
-      >
-        MÃO {n}/{MAX_HAND}
+      <div className="absolute" style={{ left: 1236, top: 724 }}>
+        <TabLabel tone="o" size={13}>
+          MÃO {n}/{MAX_HAND}
+        </TabLabel>
       </div>
-      <div
-        className="relative mx-auto"
-        style={{
-          width: Math.max(cardW, n * step + cardW),
-          height: z.h,
-        }}
-      >
-        {list.map((c, i) => {
-          const rot = (i - (n - 1) / 2) * 3.2;
-          return (
-            <div
-              key={`${c.cardId}-${i}`}
-              className="absolute bottom-2 origin-bottom transition-transform hover:-translate-y-3"
-              style={{
-                left: i * step,
-                width: cardW,
-                height: cardH,
-                transform: `rotate(${rot}deg)`,
-                zIndex: i,
+      {list.map((c, i) => {
+        const o = i - (n - 1) / 2;
+        const left = cx + o * gap - cardW / 2;
+        const top = base + Math.abs(o) ** 2 * drop;
+        const rot = o * spread;
+        return (
+          <div
+            key={`${c.cardId}-${i}`}
+            className="absolute origin-bottom transition-transform hover:-translate-y-3"
+            style={{
+              left,
+              top,
+              width: cardW,
+              height: cardH,
+              transform: `rotate(${rot}deg)`,
+              transformOrigin: '50% 130%',
+              filter: 'drop-shadow(0 6px 10px #000b)',
+              zIndex: i,
+            }}
+          >
+            <FieldCard
+              card={{
+                uid: `hand-${i}`,
+                cardId: c.cardId,
+                name: c.name,
+                owner: 'player',
+                artUrl: c.artUrl,
+                cost: c.cost,
+                preview: undefined,
               }}
-            >
-              {/* Placeholder da mão: FieldCard reescalado (Part 2 troca o componente interno). */}
-              <div style={{ transform: 'scale(1.05)', transformOrigin: 'bottom center' }}>
-                <FieldCard
-                  card={{
-                    uid: `hand-${i}`,
-                    cardId: c.cardId,
-                    name: c.name,
-                    owner: 'player',
-                    artUrl: c.artUrl,
-                    cost: c.cost,
-                    preview: undefined,
-                  }}
-                  onClick={() => onCardClick?.(c.cardId, i)}
-                  className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
-                  style={{ width: cardW, height: cardH }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              onClick={() => onCardClick?.(c.cardId, i)}
+              className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
+              style={{ width: cardW, height: cardH }}
+            />
+          </div>
+        );
+      })}
+      {/* footprint da zona (debug/layout) */}
+      <div
+        className="pointer-events-none absolute"
+        style={{ left: z.x, top: z.y, width: z.w, height: z.h }}
+        aria-hidden
+      />
     </div>
   );
 }

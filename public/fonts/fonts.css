@@ -150,3 +150,12 @@
   font-display: swap;
   src: url(/fonts/SedgwickAve-Regular.ttf) format('truetype');
 }
+
+/* Yuji Boku kanji — SIL Open Font License 1.1 */
+@font-face {
+  font-family: 'Yuji Boku';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/YujiBoku-kanji.woff2) format('woff2');
+}
