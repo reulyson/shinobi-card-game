@@ -20,6 +20,16 @@ export type CardIconId =
   | 'formacao'
   | 'veneno'
   | 'selado'
+  | 'sede-batalha'
+  | 'provocar'
+  | 'copiar'
+  | 'combo'
+  | 'muralha'
+  | 'resistente'
+  | 'absorcao'
+  | 'apoio'
+  | 'impeto'
+  | 'substituicao'
   | 'poder'
   | 'vida'
   | 'selo-ninjutsu'
@@ -52,11 +62,19 @@ const KEYWORD_ICON: Partial<Record<Keyword, CardIconId>> = {
   Veneno: 'veneno',
   'Escudo de Feitiço': 'selado',
   Sobrepujar: 'ataque-individual',
-  Fúria: 'golpe-veloz',
-  Desafiador: 'formacao',
-  Barreira: 'selado',
+  Fúria: 'sede-batalha',
+  Desafiador: 'provocar',
+  Barreira: 'substituicao',
   Regeneração: 'vida',
   Efêmero: 'oculto',
+  'Ataque Duplo': 'combo',
+  Copiar: 'copiar',
+  Formidável: 'muralha',
+  Robusto: 'resistente',
+  'Roubo de Vida': 'absorcao',
+  Auxiliar: 'apoio',
+  Imprudente: 'impeto',
+  Parceiro: 'formacao',
 };
 
 const CATEGORY_ICON: Partial<Record<JutsuCategory, CardIconId>> = {

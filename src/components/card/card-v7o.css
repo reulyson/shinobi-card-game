@@ -292,7 +292,7 @@
 .card6.lor .box .rv{display:none!important}
 .card6.lor:not(.jut):not(.field) .box .nm{color:#fff!important;font-size:25px!important;text-shadow:0 2px 6px #000,0 0 3px #000;letter-spacing:.5px}
 .card6.lor:not(.jut):not(.field) .box .rule{display:none}
-.card6.lor:not(.jut):not(.field) .box .traits{color:#F5C542!important;font-size:11.5px!important;letter-spacing:2.5px!important;margin-top:-2px}
+.card6.lor:not(.jut):not(.field) .box .traits{color:#F5C542!important;font-size:11.5px!important;letter-spacing:2.5px!important;margin-top:-2px;line-height:normal!important}
 .card6.lor:not(.jut):not(.field) .box .rules{color:#F1F5F9!important;font-size:13.5px;line-height:1.3;text-shadow:0 1px 2px #000}
 .card6.lor:not(.jut):not(.field) .box .rules em{color:#FBBF24!important;font-weight:800}
 .lvlbar{display:flex;align-items:center;gap:8px;width:92%;margin-top:3px}.lvlbar i{flex:1;height:1px;background:linear-gradient(90deg,#0000,#D4A24C,#0000)}
@@ -302,7 +302,8 @@
 
 
 /* —— React size wrappers (gen_v7o: hand=zoom.5 of 312×438; field game=119×165) —— */
-.card6{width:312px;height:438px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;user-select:none}
+/* line-height no wrapper é 0 (anti-gap); o card6 restaura texto legível */
+.card6{width:312px;height:438px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;user-select:none;line-height:normal}
 .card6.field{width:238px;height:330px}
 .sc-v7o-scale{position:relative;flex:none;line-height:0}
 .sc-v7o-scale--hand{width:156px;height:219px}
@@ -356,24 +357,27 @@
   display: inline-block;
 }
 
-/* —— Tipografia do painel = gen_v7o (sem overrides de gap/pad que desviam do mock) —— */
-/* Nome: gen_v7o cita Cinzel mas não a carrega — serif clássico caixa mista */
+/* —— Tipografia do painel = gen_v7o —— */
+/* Nome: mesma cascata da ref (Cinzel 900 / lh 1.05 / lor 25px) */
 .box .nm{
-  font-family:Georgia,'Noto Serif','Times New Roman',serif!important;
-  font-weight:700!important;
+  font-family:Cinzel,Georgia,'Times New Roman',serif!important;
+  font-weight:900!important;
   font-style:normal!important;
   font-variant:normal!important;
   font-variant-caps:normal!important;
   font-feature-settings:"smcp" 0,"c2sc" 0!important;
   text-transform:none!important;
   font-synthesis:weight!important;
-  letter-spacing:0.5px!important;
-  line-height:1.15!important;
+  letter-spacing:.5px!important;
+  line-height:1.05!important;
 }
 .card6.lor:not(.jut):not(.field) .box .nm{
   font-size:25px!important;
   letter-spacing:.5px!important;
-  line-height:1.15!important;
+  line-height:1.05!important;
+}
+.card6 .box .traits{
+  line-height:normal!important;
 }
 /* Habilidade / highlights / divisor / contador — valores do v7o.html */
 .card6.lor:not(.jut):not(.field) .box .rules{
