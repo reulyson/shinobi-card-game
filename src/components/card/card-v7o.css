@@ -444,17 +444,16 @@
   margin:0!important;
   line-height:normal!important;
 }
-/* .rule: igual ao v7o — sem margem extra (gaps = só gap:3px do box).
- * Em cards apertados o flex-shrink pode colapsar a linha (ex.: Chidori na ref).
- * Genjutsu: a ref mantém a linha roxa — não colapsar. */
-.card6.jut .box .rule{
-  display:block;
-  margin:0;
-}
-.card6.fam-genjutsu .box .rule{
-  flex-shrink:0;
-  height:1.5px;
-  min-height:1.5px;
+/* Jutsu (todas as famílias + Oculto) e Equipamento: sem linha sob o nome (regra aprovada). */
+.card6.jut .box .rule,
+.card6.equip .box .rule{
+  display:none!important;
+  height:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:none!important;
+  background:none!important;
 }
 .card6.jut .box{
   gap:3px!important;
