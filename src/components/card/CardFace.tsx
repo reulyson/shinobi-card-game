@@ -182,7 +182,9 @@ function shortTraits(card: CardDef, rank: 1 | 2 | 3): string | null {
     case 'token':
       return card.role.toUpperCase();
     case 'equipamento':
-      return 'EQUIPAMENTO';
+      return card.faction
+        ? `EQUIPAMENTO · ${card.faction.toUpperCase()}`
+        : 'EQUIPAMENTO';
     case 'jutsu':
       return null;
     default: {
@@ -398,7 +400,6 @@ export const CardFace: React.FC<CardFaceProps> = ({
   const family = card.kind === 'jutsu' ? jutsuFamilyOf(card) : null;
   const traits = shortTraits(card, rank);
 
-  const isTrap = card.kind === 'jutsu' && card.speed === 'Oculta';
   const isJutsuFace = card.kind === 'jutsu' && !field;
   const isLor = card.kind === 'ninja';
   const isEquip = card.kind === 'equipamento';
@@ -436,7 +437,6 @@ export const CardFace: React.FC<CardFaceProps> = ({
     isJutsuFace && family === 'selo-ninjutsu' && 'fam-ninjutsu',
     isJutsuFace && family === 'selo-genjutsu' && 'fam-genjutsu',
     isJutsuFace && family === 'selo-taijutsu' && 'fam-taijutsu',
-    isTrap && 'trap',
     isEquip && 'equip',
     isLor && 'lor',
     frame === 'gennin' && 'rank-gennin',
@@ -533,8 +533,8 @@ export const CardFace: React.FC<CardFaceProps> = ({
               <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
                 {card.name}
               </div>
-              {/* Jutsu: sem linha sob o nome (v7o — só a pílula de velocidade / OCULTO) */}
-              {!isJutsuFace && <div className="rule" />}
+              {/* Linha sob o nome (cor da família no jutsu; LoR esconde via CSS) */}
+              <div className="rule" />
 
               {!field &&
                 card.kind !== 'unidade' &&
@@ -542,14 +542,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
                 card.kind !== 'jutsu' &&
                 traits && <div className="traits">{traits}</div>}
 
-              {isJutsuFace && card.kind === 'jutsu' && card.speed === 'Oculta' && (
-                <div className="pill trig">
-                  <CardIcon id="oculto" size={18} />
-                  <span>OCULTO</span>
-                </div>
-              )}
-
-              {isJutsuFace && card.kind === 'jutsu' && card.speed !== 'Oculta' && (
+              {isJutsuFace && card.kind === 'jutsu' && (
                 <div className="pill">
                   <CardIcon id={speedPill(card.speed).id} size={18} />
                   <span>{speedPill(card.speed).label}</span>
@@ -558,8 +551,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
 
               {(card.kind === 'ninja' ||
                 card.kind === 'unidade' ||
-                card.kind === 'token' ||
-                card.kind === 'equipamento') && (
+                card.kind === 'token') && (
                 <KeywordRow pills={pills} field={field} />
               )}
 

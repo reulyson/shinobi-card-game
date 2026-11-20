@@ -89,8 +89,11 @@ const SPEED_ICON: Record<JutsuSpeed, CardIconId> = {
   Oculta: 'oculto',
 };
 
-/** Mapeia symbolType / nome existente → selo de família (sem alterar dados). */
+/** Mapeia family/symbolType / nome → selo de família (sem alterar dados). */
 export function jutsuFamilyOf(card: JutsuCardDef): JutsuFamilySeal {
+  if (card.family === 'Ninjutsu') return 'selo-ninjutsu';
+  if (card.family === 'Genjutsu') return 'selo-genjutsu';
+  if (card.family === 'Taijutsu') return 'selo-taijutsu';
   const name = card.name.toLowerCase();
   // Genjutsu clássicos já no repo (ex.: Magen) — só visual.
   if (

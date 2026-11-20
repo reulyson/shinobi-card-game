@@ -420,13 +420,20 @@
   margin:0!important;
   line-height:normal!important;
 }
-.card6.jut .box .rule{display:none!important}
+/* Linha de família sob o nome do jutsu (gen_v7o sempre renderiza .rule) */
+.card6.jut .box .rule{
+  display:block!important;
+  width:86%;
+  height:1.5px;
+  margin:2px 0 1px;
+}
 .card6.jut .box{
   gap:3px!important;
   justify-content:center!important;
   padding:15px 18px!important;
   overflow:visible!important;
 }
+/* Oculto: v7o.html usa class="pill" padrão (borda ouro), sem .trap/.trig */
 .lvlbar{
   display:flex;
   align-items:center;

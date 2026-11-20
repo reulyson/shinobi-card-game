@@ -10,20 +10,26 @@ const HAND_IDS = [
   'zabuza_momochi',
   'unit_anbu_konoha',
   'jutsu_chidori',
-  'jutsu_rasengan',
+  'jutsu_bola_de_fogo',
   'jutsu_magen_kurenai',
-  'jutsu_omote_renge',
+  'jutsu_fuma_shuriken',
+  'trap_selo_explosivo',
   'equip_kubikiribocho',
 ] as const;
 
+/** Pares para compare-final (id → rótulo do artifact). Alinhados às cartas do v7o.html. */
 const COMPARE_IDS = [
-  { id: 'sasuke_uchiha', label: 'Ninja' },
-  { id: 'unit_anbu_konoha', label: 'Unidade' },
-  { id: 'jutsu_chidori', label: 'Jutsu Exclusivo' },
-  { id: 'jutsu_rasengan', label: 'Ninjutsu' },
-  { id: 'jutsu_magen_kurenai', label: 'Genjutsu' },
-  { id: 'jutsu_omote_renge', label: 'Taijutsu' },
-  { id: 'equip_kubikiribocho', label: 'Equipamento' },
+  { id: 'sasuke_uchiha', label: 'Ninja Gennin', rank: 1 as const, key: 'ninja-gennin' },
+  { id: 'sasuke_uchiha', label: 'Ninja Chuunin', rank: 2 as const, key: 'ninja-chuunin' },
+  { id: 'sasuke_uchiha', label: 'Ninja Jounnin', rank: 3 as const, key: 'ninja-jounnin' },
+  { id: 'zabuza_momochi', label: 'Ninja 2+ KW', rank: 1 as const, key: 'ninja-2kw' },
+  { id: 'unit_anbu_konoha', label: 'Unidade Anbu', rank: 1 as const, key: 'unidade-anbu' },
+  { id: 'jutsu_bola_de_fogo', label: 'Ninjutsu', rank: 1 as const, key: 'ninjutsu' },
+  { id: 'jutsu_magen_kurenai', label: 'Genjutsu', rank: 1 as const, key: 'genjutsu' },
+  { id: 'jutsu_fuma_shuriken', label: 'Taijutsu', rank: 1 as const, key: 'taijutsu' },
+  { id: 'jutsu_chidori', label: 'Exclusivo Chidori', rank: 1 as const, key: 'exclusivo-chidori' },
+  { id: 'trap_selo_explosivo', label: 'Oculto', rank: 1 as const, key: 'oculto' },
+  { id: 'equip_kubikiribocho', label: 'Equipamento', rank: 1 as const, key: 'equipamento' },
 ] as const;
 
 /**
@@ -56,18 +62,20 @@ export const CardGallery: React.FC = () => {
 
       <section data-section="compare-zoom">
         <h2 className="text-orange-300 font-semibold mb-2">
-          Comparação lado a lado · zoom 312×438 (React)
+          Comparação · zoom 312×438 (todas as variantes)
         </h2>
-        <p className="text-slate-500 text-xs mb-6">
-          Abra a referência v7o numa aba e compare pixel a pixel com estas cartas no mesmo tamanho.
-        </p>
         <div className="flex flex-wrap gap-12 items-start">
-          {COMPARE_IDS.map(({ id, label }) => {
+          {COMPARE_IDS.map(({ id, label, rank, key }) => {
             const card = getCardById(id);
             if (!card) return null;
             return (
-              <div key={id} className="flex flex-col gap-2 items-center" data-compare={id}>
-                <CardFace card={card} size="zoom" />
+              <div
+                key={key}
+                className="flex flex-col gap-2 items-center"
+                data-compare={key}
+                data-card-id={id}
+              >
+                <CardFace card={card} size="zoom" rankLevel={rank} />
                 <span className="text-xs text-slate-400">
                   {label} · {card.name}
                 </span>
@@ -86,28 +94,16 @@ export const CardGallery: React.FC = () => {
         <div className="flex flex-wrap gap-10 items-start">
           {hands.map((card) =>
             card ? (
-              <div key={card.id} className="flex flex-col gap-2 items-center">
+              <div
+                key={card.id}
+                className="flex flex-col gap-2 items-center"
+                data-card-id={card.id}
+              >
                 <CardFace card={card} size="hand" />
                 <span className="text-xs text-slate-400">{card.name}</span>
               </div>
             ) : null,
           )}
-        </div>
-      </section>
-
-      <section data-section="frente-zoom">
-        <h2 className="text-orange-300 font-semibold mb-6">Frente · zoom 312×438</h2>
-        <div className="flex flex-wrap gap-12 items-start">
-          {['naruto_uzumaki', 'unit_anbu_konoha', 'jutsu_chidori', 'equip_kubikiribocho'].map((id) => {
-            const card = getCardById(id);
-            if (!card) return null;
-            return (
-              <div key={id} className="flex flex-col gap-2 items-center">
-                <CardFace card={card} size="zoom" />
-                <span className="text-xs text-slate-400">{card.name}</span>
-              </div>
-            );
-          })}
         </div>
       </section>
 
@@ -131,7 +127,7 @@ export const CardGallery: React.FC = () => {
         </h2>
         <div className="flex flex-wrap gap-14 items-end">
           {anbu && (
-            <div className="sc-gallery-field-wrap">
+            <div className="sc-gallery-field-wrap" data-compare="campo-anbu" data-card-id="unit_anbu_konoha">
               <CardFace card={anbu} size="field" power={2} vitality={2} />
               <span className="text-[11px] text-slate-400 text-center">
                 Anbu · 2/2 branco (base)
@@ -139,7 +135,7 @@ export const CardGallery: React.FC = () => {
             </div>
           )}
           {naruto && (
-            <div className="sc-gallery-field-wrap">
+            <div className="sc-gallery-field-wrap" data-compare="campo-naruto">
               <CardFace
                 card={naruto}
                 size="field"
@@ -154,7 +150,7 @@ export const CardGallery: React.FC = () => {
             </div>
           )}
           {zabuza && (
-            <div className="sc-gallery-field-wrap">
+            <div className="sc-gallery-field-wrap" data-compare="campo-zabuza">
               <CardFace
                 card={zabuza}
                 size="field"
@@ -169,7 +165,7 @@ export const CardGallery: React.FC = () => {
             </div>
           )}
           {sasuke && (
-            <div className="sc-gallery-field-wrap">
+            <div className="sc-gallery-field-wrap" data-compare="campo-sasuke" data-card-id="sasuke_uchiha">
               <CardFace
                 card={sasuke}
                 size="field"
