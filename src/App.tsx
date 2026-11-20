@@ -12,6 +12,7 @@ import { soundFX } from './utils/sound';
 import { OFFICIAL_ART } from './data/officialArt';
 import { OfficialImage, VillageSymbol } from './components/OfficialImage';
 import { CardGallery } from './components/card/CardGallery';
+import { ArenaB4Demo, resolveArenaB4DemoFromSearch } from './ui/combat';
 
 type ActiveScreen = 'lobby' | 'battle' | 'collection' | 'builder' | 'rules' | 'history';
 
@@ -26,6 +27,11 @@ function isPart4Demo(): boolean {
 export default function App() {
   // Demo Parte 4: ramo separado antes de qualquer hook do App principal.
   if (isPart4Demo()) return <Part4Demo />;
+
+  const b4Demo = resolveArenaB4DemoFromSearch(
+    typeof window !== 'undefined' ? window.location.search : ''
+  );
+  if (b4Demo) return <ArenaB4Demo demoId={b4Demo} />;
 
   return <AppMain />;
 }

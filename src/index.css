@@ -25,6 +25,18 @@
     font-family: 'JetBrains Mono', monospace;
     font-variant-numeric: tabular-nums;
   }
+
+  /* Números das bandanas (Arena B4). */
+  .font-bandana {
+    font-family: 'Sedgwick Ave', 'Bangers', cursive;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Carta morrendo na prévia de combate B4. */
+.arena-b4-dying {
+  position: relative;
 }
 
 .tabular-nums {

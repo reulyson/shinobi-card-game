@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Moon, Sparkles, Sun, Wrench } from 'lucide-react';
+import { Moon, Sun, Wrench } from 'lucide-react';
 import {
   BoardUnit,
   CardDef,
   KeywordBurstId,
 } from '../types/game';
-import { getUnitBadges, getUnitAuras, KEYWORD_BURSTS } from '../data/keywordVisuals';
+import { getUnitAuras, KEYWORD_BURSTS } from '../data/keywordVisuals';
 import { getCardById } from '../data/cards';
 import { CardBack } from './card/CardBack';
 import { CardFace, CardFaceSize } from './card/CardFace';
@@ -150,22 +150,71 @@ export const CardView: React.FC<CardViewProps> = ({
 
   if (!card) return null;
 
+  // Campo / board: só CardFace size="field" (aprovado). Sem badges/auras/chips
+  // que alteravam a face vs compare-final-campo. Vanish = mesma face + animação.
+  if (isField) {
+    const fxClass =
+      fxState?.type === 'lunge-up'
+        ? 'animate-lunge-up'
+        : fxState?.type === 'lunge-down'
+          ? 'animate-lunge-down'
+          : fxState?.type === 'hit'
+            ? 'animate-hit-shake'
+            : '';
+    return (
+      <div
+        role={onClick ? 'button' : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        onClick={onClick}
+        onContextMenu={(e) => {
+          if (onInspect) {
+            e.preventDefault();
+            onInspect(card, unit);
+          }
+        }}
+        onKeyDown={(e) => {
+          if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        style={{ zoom: 'var(--board-zoom, 1)' } as React.CSSProperties}
+        className={`relative w-[119px] h-[165px] shrink-0 select-none ${fxClass} ${
+          onClick ? 'cursor-pointer' : ''
+        } ${vanishing ? 'animate-clone-vanish pointer-events-none' : ''} ${
+          selected ? '-translate-y-2' : ''
+        }`}
+        data-card-view="field"
+      >
+        <CardFace
+          card={card}
+          unit={unit}
+          size="field"
+          effectiveCost={effectiveCost}
+          power={power}
+          vitality={vitality}
+          powerState={powerState}
+          vitalityState={vitalityState}
+          rankLevel={unit?.evolutionLevel ?? savedRank?.level}
+          levelProgress={unit?.evolutionProgress ?? savedRank?.progress}
+          selected={selected}
+          dimmed={dimmed}
+          playable={playable}
+        />
+      </div>
+    );
+  }
+
   const keywords =
     card.kind === 'ninja' || card.kind === 'unidade' || card.kind === 'token'
       ? unit
         ? unit.keywords
         : card.keywords
       : [];
-  const badges =
-    card.kind === 'ninja' || card.kind === 'unidade' || card.kind === 'token'
-      ? getUnitBadges(unit, keywords)
-      : [];
   const auras =
     card.kind === 'ninja' || card.kind === 'unidade' || card.kind === 'token'
       ? getUnitAuras(unit, keywords)
       : [];
-  const maxBadges = isField ? 2 : 4;
-  const shownBadges = badges.length > maxBadges ? maxBadges - 1 : maxBadges;
   const allBursts = [
     ...(keywordBursts || []).map((id) => ({ id, key: `fx-${id}` })),
     ...localBursts.filter((b) => !(keywordBursts || []).includes(b.id)),
@@ -197,11 +246,9 @@ export const CardView: React.FC<CardViewProps> = ({
   };
 
   const wrapStyle: React.CSSProperties | undefined =
-    size === 'board' || size === 'field'
-      ? ({ zoom: 'var(--board-zoom, 1)' } as React.CSSProperties)
-      : size === 'hand'
-        ? ({ zoom: 'var(--hand-zoom, 1)' } as React.CSSProperties)
-        : undefined;
+    size === 'hand'
+      ? ({ zoom: 'var(--hand-zoom, 1)' } as React.CSSProperties)
+      : undefined;
 
   return (
     <div
@@ -215,7 +262,7 @@ export const CardView: React.FC<CardViewProps> = ({
       onClick={onClick}
       onContextMenu={handleContextMenu}
       onMouseEnter={() => {
-        if (size === 'hand' || size === 'board' || size === 'field') {
+        if (size === 'hand') {
           onInspect?.(card, unit);
         }
       }}
@@ -227,11 +274,7 @@ export const CardView: React.FC<CardViewProps> = ({
       }}
       style={wrapStyle}
       className={`group relative transition-transform duration-150 select-none ${
-        isField
-          ? 'w-[119px] h-[165px] shrink-0'
-          : size === 'hand'
-            ? 'w-[100px] h-[140px] shrink-0'
-            : 'w-full'
+        size === 'hand' ? 'w-[100px] h-[140px] shrink-0' : 'w-full'
       } ${liftClass} ${fxClass} ${
         draggable ? 'cursor-grab active:cursor-grabbing' : onClick ? 'cursor-pointer' : ''
       } ${vanishing ? 'animate-clone-vanish pointer-events-none' : ''}`}
@@ -291,7 +334,7 @@ export const CardView: React.FC<CardViewProps> = ({
         />
       )}
 
-      {activeAura && !fxState?.label && (size === 'hand' || isField) && (
+      {activeAura && !fxState?.label && size === 'hand' && (
         <div
           className={`pointer-events-none absolute -top-2.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[9px] font-bold shadow-md whitespace-nowrap ${
             activeAura === 'dawn'
@@ -358,32 +401,6 @@ export const CardView: React.FC<CardViewProps> = ({
           </div>
         )}
 
-        {badges.length > 0 && isField && (
-          <div className="absolute left-1 top-7 z-20 flex flex-col pointer-events-auto gap-px">
-            {badges.slice(0, shownBadges).map((b) => {
-              const Icon = b.icon;
-              return (
-                <span
-                  key={b.key}
-                  title={b.label}
-                  aria-label={b.label}
-                  className={`w-4 h-4 rounded-full bg-slate-950/85 border border-slate-500/70 flex items-center justify-center ${b.color}`}
-                >
-                  <Icon className="w-2.5 h-2.5" />
-                </span>
-              );
-            })}
-            {badges.length > maxBadges && (
-              <span
-                title={badges.slice(shownBadges).map((b) => b.label).join(' · ')}
-                className="w-4 h-4 rounded-full bg-slate-950/85 border border-slate-500/70 text-[8px] font-bold text-slate-200 flex items-center justify-center"
-              >
-                +{badges.length - shownBadges}
-              </span>
-            )}
-          </div>
-        )}
-
         {unit?.equippedCardId && (
           <span
             className={`absolute right-1 top-7 z-20 px-1 py-0.5 rounded bg-slate-900/95 border text-[10px] font-semibold flex items-center ${
@@ -398,19 +415,6 @@ export const CardView: React.FC<CardViewProps> = ({
             }
           >
             <Wrench className="w-2.5 h-2.5" />
-          </span>
-        )}
-
-        {card.kind === 'ninja' && unit && unit.evolutionLevel >= 2 && isField && (
-          <span
-            className={`absolute left-1/2 -translate-x-1/2 top-6 z-20 px-1 py-0.5 rounded border text-[8px] font-bold flex items-center gap-0.5 ${
-              unit.evolutionLevel === 3
-                ? 'bg-orange-500/25 border-orange-400 text-orange-200'
-                : 'bg-amber-500/20 border-amber-400/80 text-amber-200'
-            }`}
-          >
-            <Sparkles className="w-2.5 h-2.5" />
-            {unit.evolutionLevel === 3 ? 'Jounnin' : 'Chuunin'}
           </span>
         )}
 

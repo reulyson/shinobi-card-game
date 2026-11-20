@@ -10,7 +10,9 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "test:rules": "tsx tests/rules-g5.test.ts",
-    "test:part4": "tsx tests/part4-combat-ui.test.ts"
+    "test:arena-b4": "tsx tests/arena-b4-grid.test.ts",
+    "test:part4": "tsx tests/part4-combat-ui.test.ts",
+    "test": "tsx tests/rules-g5.test.ts && tsx tests/arena-b4-grid.test.ts && tsx tests/part4-combat-ui.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
