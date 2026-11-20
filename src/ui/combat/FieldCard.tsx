@@ -36,8 +36,9 @@ function rankClass(rank?: ArenaCardRef['rank']): string {
   return '';
 }
 
+/** Tamanhos @2× (lógicos 14/17 → 28/34). */
 function nameFontSize(name: string): number {
-  return name.length > 16 ? 14 : 17;
+  return name.length > 16 ? 28 : 34;
 }
 
 function bandClass(band?: ArenaCardRef['band']): string {
@@ -209,6 +210,10 @@ export function FieldCard({
         <div className={`fc-band ${bandClass(card.band)}`}>{bandLabel(card.band)}</div>
         <div className="fc-flow">
           <div className="fc-box">
+            <i className="fc-rv fc-rv--a" aria-hidden />
+            <i className="fc-rv fc-rv--b" aria-hidden />
+            <i className="fc-rv fc-rv--c" aria-hidden />
+            <i className="fc-rv fc-rv--d" aria-hidden />
             <div className="fc-name" style={{ fontSize: nameFontSize(card.name) }}>
               {card.name}
             </div>

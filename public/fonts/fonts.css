@@ -160,19 +160,26 @@
   src: url(/fonts/YujiBoku-kanji.woff2) format('woff2');
 }
 
-/* Cinzel — nomes das cartas de campo (gen_v7o .box .nm) — SIL OFL 1.1
-   Instâncias estáticas completas (não subset): evita glifos faltando → “SASU KE UC HIHA”. */
+/* Liberation Serif — nomes das cartas de campo (fallback real do mock Cinzel,serif) — SIL OFL 1.1 */
 @font-face {
-  font-family: 'Cinzel';
+  font-family: 'Liberation Serif';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(/fonts/Cinzel-Regular.ttf) format('truetype');
+  src: url(/fonts/LiberationSerif-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Cinzel';
+  font-family: 'Liberation Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/LiberationSerif-Bold.ttf) format('truetype');
+}
+/* Peso 900 do mock mapeia para Bold (Times/Liberation não têm Black). */
+@font-face {
+  font-family: 'Liberation Serif';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url(/fonts/Cinzel-Black.ttf) format('truetype');
+  src: url(/fonts/LiberationSerif-Bold.ttf) format('truetype');
 }
