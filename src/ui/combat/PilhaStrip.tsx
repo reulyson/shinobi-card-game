@@ -1,20 +1,24 @@
-import { STK_BAND, STK_D, STK_D_COMBAT, stkCx } from './grid';
+import { CardFace } from '../../components/card/CardFace';
+import { getCardById } from '../../data/cards';
+import { FIELD_FACE_H, FIELD_FACE_W, STK_BAND, STK_D, STK_D_COMBAT, stkCx } from './grid';
 import { TabLabel } from './TabLabel';
 import type { PilhaItem } from './types';
 
 /**
- * Miniaturas LoR da Pilha. A linha de ponta a ponta fica no CombatBoard
- * (atrás do Histórico); aqui só os thumbs + selo de ordem.
+ * Pilha: o mesmo CardFace size="field" aprovado, só com scale uniforme
+ * para caber na faixa (STK_D / STK_D_COMBAT). Sem thumb circular legado.
  */
 export function PilhaStrip({
   items,
   compact,
 }: {
   items: PilhaItem[];
-  /** Miniaturas 36px quando há combate ativo. */
+  /** Miniaturas menores quando há combate ativo. */
   compact?: boolean;
 }) {
-  const diameter = compact ? STK_D_COMBAT : STK_D;
+  const footprintH = compact ? STK_D_COMBAT : STK_D;
+  const scale = footprintH / FIELD_FACE_H;
+  const footprintW = Math.round(FIELD_FACE_W * scale);
   const newestFirst = [...items].sort((a, b) => a.order - b.order);
 
   if (newestFirst.length === 0) {
@@ -32,54 +36,69 @@ export function PilhaStrip({
       )}
 
       {newestFirst.map((item, k) => {
-        const cx = stkCx(k, newestFirst.length, diameter);
+        const cx = stkCx(k, newestFirst.length, footprintW);
         const isNewest = item.order === 1;
         const ring = item.owner === 'player' ? '#F97316' : '#DC2626';
+        const def = getCardById(item.cardId);
         return (
           <div
             key={item.uid}
             className="absolute"
             style={{
-              left: cx - diameter / 2,
-              top: STK_BAND.y - diameter / 2,
-              width: diameter,
-              height: diameter,
+              left: cx - footprintW / 2,
+              top: STK_BAND.y - footprintH / 2,
+              width: footprintW,
+              height: footprintH,
               zIndex: isNewest ? 3 : 1,
             }}
             title={item.name}
             data-pilha-item={item.uid}
             data-order={item.order}
             data-uid={`stack-${item.uid}`}
+            data-arena-card="pilha"
           >
             <div
-              className="relative h-full w-full overflow-hidden rounded-full"
+              className="relative overflow-visible"
               style={{
-                border: `${diameter >= 50 ? 3.5 : 3}px solid ${ring}`,
+                width: footprintW,
+                height: footprintH,
                 boxShadow: isNewest
-                  ? '0 0 0 2px #fff, 0 2px 6px #000d, 0 0 0 4px #FFE55A, 0 0 16px 5px #FFD23Fcc'
-                  : '0 0 0 2px #fff, 0 2px 6px #000d',
-                background: '#000',
+                  ? `0 0 0 2px ${ring}, 0 0 0 3px #FFE55A, 0 0 12px 3px #FFD23Fcc`
+                  : `0 0 0 1.5px ${ring}, 0 2px 6px #000a`,
               }}
             >
-              {item.artUrl ? (
-                <img src={item.artUrl} alt="" className="h-full w-full object-cover" />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-[#1a2340] font-display text-[10px] text-white">
-                  {item.name.slice(0, 3)}
-                </div>
-              )}
+              <div
+                className="pointer-events-none origin-top-left"
+                style={{
+                  width: FIELD_FACE_W,
+                  height: FIELD_FACE_H,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top left',
+                }}
+              >
+                {def ? (
+                  <CardFace card={def} size="field" />
+                ) : (
+                  <div
+                    className="flex h-full w-full items-center justify-center bg-[#1a2340] font-display text-[22px] text-white"
+                    style={{ width: FIELD_FACE_W, height: FIELD_FACE_H }}
+                  >
+                    {item.name.slice(0, 3)}
+                  </div>
+                )}
+              </div>
               <span
                 className="absolute flex items-center justify-center rounded-full font-display text-white"
                 style={{
                   left: -4,
                   top: -5,
-                  width: diameter >= 50 ? 22 : 15,
-                  height: diameter >= 50 ? 22 : 15,
-                  fontSize: diameter >= 50 ? 14 : 11,
+                  width: footprintH >= 50 ? 18 : 14,
+                  height: footprintH >= 50 ? 18 : 14,
+                  fontSize: footprintH >= 50 ? 11 : 9,
                   lineHeight: 1,
                   background: ring,
-                  border: diameter >= 50 ? '2px solid #fff' : '1.5px solid #fff',
-                  boxShadow: diameter >= 50 ? '0 0 0 1.5px #111' : undefined,
+                  border: '1.5px solid #fff',
+                  zIndex: 4,
                 }}
               >
                 {item.order}

@@ -14,7 +14,7 @@ export function RivalHand({ count }: { count: number }) {
 
   return (
     <div
-      className="absolute overflow-visible"
+      className="pointer-events-none absolute overflow-visible"
       style={{ left: 0, top: 0, width: 1600, height: z.h + 40, zIndex: 15 }}
       data-hand="rival"
       aria-label={`Mão do rival: ${n}`}

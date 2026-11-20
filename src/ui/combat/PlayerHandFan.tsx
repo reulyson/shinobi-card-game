@@ -29,7 +29,9 @@ export function PlayerHandFan({
 
   return (
     <div
-      className="absolute overflow-visible"
+      // Camada 1600×900 só posiciona o leque: não pode capturar cliques do
+      // tabuleiro nem do botão da moeda (z 22) — só as cartas recebem eventos.
+      className="pointer-events-none absolute overflow-visible"
       style={{ left: 0, top: 0, width: 1600, height: 900, zIndex: 24 }}
       data-hand="player"
       aria-label={`Mão ${n}/${MAX_HAND}`}
@@ -47,7 +49,7 @@ export function PlayerHandFan({
         return (
           <div
             key={`${c.cardId}-${i}`}
-            className="absolute origin-bottom transition-transform hover:-translate-y-3"
+            className="pointer-events-auto absolute origin-bottom transition-transform hover:-translate-y-3"
             style={{
               left,
               top,

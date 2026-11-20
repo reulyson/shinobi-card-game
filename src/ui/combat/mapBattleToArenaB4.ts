@@ -62,6 +62,8 @@ function toCardRef(
     baseVitality: base.vitality,
     dying,
   };
+  const rank: ArenaCardRef['rank'] =
+    src.evolutionLevel >= 3 ? 'jounnin' : src.evolutionLevel >= 2 ? 'chuunin' : 'gennin';
   return {
     uid: unit.uid,
     cardId: unit.cardId,
@@ -69,9 +71,10 @@ function toCardRef(
     owner: unit.owner,
     cost: card && 'cost' in card ? (card.cost as number) : undefined,
     column,
+    rank,
     keywords: fieldKeywords(src),
-    // Keywords vivas do motor → CardFace (1 pílula / 2+ ícones), sem dim.
-    keywordsOverride: [...src.keywords],
+    // Sem keywordsOverride: CardFace usa CardDef + rank (face aprovada).
+    // Só plaquinhas (preview) mudam em combate.
     preview,
   };
 }

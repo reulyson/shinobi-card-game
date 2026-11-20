@@ -56,7 +56,9 @@ export function AttackArrows({ arrows }: { arrows: ArenaArrow[] }) {
         const { c1, c2, ink } = PAL[who];
         // gen_b4prev: AR(COL_CX[i]+4, BLK_Y+34, COL_CX[i]-4, ATT_Y+100, …)
         const fromTop = a.direction === 'down';
-        const y1 = fromTop ? ATT_Y + 100 : BLK_Y + 34;
+        // Origem na borda do atacante (não sobre a face da carta): só as
+        // plaquinhas mudam na carta em combate, nada é desenhado por cima.
+        const y1 = fromTop ? ATT_Y + SLOT_H : BLK_Y;
         const y2 = fromTop ? BLK_Y + 34 : ATT_Y + 100;
         const bend = 0.0001;
         const p0: [number, number] = [cx + 4, y1];
@@ -140,6 +142,10 @@ export function AttackArrows({ arrows }: { arrows: ArenaArrow[] }) {
                 />
               </>
             )}
+            {/* Par bloqueado = só o conector (mock combate-B4-preview); seta +
+                kunai + "-X" só para atacante sem bloqueio, sem cobrir cartas. */}
+            {!a.blocked && (
+              <>
             {/* Sombra da trilha */}
             <polygon points={poly} fill="#000" opacity={0.35} transform="translate(2,3)" />
             {/* Trilha de pincel */}
@@ -193,6 +199,8 @@ export function AttackArrows({ arrows }: { arrows: ArenaArrow[] }) {
               strokeWidth={s * 0.2}
               strokeLinejoin="round"
             />
+              </>
+            )}
             {!a.blocked && a.unblockedDamage != null && a.unblockedDamage > 0 && (
               <text
                 x={cx}

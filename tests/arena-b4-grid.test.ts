@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {
   BOARD,
   COL_CX,
+  FIELD_FACE_H,
+  FIELD_FACE_W,
   LINE_Y,
   MAX_HAND,
   MAX_OCULTO,
@@ -9,6 +11,7 @@ import {
   SCREEN_H,
   SCREEN_W,
   SLOT_H,
+  SLOT_SCALE,
   SLOT_W,
   ZONES,
   colX,
@@ -23,6 +26,9 @@ assert.equal(SCREEN_H, 900);
 assert.deepEqual([...COL_CX], [530, 665, 800, 935, 1070]);
 assert.equal(SLOT_W, 95);
 assert.equal(SLOT_H, 132);
+assert.equal(FIELD_FACE_W, 119);
+assert.equal(FIELD_FACE_H, 165);
+assert.equal(SLOT_SCALE, SLOT_W / FIELD_FACE_W);
 assert.deepEqual(BOARD, { x: 200, y: 112, w: 1200, h: 612 });
 assert.equal(LINE_Y, 416);
 assert.equal(ZONES.historico.w, ZONES.infoLeft.w);
