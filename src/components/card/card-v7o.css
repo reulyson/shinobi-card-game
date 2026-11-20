@@ -358,21 +358,27 @@
 }
 
 /* —— Tipografia do painel = gen_v7o —— */
-/* Nome: mesma cascata da ref (Cinzel 900 / lh 1.05 / lor 25px) */
+/*
+ * Nome em caixa mista como a referência visual.
+ * gen_v7o cita Cinzel mas o HTML de ref NÃO a carrega → fallback serif com
+ * minúsculas reais. Cinzel carregada no app parece versalete; usamos Georgia.
+ */
 .box .nm{
-  font-family:Cinzel,Georgia,'Times New Roman',serif!important;
-  font-weight:900!important;
+  font-family:Georgia,'Noto Serif','Times New Roman',serif!important;
+  font-weight:700!important;
   font-style:normal!important;
   font-variant:normal!important;
   font-variant-caps:normal!important;
   font-feature-settings:"smcp" 0,"c2sc" 0!important;
+  font-variant-ligatures:none!important;
   text-transform:none!important;
-  font-synthesis:weight!important;
+  font-synthesis:none!important;
   letter-spacing:.5px!important;
   line-height:1.05!important;
 }
 .card6.lor:not(.jut):not(.field) .box .nm{
   font-size:25px!important;
+  font-weight:700!important;
   letter-spacing:.5px!important;
   line-height:1.05!important;
 }

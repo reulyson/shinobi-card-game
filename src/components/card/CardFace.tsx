@@ -41,25 +41,38 @@ export interface CardFaceProps {
   createdByCard?: boolean;
 }
 
+/** Omite placeholders de “sem habilidade ao baixar”; mostra só texto real. */
+function sanitizeRulesText(text: string): string {
+  let t = text.trim();
+  t = t.replace(/^(Sem baixada|Sem entrada)\.\s*/i, '');
+  if (/^Passiva:\s*nenhuma\b/i.test(t)) return '';
+  return t.trim();
+}
+
 function abilityTextFor(card: CardDef, rank: 1 | 2 | 3): string {
+  let raw = '';
   switch (card.kind) {
     case 'ninja':
-      if (rank === 3) return card.jounninAbilityText;
-      if (rank === 2) return card.chuuninAbilityText;
-      return card.abilityText;
+      if (rank === 3) raw = card.jounninAbilityText;
+      else if (rank === 2) raw = card.chuuninAbilityText;
+      else raw = card.abilityText;
+      break;
     case 'unidade':
     case 'token':
-      return card.abilityText;
+      raw = card.abilityText;
+      break;
     case 'jutsu':
     case 'armadilha':
     case 'equipamento':
-      return card.effectText;
+      raw = card.effectText;
+      break;
     default: {
       const _never: never = card;
       void _never;
       return '';
     }
   }
+  return sanitizeRulesText(raw);
 }
 
 function baseStats(card: CardDef, rank: 1 | 2 | 3): { attack: number; health: number } | null {
