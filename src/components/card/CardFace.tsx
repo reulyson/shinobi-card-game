@@ -106,17 +106,17 @@ function levelUpCounter(
   return `${card.chuuninLevelUpCondition} (${cur}/${target})`;
 }
 
-/** Destaca termos-chave e números como no gen_v7o (não só a 1ª palavra). */
+/** Destaca termos como no gen_v7o (em nos mocks: nomes, N de dano, −N/−N, Entrada:). */
 function formatRulesHtml(text: string): string {
   const escaped = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  // Como no gen_v7o: nomes de mecânica + números; rótulos Entrada/Passiva ficam sem <em>.
+  // Espelha os <em> do gen_v7o — não destaca +N/+N (ex.: Sasuke deixa (+1/+1) sem em).
   const patterns: RegExp[] = [
-    /\+\d+\/\+\d+/g,
-    /-?\d+\/-?\d+/g,
+    /\bEntrada:/gi,
+    /-\d+\/-?\d+/g,
     /\d+\s+de\s+dano/gi,
     /\bSede de Batalha\b/gi,
     /\bClone das Sombras\b/gi,
@@ -276,38 +276,35 @@ function KeywordRow({
   field?: boolean;
 }) {
   if (pills.length === 0) return null;
-  // Campo: ícones compactos; mão/zoom: pílulas rotuladas como no v7o de referência
-  if (field) {
-    const tile = 24;
+  // 1 keyword → pílula ícone+nome; 2+ → só ícones lado a lado (todos os tamanhos)
+  if (pills.length === 1) {
+    const p = pills[0];
     return (
-      <div className="tiles">
-        {pills.map((p, i) =>
-          p.id ? (
-            <div
-              key={`${p.label}-${i}`}
-              className="tile"
-              style={{ width: tile, height: tile }}
-              title={p.label}
-            >
-              <CardIcon id={p.id} size={tile - 6} />
-            </div>
-          ) : (
-            <div key={`${p.label}-${i}`} className="pill" title={p.label}>
-              <span>{p.label}</span>
-            </div>
-          ),
-        )}
+      <div className="pill" title={p.label}>
+        {p.id && <CardIcon id={p.id} size={field ? 14 : 18} />}
+        <span>{p.label}</span>
       </div>
     );
   }
+  const tile = field ? 24 : 30;
   return (
-    <div className={pills.length > 1 ? 'prow' : undefined}>
-      {pills.map((p, i) => (
-        <div key={`${p.label}-${i}`} className="pill" title={p.label}>
-          {p.id && <CardIcon id={p.id} size={18} />}
-          <span>{p.label}</span>
-        </div>
-      ))}
+    <div className="tiles">
+      {pills.map((p, i) =>
+        p.id ? (
+          <div
+            key={`${p.label}-${i}`}
+            className="tile"
+            style={{ width: tile, height: tile }}
+            title={p.label}
+          >
+            <CardIcon id={p.id} size={tile - 6} />
+          </div>
+        ) : (
+          <div key={`${p.label}-${i}`} className="pill" title={p.label}>
+            <span>{p.label}</span>
+          </div>
+        ),
+      )}
     </div>
   );
 }
