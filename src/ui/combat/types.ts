@@ -1,3 +1,5 @@
+import type { Keyword } from '../../types/game';
+
 /** Tipos de apresentação da Arena B4 (Part 3) — sem inventar regras; só layout/prévia. */
 
 export type OwnerSide = 'player' | 'enemy';
@@ -35,16 +37,19 @@ export interface ArenaCardRef {
   /** Faixa de tipo (NINJA / UNIDADE). */
   band?: FieldBand;
   /**
-   * Palavras-chave da carta (ícones v7o).
-   * 1 → pílula ícone+nome; 2+ → só ícones.
+   * Palavras-chave de apresentação (legado / HUD).
+   * CardFace usa `keywordsOverride` (Keyword[]) ou o CardDef.
    */
   keywords?: Array<{ id: string | null; label: string }>;
+  /** Override direto para CardFace (ex.: demo Sasuke = 1 KW como no compare-final-campo). */
+  keywordsOverride?: Keyword[];
   /** Coluna 0–4; omitido = preenchimento sequencial. */
   column?: number;
   preview?: FieldCardPreview;
   /** Face down (verso). */
   faceDown?: boolean;
   selected?: boolean;
+  /** @deprecated Ignorado — combate não escurece a carta. */
   dimmed?: boolean;
 }
 

@@ -2,7 +2,8 @@ import type { CSSProperties } from 'react';
 import { CardBack } from '../../components/card/CardBack';
 import { CardFace } from '../../components/card/CardFace';
 import { compareStat, type StatColorState } from '../../components/card/theme';
-import { keywordsFromArenaLabels, resolveArenaCardDef } from './resolveArenaCard';
+import { FIELD_FACE_H, FIELD_FACE_W, SLOT_H, SLOT_SCALE, SLOT_W } from './grid';
+import { resolveArenaCardDef } from './resolveArenaCard';
 import type { ArenaCardRef } from './types';
 
 export interface ArenaFieldCardProps {
@@ -10,7 +11,7 @@ export interface ArenaFieldCardProps {
   onClick?: () => void;
   className?: string;
   style?: CSSProperties;
-  /** `field` = slot 119×165; `hand` = face de mão 156×219. */
+  /** `field` = CardFace aprovado (119×165) no slot; `hand` = mão. */
   size?: 'field' | 'hand';
 }
 
@@ -19,8 +20,9 @@ function toneToState(value: number, base: number): StatColorState {
 }
 
 /**
- * Carta da arena B4 via CardFace size="field" (PR #1) — sem FieldCard mock.
- * Prévia de combate: power/vitality + powerState/vitalityState nas plaquinhas 32px.
+ * CardFace size="field" idêntico ao aprovado (compare-final-campo).
+ * Slot B4 menor → só `transform: scale` uniforme (sem reflow/CSS de arena).
+ * Combate = mesma carta; só plaquinhas mudam na prévia.
  */
 export function ArenaFieldCard({
   card,
@@ -31,24 +33,80 @@ export function ArenaFieldCard({
 }: ArenaFieldCardProps) {
   const def = resolveArenaCardDef(card.cardId);
   const preview = card.preview;
-  const kwOverride = keywordsFromArenaLabels(card.keywords);
   const rankLevel =
     card.rank === 'jounnin' ? 3 : card.rank === 'chuunin' ? 2 : card.rank === 'gennin' ? 1 : undefined;
+  const kwOverride = card.keywordsOverride;
 
-  if (card.faceDown || !def) {
+  if (size === 'hand') {
+    if (card.faceDown || !def) {
+      return (
+        <button
+          type="button"
+          data-uid={card.uid}
+          data-card-id={card.cardId}
+          data-arena-card="hand"
+          className={`relative block overflow-visible border-0 bg-transparent p-0 ${className}`}
+          style={style}
+          onClick={onClick}
+          aria-label={card.faceDown ? 'Carta virada' : card.name}
+        >
+          <CardBack size="hand" sized />
+        </button>
+      );
+    }
     return (
       <button
         type="button"
         data-uid={card.uid}
-        data-card-id={card.cardId}
-        data-arena-card={size}
-        className={`relative block overflow-visible border-0 bg-transparent p-0 ${className}`}
+        data-card-id={def.id}
+        data-arena-card="hand"
+        className={`relative block overflow-visible border-0 bg-transparent p-0 text-left ${className}`}
         style={style}
         onClick={onClick}
-        aria-label={card.faceDown ? 'Carta virada' : card.name}
+        aria-label={def.name}
       >
-        <CardBack size={size} sized />
+        <CardFace
+          card={def}
+          size="hand"
+          power={preview?.power}
+          vitality={preview?.vitality}
+          powerState={preview ? toneToState(preview.power, preview.basePower) : undefined}
+          vitalityState={preview ? toneToState(preview.vitality, preview.baseVitality) : undefined}
+          rankLevel={rankLevel as 1 | 2 | 3 | undefined}
+          keywordsOverride={kwOverride}
+        />
       </button>
+    );
+  }
+
+  // —— field: footprint do slot + CardFace nativo 119×165 com scale uniforme ——
+  if (card.faceDown || !def) {
+    return (
+      <div
+        data-uid={card.uid}
+        data-card-id={card.cardId}
+        data-arena-card="field"
+        className={`relative overflow-visible ${className}`}
+        style={{ width: SLOT_W, height: SLOT_H, ...style }}
+      >
+        <div
+          className="origin-top-left"
+          style={{
+            width: FIELD_FACE_W,
+            height: FIELD_FACE_H,
+            transform: `scale(${SLOT_SCALE})`,
+            transformOrigin: 'top left',
+          }}
+        >
+          <CardBack size="field" sized />
+        </div>
+        <button
+          type="button"
+          className="absolute inset-0 z-10 cursor-pointer border-0 bg-transparent p-0"
+          onClick={onClick}
+          aria-label={card.faceDown ? 'Carta virada' : card.name}
+        />
+      </div>
     );
   }
 
@@ -60,31 +118,40 @@ export function ArenaFieldCard({
     preview != null ? toneToState(preview.vitality, preview.baseVitality) : undefined;
 
   return (
-    <button
-      type="button"
+    <div
       data-uid={card.uid}
       data-card-id={def.id}
-      data-arena-card={size}
-      className={`relative block overflow-visible border-0 bg-transparent p-0 text-left ${
-        card.dimmed || preview?.dying ? 'opacity-55' : ''
-      } ${card.selected ? 'ring-2 ring-amber-300' : ''} ${className}`}
-      style={style}
-      onClick={onClick}
-      aria-label={def.name}
+      data-arena-card="field"
+      data-preview-dying={preview?.dying ? '1' : undefined}
+      className={`relative overflow-visible ${className}`}
+      style={{ width: SLOT_W, height: SLOT_H, ...style }}
     >
-      <CardFace
-        card={def}
-        size={size}
-        effectiveCost={card.cost}
-        power={power}
-        vitality={vitality}
-        powerState={powerState}
-        vitalityState={vitalityState}
-        rankLevel={rankLevel as 1 | 2 | 3 | undefined}
-        selected={card.selected}
-        dimmed={card.dimmed || Boolean(preview?.dying)}
-        keywordsOverride={kwOverride}
+      <div
+        className="pointer-events-none origin-top-left"
+        style={{
+          width: FIELD_FACE_W,
+          height: FIELD_FACE_H,
+          transform: `scale(${SLOT_SCALE})`,
+          transformOrigin: 'top left',
+        }}
+      >
+        <CardFace
+          card={def}
+          size="field"
+          power={power}
+          vitality={vitality}
+          powerState={powerState}
+          vitalityState={vitalityState}
+          rankLevel={rankLevel as 1 | 2 | 3 | undefined}
+          keywordsOverride={kwOverride}
+        />
+      </div>
+      <button
+        type="button"
+        className="absolute inset-0 z-10 cursor-pointer border-0 bg-transparent p-0"
+        onClick={onClick}
+        aria-label={def.name}
       />
-    </button>
+    </div>
   );
 }

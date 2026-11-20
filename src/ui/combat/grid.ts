@@ -6,10 +6,16 @@
 export const SCREEN_W = 1600;
 export const SCREEN_H = 900;
 
-/** Cartas de campo = CardFace size="field" (238×330 @ 0.5 → 119×165). */
-export const SLOT_ZOOM = 0.5;
-export const SLOT_W = 119;
-export const SLOT_H = 165;
+/**
+ * CardFace size="field" nativo (aprovado): 119×165.
+ * Slot B4 do mock: 95×132 — a carta entra só com `transform: scale` uniforme.
+ */
+export const FIELD_FACE_W = 119;
+export const FIELD_FACE_H = 165;
+export const SLOT_W = 95;
+export const SLOT_H = 132;
+export const SLOT_SCALE = SLOT_W / FIELD_FACE_W;
+export const SLOT_ZOOM = SLOT_SCALE * 0.5; // vs card6 238×330
 export const COL_PITCH = 135;
 
 /** Centros das 5 colunas: 530, 665, 800, 935, 1070. */

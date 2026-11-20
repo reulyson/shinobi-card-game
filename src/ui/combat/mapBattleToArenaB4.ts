@@ -70,8 +70,9 @@ function toCardRef(
     cost: card && 'cost' in card ? (card.cost as number) : undefined,
     column,
     keywords: fieldKeywords(src),
+    // Keywords vivas do motor → CardFace (1 pílula / 2+ ícones), sem dim.
+    keywordsOverride: [...src.keywords],
     preview,
-    dimmed: dying,
   };
 }
 
