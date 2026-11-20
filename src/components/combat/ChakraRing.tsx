@@ -1,29 +1,25 @@
 import React, { useMemo } from 'react';
+import { TURN_HUD } from './turnHudLayout';
 import './ChakraRing.css';
 
 export type ChakraDotState = 'full' | 'empty' | 'sealed';
 
 export interface ChakraSideStats {
-  /** Pontos preenchidos (mana atual). */
   filled: number;
-  /** Pontos desbloqueados / capacidade (maxMana), máx. 10 no anel. */
   unlocked: number;
-  /** Reserva de jutsu (0–3). */
   reserve: number;
 }
 
 export interface ChakraRingProps {
   player: ChakraSideStats;
   rival: ChakraSideStats;
-  /** Raio do anel de pips (px). Default 68 — gen_b4prev. */
+  /** Centro absoluto dentro do pai (default: crop gen_timer). */
+  cx?: number;
+  cy?: number;
   radius?: number;
-  /** Raio dos losangos de reserva (opção B). Default 88. */
   reserveRadius?: number;
-  /** Diâmetro da moeda central. Default 104 (CR=52). */
-  coinSize?: number;
   showLabels?: boolean;
   className?: string;
-  children?: React.ReactNode;
   'data-testid'?: string;
 }
 
@@ -61,7 +57,6 @@ function pipPositions(
   return out;
 }
 
-/** Opção B: 3 losangos no arco externo (105° / 90° / 75°) — gen_b4prev. */
 function reservePositions(
   cx: number,
   cy: number,
@@ -104,69 +99,54 @@ const ChakraPip: React.FC<{
   );
 };
 
-const ReserveDiamond: React.FC<{ x: number; y: number; on: boolean; size?: number }> = ({
-  x,
-  y,
-  on,
-  size = 11,
-}) => (
-  <div
-    className={`chakra-diamond${on ? ' chakra-diamond--on' : ''}`}
-    style={{
-      left: x - size / 2,
-      top: y - size / 2,
-      width: size,
-      height: size,
-      borderColor: on ? INK : '#D6E6A0',
-    }}
-    aria-hidden="true"
-  />
-);
+const ReserveDiamond: React.FC<{ x: number; y: number; on: boolean }> = ({ x, y, on }) => {
+  const size = 11;
+  return (
+    <div
+      className={`chakra-diamond${on ? ' chakra-diamond--on' : ''}`}
+      style={{
+        left: x - size / 2,
+        top: y - size / 2,
+        width: size,
+        height: size,
+        borderColor: on ? INK : '#D6E6A0',
+      }}
+      aria-hidden="true"
+    />
+  );
+};
 
 /**
- * Anel de chakra em volta da moeda (opção B — gen_b4prev.py::chakra_ring).
- * Rival = arco superior vermelho; você = inferior azul.
- * Reserva = 3 losangos no arco externo (R2=88).
+ * Anel de chakra (opção B) — posicionado em coordenadas absolutas do pai 210×500.
+ * Não redefine o tamanho do container; só desenha pips, losangos e etiquetas.
  */
 export const ChakraRing: React.FC<ChakraRingProps> = ({
   player,
   rival,
-  radius = 68,
-  reserveRadius = 88,
-  coinSize = 104,
+  cx = TURN_HUD.cx,
+  cy = TURN_HUD.cy,
+  radius = TURN_HUD.pipRadius,
+  reserveRadius = TURN_HUD.reserveRadius,
   showLabels = true,
   className,
-  children,
   'data-testid': testId = 'chakra-ring',
 }) => {
   const me = clampStats(player);
   const rv = clampStats(rival);
 
-  // Canvas largo o bastante p/ etiquetas em cy±152 (gen_b4prev B)
-  const padY = 160;
-  const padX = Math.max(reserveRadius + 24, 100);
-  const sizeW = coinSize + padX * 2;
-  const sizeH = coinSize + padY * 2;
-  const cx = sizeW / 2;
-  const cy = sizeH / 2;
-
-  const layout = useMemo(() => {
-    return {
+  const layout = useMemo(
+    () => ({
       rivalPips: pipPositions(cx, cy, radius, 'rival'),
       playerPips: pipPositions(cx, cy, radius, 'player'),
       rivalRes: reservePositions(cx, cy, reserveRadius, 'rival'),
       playerRes: reservePositions(cx, cy, reserveRadius, 'player'),
-    };
-  }, [cx, cy, radius, reserveRadius]);
-
-  // Posições de etiqueta idênticas ao mockup B: ty_r=cy-152, ty_m=cy+100+10
-  const labelRivalTop = cy - 152;
-  const labelPlayerTop = cy + 110;
+    }),
+    [cx, cy, radius, reserveRadius]
+  );
 
   return (
     <div
-      className={`chakra-ring${className ? ` ${className}` : ''}`}
-      style={{ width: sizeW, height: sizeH }}
+      className={`chakra-ring-layer${className ? ` ${className}` : ''}`}
       data-testid={testId}
       role="group"
       aria-label={`Chakra: você ${me.filled}/${me.unlocked} (reserva ${me.reserve}), rival ${rv.filled}/${rv.unlocked} (reserva ${rv.reserve})`}
@@ -199,14 +179,20 @@ export const ChakraRing: React.FC<ChakraRingProps> = ({
 
       {showLabels ? (
         <>
-          <div className="chakra-label chakra-label--rival" style={{ left: cx - 72, top: labelRivalTop }}>
+          <div
+            className="chakra-label chakra-label--rival"
+            style={{ left: TURN_HUD.labelLeft, top: TURN_HUD.labelRivalTop }}
+          >
             <span>
               <i>
                 {rv.filled}/{rv.unlocked}
               </i>
             </span>
           </div>
-          <div className="chakra-label chakra-label--player" style={{ left: cx - 72, top: labelPlayerTop }}>
+          <div
+            className="chakra-label chakra-label--player"
+            style={{ left: TURN_HUD.labelLeft, top: TURN_HUD.labelPlayerTop }}
+          >
             <span>
               <i>
                 {me.filled}/{me.unlocked}
@@ -215,10 +201,6 @@ export const ChakraRing: React.FC<ChakraRingProps> = ({
           </div>
         </>
       ) : null}
-
-      <div className="chakra-ring-slot" style={{ width: coinSize, height: coinSize }}>
-        {children}
-      </div>
     </div>
   );
 };

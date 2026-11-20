@@ -50,7 +50,8 @@ Slots além de `unlocked` = selados (X). Reserva = 3 losangos no arco externo.
 
 ### `<TurnChakraHud />`
 
-Composição pronta: `ChakraRing` + `TurnCoin` + botão. Aceita as props de ambos.
+Composição pronta no crop **210×500** de `gen_timer` (moeda CR=52 em (135,226), anel R=68 / R2=88).
+`size` (default 104) escala o canvas inteiro. Aceita as props de `TurnCoin` + `player`/`rival`.
 Ideal para a coluna direita B4 (`1452,171`).
 
 ## Hook-up atual (mínimo)

@@ -1,0 +1,30 @@
+.turn-chakra-hud {
+  position: relative;
+  flex-shrink: 0;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.turn-chakra-hud__canvas {
+  position: relative;
+  width: 210px;
+  height: 500px;
+  overflow: visible;
+  box-sizing: border-box;
+  font-family: Bangers, Impact, sans-serif;
+  /* gen_timer page_(): linear-gradient(180deg,#0E1636,#080C22) */
+  background: linear-gradient(180deg, #0e1636, #080c22);
+}
+
+.turn-chakra-hud__coin {
+  position: absolute;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.turn-chakra-hud__confirm {
+  position: absolute;
+  z-index: 6;
+  white-space: nowrap;
+  pointer-events: auto;
+}

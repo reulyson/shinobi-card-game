@@ -143,10 +143,7 @@
 .turn-coin-btn {
   position: relative;
   z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 148px;
+  display: inline-block;
   padding: 1px 14px;
   transform: skewX(-12deg);
   border: 2.5px solid #111;
@@ -155,6 +152,8 @@
     0 3px 6px #000a;
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  /* gen_b4.tab — sem min-width; largura = texto + padding */
 }
 
 .turn-coin-btn span {

@@ -1,7 +1,8 @@
-.chakra-ring {
-  position: relative;
-  flex: none;
-  margin: 0 auto;
+.chakra-ring-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
 }
 
 .chakra-pip {
@@ -17,9 +18,9 @@
 .chakra-pip--full {
   background: radial-gradient(circle at 35% 30%, #fff, var(--pip-c1) 40%, var(--pip-c2));
   border: 2px solid #fff;
-  /* gen_b4prev: 0 0 8px — manter apertado; browsers amplificam o blur */
+  /* gen_b4prev: box-shadow:0 0 8px */
   box-shadow:
-    0 0 6px var(--pip-c1),
+    0 0 8px var(--pip-c1),
     0 0 0 1.5px #111;
 }
 
@@ -93,15 +94,4 @@
 
 .chakra-label--player span {
   background: linear-gradient(180deg, #7dc4ff, #1d5fd6);
-}
-
-.chakra-ring-slot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
