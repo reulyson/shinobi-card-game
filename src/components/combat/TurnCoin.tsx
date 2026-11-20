@@ -26,6 +26,24 @@ export interface TurnCoinHandle {
   getLevel: () => number;
 }
 
+/** Congela a moeda num keyframe (captura / demo `?frame=`). */
+export interface TurnCoinPreview {
+  level: number;
+  /** Quem aparece na moeda (kanji vs swirl, salvo `symbol`). */
+  displaySide: TurnSide;
+  /** Força kanji/swirl (gen_timer FR). Default: kanji se displaySide=player. */
+  symbol?: 'kanji' | 'swirl';
+  poof?: number | null;
+}
+
+export interface TurnCoinVisualState {
+  displaySide: TurnSide;
+  level: number;
+  poof: number | null;
+  /** Botão ativo = visual de “seu turno” (kanji / CONFIRMAR). */
+  buttonActive: boolean;
+}
+
 export interface TurnCoinProps {
   /** Quem tem a vez. Ao mudar, dispara poof e reinicia o líquido. */
   side: TurnSide;
@@ -45,6 +63,10 @@ export interface TurnCoinProps {
    * - rival (laranja cheio) → sinal visual de fim do turno do rival.
    */
   onTimeout?: () => void;
+  /** Estado visual atual (displaySide durante poof ≠ side alvo). */
+  onVisualChange?: (state: TurnCoinVisualState) => void;
+  /** Congela nível/símbolo/poof — usado pela demo de frames gen_timer. */
+  preview?: TurnCoinPreview | null;
   size?: number;
   /** Oculta o botão (útil quando o anel de chakra envolve só a moeda). */
   hideButton?: boolean;
@@ -196,6 +218,8 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
     disabled = false,
     onConfirm,
     onTimeout,
+    onVisualChange,
+    preview = null,
     size = 104,
     hideButton = false,
     className,
@@ -212,8 +236,9 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
   const levelRef = useRef(level);
   const sideRef = useRef(side);
   const displaySideRef = useRef(displaySide);
-  const pausedRef = useRef(paused || localPaused);
+  const pausedRef = useRef(paused || localPaused || preview != null);
   const onTimeoutRef = useRef(onTimeout);
+  const onVisualChangeRef = useRef(onVisualChange);
   const firedTimeoutRef = useRef(false);
   const transformingRef = useRef(false);
   const timerRafRef = useRef<number | null>(null);
@@ -224,8 +249,9 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
   levelRef.current = level;
   sideRef.current = side;
   displaySideRef.current = displaySide;
-  pausedRef.current = paused || localPaused;
+  pausedRef.current = paused || localPaused || preview != null;
   onTimeoutRef.current = onTimeout;
+  onVisualChangeRef.current = onVisualChange;
 
   const cancelPoof = useCallback(() => {
     if (poofRafRef.current != null) {
@@ -303,24 +329,27 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
   );
 
   const prevSideRef = useRef<TurnSide | null>(null);
-  // Side change → poof + reset timer
+  // Side change → poof + reset timer (skip while previewing a frozen frame)
   useEffect(() => {
+    if (preview != null) return;
     const prev = prevSideRef.current;
     prevSideRef.current = side;
     startCycle(side, prev != null && prev !== side);
-  }, [side, startCycle]);
+  }, [side, startCycle, preview]);
 
   const prevResetRef = useRef(resetKey);
   // External resetKey
   useEffect(() => {
+    if (preview != null) return;
     if (resetKey === undefined) return;
     if (prevResetRef.current === resetKey) return;
     prevResetRef.current = resetKey;
     startCycle(sideRef.current, false);
-  }, [resetKey, startCycle]);
+  }, [resetKey, startCycle, preview]);
 
   // Timer loop (independent of poof RAF)
   useEffect(() => {
+    if (preview != null) return;
     const tick = (now: number) => {
       timerRafRef.current = requestAnimationFrame(tick);
       if (transformingRef.current) return;
@@ -347,22 +376,38 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
       if (timerRafRef.current != null) cancelAnimationFrame(timerRafRef.current);
       cancelPoof();
     };
-  }, [applyLevelFromRemaining, cancelPoof]);
+  }, [applyLevelFromRemaining, cancelPoof, preview]);
 
-  const isPlayerVisual = displaySide === 'player';
-  const showKanji = isPlayerVisual;
+  const liveLevel = preview?.level ?? level;
+  const liveDisplaySide = preview?.displaySide ?? displaySide;
+  const livePoof = preview != null ? (preview.poof ?? null) : poof;
+  const showKanji =
+    preview?.symbol != null
+      ? preview.symbol === 'kanji'
+      : liveDisplaySide === 'player';
+  const isPlayerVisual = showKanji;
   const activeBtn = isPlayerVisual && !disabled;
   const label = isPlayerVisual ? confirmLabel : 'AGUARDE O RIVAL';
-  const topPct = (1 - level) * 100;
+  const topPct = (1 - liveLevel) * 100;
   // gen_timer: logo('忍', 50) com CR=52 (moeda 104px)
   const kanjiSize = size >= 100 ? 50 : Math.round(size * 0.48);
+
+  useEffect(() => {
+    onVisualChangeRef.current?.({
+      displaySide: liveDisplaySide,
+      level: liveLevel,
+      poof: livePoof,
+      buttonActive: isPlayerVisual,
+    });
+  }, [liveDisplaySide, liveLevel, livePoof, isPlayerVisual]);
 
   return (
     <div
       className={`turn-coin-wrap${hideButton ? ' turn-coin-wrap--coin-only' : ''}${className ? ` ${className}` : ''}`}
       data-testid={testId}
-      data-side={displaySide}
-      data-level={level.toFixed(3)}
+      data-side={liveDisplaySide}
+      data-level={liveLevel.toFixed(3)}
+      data-poof={livePoof == null ? '' : livePoof.toFixed(2)}
     >
       <div className="turn-coin" style={{ width: size, height: size }}>
         <div
@@ -374,7 +419,7 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
             className="turn-coin-fill turn-coin-fill--orange"
             style={{ clipPath: `inset(${topPct.toFixed(2)}% 0 0 0)` }}
           />
-          {level > 0.02 && level < 0.98 ? (
+          {liveLevel > 0.02 && liveLevel < 0.98 ? (
             <div
               className="turn-coin-meniscus"
               style={{ top: `calc(${topPct.toFixed(2)}% - 2px)` }}
@@ -389,7 +434,7 @@ export const TurnCoin = forwardRef<TurnCoinHandle, TurnCoinProps>(function TurnC
             <SwirlIcon size={size - 26} color="#1F2937" strokeWidth={10} />
           )}
         </div>
-        {poof != null ? <PoofCloud p={poof} /> : null}
+        {livePoof != null ? <PoofCloud p={livePoof} /> : null}
       </div>
 
       {hideButton ? null : (

@@ -21,6 +21,8 @@ export {
   TurnCoinButton,
   type TurnCoinProps,
   type TurnCoinHandle,
+  type TurnCoinPreview,
+  type TurnCoinVisualState,
   type TurnSide,
   type ConfirmLabel,
 } from './TurnCoin';
@@ -31,3 +33,4 @@ export {
   type ChakraDotState,
 } from './ChakraRing';
 export { TurnChakraHud, type TurnChakraHudProps } from './TurnChakraHud';
+export { TIMER_FRAMES, getTimerFrame, type TimerFrameSpec } from './timerFrames';

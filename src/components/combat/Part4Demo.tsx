@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { HistoricoScroll } from './HistoricoScroll';
 import { TurnChakraHud } from './TurnChakraHud';
+import { getTimerFrame } from './timerFrames';
+import type { TurnCoinPreview } from './TurnCoin';
 import type { BattleLogEntry } from '../../types/game';
 
 const DEMO_LINES: BattleLogEntry[] = [
@@ -23,6 +25,7 @@ const DEMO_LINES: BattleLogEntry[] = [
 /**
  * Demo isolada Parte 4 (`?demo=part4`) para screenshots / GIF.
  * Timer acelerado (8s) para capturar dreno + poof sem esperar 1 minuto.
+ * `?frame=0..13` congela o keyframe idêntico a gen_timer.FR / timer-XX.png.
  */
 export const Part4Demo: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -31,13 +34,14 @@ export const Part4Demo: React.FC = () => {
   const [forceProgress, setForceProgress] = useState<number | undefined>(undefined);
   const [paused, setPaused] = useState(false);
   const [durationMs, setDurationMs] = useState(8000);
+  const [frameIdx, setFrameIdx] = useState<number | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setOpen(true), 200);
     return () => window.clearTimeout(t);
   }, []);
 
-  // Query: ?demo=part4&scroll=0.45&side=rival&paused=1&ms=5000&block=1
+  // Query: ?demo=part4&scroll=0.45&side=rival&paused=1&ms=5000&block=1&frame=4
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const q = new URLSearchParams(window.location.search);
@@ -49,7 +53,26 @@ export const Part4Demo: React.FC = () => {
     setPaused(q.get('paused') === '1');
     if (q.get('realtime') === '1') setDurationMs(60_000);
     else if (q.get('ms')) setDurationMs(Number(q.get('ms')));
+    const fr = q.get('frame');
+    if (fr != null && fr !== '') {
+      const n = Number(fr);
+      if (Number.isFinite(n)) setFrameIdx(n);
+    }
   }, []);
+
+  const preview: TurnCoinPreview | null = useMemo(() => {
+    if (frameIdx == null) return null;
+    const fr = getTimerFrame(frameIdx);
+    if (!fr) return null;
+    return {
+      level: fr.level,
+      displaySide: fr.side,
+      symbol: fr.symbol,
+      poof: fr.poof,
+    };
+  }, [frameIdx]);
+
+  const hudSide = preview?.displaySide ?? side;
 
   return (
     <div
@@ -73,10 +96,11 @@ export const Part4Demo: React.FC = () => {
       <div className="flex flex-col items-center gap-3 pt-6">
         <div className="font-display text-amber-300 text-lg tracking-wider">TurnCoin + ChakraRing</div>
         <TurnChakraHud
-          side={side}
+          side={hudSide}
           confirmLabel={label}
           durationMs={durationMs}
-          paused={paused}
+          paused={paused || preview != null}
+          preview={preview}
           size={104}
           player={{ filled: 7, unlocked: 9, reserve: 2 }}
           rival={{ filled: 6, unlocked: 8, reserve: 1 }}

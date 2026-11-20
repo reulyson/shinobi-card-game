@@ -1,10 +1,12 @@
-import React, { forwardRef, useMemo } from 'react';
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { ChakraRing, type ChakraSideStats } from './ChakraRing';
 import {
   TurnCoin,
   TurnCoinButton,
   type TurnCoinHandle,
+  type TurnCoinPreview,
   type TurnCoinProps,
+  type TurnCoinVisualState,
 } from './TurnCoin';
 import { TURN_HUD } from './turnHudLayout';
 import './TurnChakraHud.css';
@@ -19,6 +21,7 @@ export interface TurnChakraHudProps extends Omit<TurnCoinProps, 'hideButton' | '
  * HUD do turno no crop 210×500 de gen_timer (CXX=1525, CY=416 → crop 1390,190).
  * Moeda CR=52 em (135,226), anel R=68 / R2=88, plaquinhas e botão nas mesmas distâncias.
  * `size` escala o canvas inteiro (default 104 = 1:1 com a ref).
+ * O botão segue o visual da moeda (troca no meio do poof → AGUARDE O RIVAL).
  */
 export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(function TurnChakraHud(
   {
@@ -28,20 +31,42 @@ export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(func
     confirmLabel = 'CONFIRMAR ATAQUE',
     disabled,
     onConfirm,
+    onVisualChange,
+    preview = null,
     size = TURN_HUD.coinSize,
     className,
     ...coinProps
   },
   ref
 ) {
-  const isPlayer = side === 'player';
+  const [visual, setVisual] = useState<TurnCoinVisualState>(() => ({
+    displaySide: side,
+    level: side === 'player' ? 1 : 0,
+    poof: null,
+    buttonActive: side === 'player',
+  }));
+
+  const handleVisual = useCallback(
+    (state: TurnCoinVisualState) => {
+      setVisual(state);
+      onVisualChange?.(state);
+    },
+    [onVisualChange]
+  );
+
+  const buttonActive = preview != null
+    ? (preview.symbol ?? (preview.displaySide === 'player' ? 'kanji' : 'swirl')) === 'kanji' &&
+      !disabled
+    : visual.buttonActive && !disabled;
+
   const label = useMemo(
-    () => (isPlayer ? confirmLabel : 'AGUARDE O RIVAL'),
-    [confirmLabel, isPlayer]
+    () => (buttonActive ? confirmLabel : 'AGUARDE O RIVAL'),
+    [buttonActive, confirmLabel]
   );
 
   const scale = size / TURN_HUD.coinSize;
   const coinPx = TURN_HUD.coinSize;
+  const coinPreview: TurnCoinPreview | null = preview;
 
   return (
     <div
@@ -79,6 +104,8 @@ export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(func
             confirmLabel={confirmLabel}
             disabled={disabled}
             onConfirm={onConfirm}
+            onVisualChange={handleVisual}
+            preview={coinPreview}
             size={coinPx}
             hideButton
           />
@@ -92,8 +119,8 @@ export const TurnChakraHud = forwardRef<TurnCoinHandle, TurnChakraHudProps>(func
           }}
         >
           <TurnCoinButton
-            active={isPlayer && !disabled}
-            disabled={disabled}
+            active={buttonActive}
+            disabled={disabled || !buttonActive}
             label={label}
             onClick={onConfirm}
           />
