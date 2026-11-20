@@ -118,7 +118,7 @@ export const KEYWORD_BURSTS: Record<KeywordBurstId, { className: string; label: 
   segunda_chance: { className: 'kw-burst-second-chance', label: 'Segunda Chance!', icon: InfinityIcon },
   absorcao: { className: 'kw-burst-drain', label: 'Absorção de Chakra', icon: Droplet },
   resistente: { className: 'kw-burst-tough', label: 'Resistente', icon: ShieldHalf },
-  ataque_portao: { className: 'kw-burst-impact', label: 'Ataque ao Portão', icon: DoorOpen },
+  ataque_portao: { className: 'kw-burst-impact', label: 'Ataque à Vitalidade', icon: DoorOpen },
   sede_batalha: { className: 'kw-burst-fury', label: 'Sede de Batalha!', icon: Activity },
   cura_natural: { className: 'kw-burst-regen', label: 'Cura Natural', icon: HeartPulse },
   paralisia: { className: 'kw-burst-stun', label: 'Paralisia', icon: Gem },

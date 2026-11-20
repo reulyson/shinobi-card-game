@@ -10,6 +10,7 @@ import {
   TrapCardDef,
   UnitCardDef,
 } from '../types/game';
+// TrapCardDef = alias Grupo 8 (Jutsu Oculto com gatilho).
 import { NINJA_CARDS } from './ninjas';
 import {
   NINJA_CREATED_ONLY_IDS,
@@ -36,7 +37,9 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     sourceUrl: 'https://naruto.fandom.com/wiki/Body_Replacement_Technique',
     category: 'Fortalecer',
     faction: 'Time 7',
-    speed: 'Imediata',
+    // Grupo 8: lista Oculto. Gatilho face-down ainda não registrado — manter efeito; TODO gatilho.
+    speed: 'Oculta',
+    family: 'Ninjutsu',
     cost: 2,
     targetMode: 'ally_unit',
     effectText: 'Um aliado ganha Substituição e +0/+2 nesta rodada.',
@@ -111,7 +114,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Rapida',
     cost: 2,
     targetMode: 'enemy_unit',
-    effectText: 'Cause 2 de dano a um inimigo e 1 ao Portão rival.',
+    effectText: 'Cause 2 de dano a um inimigo e 1 à Vitalidade rival.',
     flavorText: 'Tenten ergue dois pergaminhos que sobem girando como dragões e dispara deles uma chuva incessante de armas com precisão absoluta.',
     elementColor: '#94A3B8',
     symbolType: 'kunai',
@@ -147,7 +150,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 4,
     targetMode: 'enemy_unit',
-    effectText: 'Cause 5 de dano a um inimigo. Se ele morrer, cause 2 ao Portão rival.',
+    effectText: 'Cause 5 de dano a um inimigo. Se ele morrer, cause 2 à Vitalidade rival.',
     flavorText: 'Esfera giratória de chakra puro criada por Minato Namikaze, inspirada na Bomba de Chakra das Bestas com Cauda.',
     elementColor: '#3B82F6',
     symbolType: 'rasengan',
@@ -165,7 +168,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 6,
     targetMode: 'enemy_unit',
-    effectText: 'Cause 6 de dano ao alvo, Exaustão (-1/-1) aos outros inimigos e 2 ao Portão rival.',
+    effectText: 'Cause 6 de dano ao alvo, Exaustão (-1/-1) aos outros inimigos e 2 à Vitalidade rival.',
     flavorText: 'Variante do Rasengan com natureza vento criada por Naruto, em forma de shuriken; o vento corta o alvo em incontáveis pontos.',
     elementColor: '#38BDF8',
     symbolType: 'rasengan',
@@ -201,7 +204,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 5,
     targetMode: 'none',
-    effectText: 'Cause 3 de dano a todos os inimigos e 2 ao Portão rival.',
+    effectText: 'Cause 3 de dano a todos os inimigos e 2 à Vitalidade rival.',
     flavorText: 'Ápice do Katon Uchiha: o fogo expelido vira um mar de chamas tão vasto que só vários usuários de Suiton juntos conseguem contê-lo.',
     elementColor: '#DC2626',
     symbolType: 'fire',
@@ -347,7 +350,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Imediata',
     cost: 2,
     targetMode: 'ally_unit',
-    effectText: 'Cause 2 de dano ao Portão rival. Um aliado ganha Ataque ao Portão.',
+    effectText: 'Cause 2 de dano à Vitalidade rival. Um aliado ganha Ataque à Vitalidade.',
     flavorText: 'Gaara molda a areia que cobre os braços em várias shuriken e as dispara em rajadas a cada movimento.',
     elementColor: '#D97706',
     symbolType: 'sand',
@@ -365,7 +368,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Imediata',
     cost: 2,
     targetMode: 'ally_unit',
-    effectText: 'Cura 3 de Vida de um aliado e 2 do seu Portão.',
+    effectText: 'Cura 3 de Vida de um aliado e 2 da sua Vitalidade.',
     flavorText: 'O usuário envia chakra pela mão até o ferimento e acelera a cura natural do corpo; exige controle preciso da quantidade de chakra.',
     elementColor: '#10B981',
     symbolType: 'medical',
@@ -401,7 +404,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 4,
     targetMode: 'none',
-    effectText: 'Cura 3 de Vida de todos os aliados e 3 do seu Portão.',
+    effectText: 'Cura 3 de Vida de todos os aliados e 3 da sua Vitalidade.',
     flavorText: 'Katsuyu se divide em clones que se prendem a cada aliado, e o invocador transmite chakra médico por eles para curar todos de uma vez.',
     elementColor: '#059669',
     symbolType: 'medical',
@@ -509,7 +512,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 6,
     targetMode: 'none',
-    effectText: 'Invoque Gamabunta 5/5 com Perfurante e Ataque ao Portão.',
+    effectText: 'Invoque Gamabunta 5/5 com Perfurante e Ataque à Vitalidade.',
     flavorText: 'Gamabunta, o sapo-chefe do Monte Myōboku, responde à invocação e entra em batalha com seu tamanho colossal.',
     elementColor: '#EA580C',
     symbolType: 'summon',
@@ -632,7 +635,9 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     sourceUrl: 'https://naruto.fandom.com/wiki/Hiding_in_Mist_Technique',
     category: 'Fortalecer',
     faction: 'Névoa',
-    speed: 'Imediata',
+    // Grupo 8: lista Oculto. Gatilho face-down ainda não registrado — manter efeito; TODO gatilho.
+    speed: 'Oculta',
+    family: 'Ninjutsu',
     cost: 2,
     targetMode: 'none',
     effectText: 'Seus aliados ganham Furtivo nesta rodada.',
@@ -653,7 +658,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Focada',
     cost: 2,
     targetMode: 'none',
-    effectText: 'Descarte 1 Armadilha oculta do rival sem dispará-la. Compre 1 carta.',
+    effectText: 'Descarte 1 Oculto do rival sem dispará-lo. Compre 1 carta.',
     flavorText: 'Dōjutsu ancestral vindo do clã Ōtsutsuki e herdado pelos Hyūga; enxerga através de objetos e a grandes distâncias, expondo o que está oculto.',
     elementColor: '#38BDF8',
     symbolType: 'byakugan',
@@ -671,7 +676,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Rapida',
     cost: 1,
     targetMode: 'none',
-    effectText: 'Descarte 1 Armadilha oculta do rival sem dispará-la.',
+    effectText: 'Descarte 1 Oculto do rival sem dispará-lo.',
     flavorText: 'Técnica sensorial de Karin: de olhos fechados, ela detecta e rastreia chakra a distâncias enormes, com detalhes que superam muitos dōjutsu.',
     elementColor: '#A855F7',
     symbolType: 'seal',
@@ -707,7 +712,7 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     speed: 'Lenta',
     cost: 3,
     targetMode: 'enemy_unit',
-    effectText: 'Cause 2 de dano e Exaustão (-1/-1) a um inimigo. Cura 2 do seu Portão.',
+    effectText: 'Cause 2 de dano e Exaustão (-1/-1) a um inimigo. Cura 2 da sua Vitalidade.',
     flavorText: 'Os Aburame hospedam milhares de insetos que se alimentam do seu chakra e obedecem a cada comando: atacar, defender ou espionar.',
     elementColor: '#10B981',
     symbolType: 'seal',
@@ -892,86 +897,166 @@ export const JUTSU_CARDS: JutsuCardDef[] = [
     elementColor: '#38BDF8',
     symbolType: 'kunai',
   },
+  // ----- Grupo 8: Fūma Shuriken (ex-Equipamento → Taijutsu Rápido) -----
+  {
+    id: 'jutsu_fuma_shuriken',
+    kind: 'jutsu',
+    name: 'Fūma Shuriken',
+    jpName: 'Shuriken Moinho das Sombras',
+    wikiTitle: 'Fūma_Shuriken',
+    imageUrl: 'https://static.wikia.nocookie.net/naruto/images/b/b8/F%C5%ABma_Shuriken.png/revision/latest/scale-to-width-down/600?cb=20160819165115',
+    sourceUrl: 'https://naruto.fandom.com/wiki/F%C5%ABma_Shuriken',
+    category: 'Ataque Individual',
+    faction: 'Time 9',
+    speed: 'Rapida',
+    family: 'Taijutsu',
+    cost: 2,
+    targetMode: 'enemy_unit',
+    // TODO Grupo 8: valor de dano da Fūma Shuriken NÃO decidido — mantido 2 (ex-bonusAttack do Equipamento).
+    effectText: 'Cause 2 de dano a um inimigo.',
+    flavorText: 'Grande shuriken de quatro lâminas, característica do clã Fūma; dobrável para transporte e letal arremessada ou empunhada.',
+    elementColor: '#F59E0B',
+    symbolType: 'taijutsu',
+  },
+  // ----- Grupo 8: Kai (Genjutsu Rápido) -----
+  {
+    id: 'jutsu_kai',
+    kind: 'jutsu',
+    name: 'Kai',
+    jpName: 'Liberação',
+    wikiTitle: 'Genjutsu',
+    imageUrl: 'https://static.wikia.nocookie.net/naruto/images/1/1b/Kai.png/revision/latest/scale-to-width-down/600?cb=20150116124127',
+    sourceUrl: 'https://naruto.fandom.com/wiki/Genjutsu',
+    category: 'Fortalecer',
+    faction: 'Neutro',
+    speed: 'Rapida',
+    family: 'Genjutsu',
+    cost: 1,
+    targetMode: 'ally_unit',
+    effectText: 'Remova Genjutsu e Selado de um aliado.',
+    flavorText: 'Ao perceber a ilusão, o shinobi interrompe o fluxo de chakra e quebra o genjutsu — e selos mentais semelhantes.',
+    elementColor: '#A855F7',
+    symbolType: 'seal',
+  },
 ];
 
-// ================= ARMADILHAS =================
-export const TRAP_CARDS: TrapCardDef[] = [
+/**
+ * Grupo 8: tipo Oculto REMOVIDO. O papel passa à velocidade Oculto (Jutsu).
+ * Convertidas das ex-Ocultos (textos/gatilhos existentes).
+ *
+ * TODO Grupo 8 — Ocultos listados sem carta no repo (não inventar texto):
+ * - Emboscada de Clone
+ * - Doton: Shinjū Zanshu
+ * - Senbon do Haku
+ * - 8º Oculto (lista diz 8; confirmar com o usuário)
+ *
+ * TODO: resposta do rival a Oculto / prioridade — indefinido.
+ */
+export const OCULTO_JUTSU_CARDS: TrapCardDef[] = [
   {
     id: 'trap_selo_explosivo',
-    kind: 'armadilha',
+    kind: 'jutsu',
     name: 'Kibaku Fuda',
     jpName: 'Amuleto Explosivo',
     wikiTitle: 'Explosive_Tag',
     imageUrl: 'https://static.wikia.nocookie.net/naruto/images/b/be/Paperbomb.png/revision/latest/scale-to-width-down/600?cb=20150529135157',
     sourceUrl: 'https://naruto.fandom.com/wiki/Explosive_Tag',
+    category: 'Ataque Individual',
     faction: 'Time 10',
+    speed: 'Oculta',
+    family: 'Ninjutsu',
     cost: 2,
+    targetMode: 'none',
     triggerType: 'on_enemy_attack',
     effectText: 'Quando o rival atacar: cause 3 de dano ao atacante mais forte.',
     flavorText: 'Folhas de papel com o selo de "explodir"; infundidas com chakra, detonam após um tempo, à distância ou ao contato com fogo.',
     elementColor: '#DC2626',
+    symbolType: 'seal',
   },
   {
     id: 'trap_possessao_sombras',
-    kind: 'armadilha',
+    kind: 'jutsu',
     name: 'Kagemane no Jutsu',
     jpName: 'Imitação das Sombras',
     wikiTitle: 'Shadow_Possession_Technique',
     imageUrl: 'https://static.wikia.nocookie.net/naruto/images/0/02/Shadow_Imitation_Technique.png/revision/latest/scale-to-width-down/600?cb=20150222031550',
-    sourceUrl: 'https://naruto.fandom.com/wiki/Shadow_Imitation_Technique',
+    sourceUrl: 'https://naruto.fandom.com/wiki/Shadow_Possession_Technique',
+    category: 'Enfraquecer',
     faction: 'Time 10',
+    speed: 'Oculta',
+    family: 'Ninjutsu',
     cost: 2,
+    targetMode: 'none',
     triggerType: 'on_enemy_attack',
     effectText: 'Quando o rival atacar: Paralise o atacante mais forte.',
     flavorText: 'Técnica-assinatura do clã Nara: o usuário estende sua sombra até a do alvo e o obriga a imitar cada movimento.',
     elementColor: '#64748B',
+    symbolType: 'shadow',
   },
   {
     id: 'trap_nevoa_venenosa',
-    kind: 'armadilha',
+    kind: 'jutsu',
     name: 'Dokugiri',
     jpName: 'Névoa Venenosa',
     wikiTitle: 'Poison_Mist',
     imageUrl: 'https://static.wikia.nocookie.net/naruto/images/8/83/Poison_Mist.png/revision/latest/scale-to-width-down/600?cb=20240925024857',
     sourceUrl: 'https://naruto.fandom.com/wiki/Poison_Mist',
+    category: 'Ataque em Área',
     faction: 'Som & Sannin',
+    speed: 'Oculta',
+    family: 'Genjutsu',
     cost: 3,
+    targetMode: 'none',
     triggerType: 'on_enemy_attack',
     effectText: 'Quando o rival atacar: cause 1 de dano e Exaustão (-1/-1) a todos os atacantes.',
     flavorText: 'Une ninjutsu, química e medicina: o usuário converte chakra numa substância e a exala como uma nuvem venenosa.',
     elementColor: '#8B5CF6',
+    symbolType: 'seal',
   },
   {
     id: 'trap_selo_cinco_elementos',
-    kind: 'armadilha',
+    kind: 'jutsu',
     name: 'Gogyō Fūin',
     jpName: 'Selo dos Cinco Elementos',
     wikiTitle: 'Five_Elements_Seal',
     imageUrl: 'https://static.wikia.nocookie.net/naruto/images/1/1b/Five_Elements_Seal.png/revision/latest/scale-to-width-down/600?cb=20240906230419',
     sourceUrl: 'https://naruto.fandom.com/wiki/Five_Elements_Seal',
+    category: 'Enfraquecer',
     faction: 'Hokages',
+    speed: 'Oculta',
+    family: 'Ninjutsu',
     cost: 2,
+    targetMode: 'none',
     triggerType: 'on_enemy_jutsu',
-    effectText: 'Quando o rival conjurar um Jutsu: ele perde 2 de Reserva e você cura 2 do Portão.',
+    effectText: 'Quando o rival conjurar um Jutsu: ele perde 2 de Reserva e você cura 2 da Vitalidade.',
     flavorText: 'Orochimaru concentra chakra nos cinco dedos e o aplica sobre outro selo; o número ímpar desequilibra selos pares e corta o fluxo de chakra.',
     elementColor: '#F59E0B',
+    symbolType: 'seal',
   },
   {
     id: 'trap_arvore_genjutsu',
-    kind: 'armadilha',
+    kind: 'jutsu',
     name: 'Magen: Jubaku Satsu',
     jpName: 'Prisão da Árvore Demoníaca',
     wikiTitle: 'Demonic_Illusion:_Tree_Binding_Death',
     imageUrl: 'https://static.wikia.nocookie.net/naruto/images/0/09/Demonic_Illusion.png/revision/latest/scale-to-width-down/600?cb=20240820183706',
     sourceUrl: 'https://naruto.fandom.com/wiki/Demonic_Illusion:_Tree_Binding_Death',
+    category: 'Enfraquecer',
     faction: 'Time 8',
+    speed: 'Oculta',
+    family: 'Genjutsu',
     cost: 2,
+    targetMode: 'none',
     triggerType: 'on_enemy_summon',
     effectText: 'Quando o rival invocar uma unidade: ela fica Paralisada e Exposta.',
     flavorText: 'O alvo vê uma árvore se enrolando ao redor do corpo e não consegue se mover; consciente e preso, fica à mercê do usuário.',
     elementColor: '#E11D48',
+    symbolType: 'seal',
   },
 ];
+
+/** @deprecated Use OCULTO_JUTSU_CARDS — tipo Armadilha removido no Grupo 8. */
+export const TRAP_CARDS = OCULTO_JUTSU_CARDS;
 
 // ================= EQUIPAMENTOS =================
 export const EQUIPMENT_CARDS: EquipmentCardDef[] = [
@@ -988,6 +1073,7 @@ export const EQUIPMENT_CARDS: EquipmentCardDef[] = [
     bonusAttack: 3,
     bonusHealth: 1,
     grantedKeywords: ['Sobrepujar', 'Fúria'],
+    // TODO Grupo 8: texto da Kubikiribōchō indefinido — manter como está.
     effectText: 'O portador ganha Perfurante e Sede de Batalha.',
     flavorText: 'A espada decapitadora dos Sete Espadachins da Névoa, passada de geração em geração; a lâmina se regenera com o ferro do sangue das vítimas.',
     accentColor: '#94A3B8',
@@ -1005,7 +1091,7 @@ export const EQUIPMENT_CARDS: EquipmentCardDef[] = [
     bonusAttack: 2,
     bonusHealth: 1,
     grantedKeywords: ['Ataque Rápido', 'Impacto'],
-    effectText: 'O portador ganha Golpe Veloz e Ataque ao Portão.',
+    effectText: 'O portador ganha Golpe Veloz e Ataque à Vitalidade.',
     flavorText: 'O leque gigante de Temari, com três "estrelas" roxas que indicam a força das rajadas de vento que ela cria.',
     accentColor: '#A855F7',
   },
@@ -1026,24 +1112,17 @@ export const EQUIPMENT_CARDS: EquipmentCardDef[] = [
     flavorText: 'Adaga ninja preta do tamanho de uma mão, a ferramenta mais comum dos shinobi; serve para golpear, arremessar ou levar selos explosivos.',
     accentColor: '#38BDF8',
   },
-  {
-    id: 'equip_shuriken',
-    kind: 'equipamento',
-    name: 'Fūma Shuriken',
-    jpName: 'Shuriken Moinho das Sombras',
-    wikiTitle: 'Fūma_Shuriken',
-    imageUrl: 'https://static.wikia.nocookie.net/naruto/images/b/b8/F%C5%ABma_Shuriken.png/revision/latest/scale-to-width-down/600?cb=20160819165115',
-    sourceUrl: 'https://naruto.fandom.com/wiki/F%C5%ABma_Shuriken',
-    faction: 'Time 9',
-    cost: 2,
-    bonusAttack: 2,
-    bonusHealth: 0,
-    grantedKeywords: ['Desafiador'],
-    effectText: 'O portador ganha Provocar.',
-    flavorText: 'Grande shuriken de quatro lâminas, característica do clã Fūma; dobrável para transporte e letal arremessada ou empunhada.',
-    accentColor: '#F59E0B',
-  },
+  // Fūma Shuriken movida para jutsu_fuma_shuriken (Taijutsu Rápido) no Grupo 8.
 ];
+
+/*
+ * TODO Grupo 8 — equipamentos novos APROVADOS só no nome; textos/custos NÃO aprovados.
+ * NÃO adicionar cartas até confirmar texto:
+ * - Samehada (Kisame): proposta custo 4; ao golpear rival perde 1 Reserva e portador +1/+1; com Kisame +1 em tudo
+ * - Pergaminho Proibido dos Selos (Naruto): proposta custo 2; Entrada compre 1 Jutsu; se Naruto, Kage Bunshin −1
+ * - Bastão Adamantino (Hiruzen/Enma): proposta custo 3; Resistente + Provocar; Hiruzen +1/+1
+ * TODO: texto da Kubikiribōchō — indefinido (manter atual).
+ */
 
 // ================= TOKENS =================
 export const TOKEN_CARDS: Record<string, UnitCardDef> = {
@@ -1225,7 +1304,7 @@ export const ALL_CARDS: CardDef[] = [
   ...UNIT_CARDS,
   ...JUTSU_CARDS,
   ...NINJA_EXCLUSIVE_JUTSUS,
-  ...TRAP_CARDS,
+  ...OCULTO_JUTSU_CARDS,
   ...EQUIPMENT_CARDS,
   ...NINJA_EQUIPMENT_TOKENS,
 ];
@@ -1318,8 +1397,8 @@ export const DECK_PRESETS: DeckPreset[] = [
       'unit_guerreiro_kaguya',
       'unit_raiz_ne',
       'unit_raiz_ne',
-      'equip_shuriken',
-      'equip_shuriken',
+      'jutsu_fuma_shuriken',
+      'jutsu_fuma_shuriken',
       'jutsu_seneijashu',
       'jutsu_seneijashu',
       'jutsu_kagura_shingan',

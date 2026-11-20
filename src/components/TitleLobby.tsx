@@ -56,7 +56,7 @@ export const TitleLobby: React.FC<TitleLobbyProps> = ({
             Estratégia de Chakra, Evolução Shinobi e Arenas Dinâmicas
           </h1>
           <p className="text-sm sm:text-base text-slate-100 leading-relaxed max-w-xl text-over-art">
-            Construa seu baralho entre {ALL_CARDS.length} cartas: {NINJA_CARDS.length} Ninjas com Promoção (Gennin → Chuunin → Jounnin), Unidades aliadas, Equipamentos reutilizáveis, Armadilhas ocultas e Jutsus Instantâneos, Rápidos, Preparados e Concentrados em Pilha tática.
+            Construa seu baralho entre {ALL_CARDS.length} cartas: {NINJA_CARDS.length} Ninjas com Promoção (Gennin → Chuunin → Jounnin), Unidades aliadas, Equipamentos reutilizáveis e Jutsus Instantâneos, Rápidos, Preparados, Concentrados e Ocultos em Pilha tática.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -148,7 +148,7 @@ export const TitleLobby: React.FC<TitleLobbyProps> = ({
               <span>Escolha seu Baralho Pronto</span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Máx. 3 Ninjas distintos (2 cópias cada) e até 3 cópias para Unidades, Jutsus, Armadilhas e Equipamentos.
+              Máx. 3 Ninjas distintos (2 cópias cada) e até 3 cópias para Unidades, Jutsus (incl. Oculto) e Equipamentos.
             </p>
           </div>
         </div>

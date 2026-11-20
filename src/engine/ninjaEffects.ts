@@ -23,15 +23,16 @@ import {
   getNinjaMaxRank,
   isDeckableCard,
 } from '../data/cards';
-import type {
-  ArenaId,
-  BattleLogEntry,
-  BoardUnit,
-  CardDef,
-  JutsuCardDef,
-  Keyword,
-  NinjaCardDef,
-  PlayerState,
+import {
+  type ArenaId,
+  type BattleLogEntry,
+  type BoardUnit,
+  type CardDef,
+  type JutsuCardDef,
+  type Keyword,
+  type NinjaCardDef,
+  type PlayerState,
+  isOcultoJutsu,
 } from '../types/game';
 import {
   applyDamageToUnit,
@@ -45,6 +46,7 @@ import {
   summonPartner,
   summonUnitByEffect,
 } from './battleEngine';
+import { MAX_HAND_SIZE } from './limits';
 import { applyGenjutsu, applyKai, GENJUTSU_UNTIL_KAI, isInGenjutsu, isOutOfCombat } from './keywords';
 
 export type Side = 'player' | 'enemy';
@@ -61,7 +63,7 @@ export interface SidesResult {
   opp: PlayerState;
 }
 
-const HAND_LIMIT = 9;
+const HAND_LIMIT = MAX_HAND_SIZE;
 
 /** Facções de Konoha (Hiruzen, Kakashi). */
 export const KONOHA_FACTIONS: ReadonlySet<string> = new Set([
@@ -446,7 +448,7 @@ export function getNinjaCostDiscount(card: CardDef, owner: PlayerState): number 
     if (card.id === 'jutsu_cho_baika' && has('choji_akimichi', 3)) discount += 2;
   }
   if (card.kind === 'ninja' && TAIJUTSU_NINJA_IDS.has(card.id) && has('might_guy')) discount += 1;
-  if (card.kind === 'armadilha' && has('shikamaru_nara', 2)) discount += 1;
+  if (isOcultoJutsu(card) && card.triggerType && has('shikamaru_nara', 2)) discount += 1;
   if (card.kind === 'equipamento' && has('tenten', 2)) discount += 1;
   return discount;
 }
@@ -480,8 +482,8 @@ export function applyNinjaEntry(
           log(
             ctx,
             side === 'player'
-              ? `Byakugan: Hinata viu a Armadilha oculta ${tName}.`
-              : 'Byakugan: Hinata do oponente viu uma das suas Armadilhas.',
+              ? `Byakugan: Hinata viu a carta Oculto ${tName}.`
+              : 'Byakugan: Hinata do oponente viu uma das suos Ocultos.',
             side,
             side === 'player' ? trap.cardId : undefined
           );
@@ -674,7 +676,7 @@ export function applyNinjaEntry(
       }
       case 'tsunade':
         o = { ...o, hp: Math.min(o.maxHp, o.hp + 4) };
-        log(ctx, 'Tsunade curou 4 do Portão.', side, ninja.id, 'info');
+        log(ctx, 'Tsunade curou 4 da Vitalidade.', side, ninja.id, 'info');
         o = addToHand(o, 'jutsu_katsuyu_cura', ctx, side, name);
         break;
       case 'minato_namikaze': {
@@ -855,7 +857,7 @@ export function applyNinjaPreStrike(
 }
 
 export interface StrikeReport {
-  /** Dano causado pelo atacante (unidade ou Portão). */
+  /** Dano causado pelo atacante (unidade ou Vitalidade). */
   damageDealt: number;
   /** Bloqueador morreu. */
   killed: boolean;
@@ -868,7 +870,7 @@ export interface StrikeReport {
 
 /**
  * Depois da troca de golpes: Ao golpear, Teimosia, Armadura de Areia e eventos de promoção.
- * def é undefined quando o ataque não foi bloqueado (golpeou o Portão).
+ * def é undefined quando o ataque não foi bloqueado (golpeou a Vitalidade).
  */
 export function applyNinjaPostStrike(
   att: BoardUnit,
@@ -898,7 +900,7 @@ export function applyNinjaPostStrike(
   }
   if (a.cardId === 'sasuke_uchiha' && a.evolutionLevel === 3 && !a.silenced && rep.killed) {
     ds = { ...ds, hp: Math.max(0, ds.hp - 2) };
-    log(ctx, 'Sasuke abateu e causou 2 de dano ao Portão.', a.owner, a.cardId, 'combat');
+    log(ctx, 'Sasuke abateu e causou 2 de dano à Vitalidade.', a.owner, a.cardId, 'combat');
   }
 
   // Teimosia (Naruto Chuunin) e Armadura de Areia (Gaara Chuunin) para os dois lados.
@@ -1073,7 +1075,7 @@ export function applyNinjaRoundStart(side: Side, owner: PlayerState, opp: Player
         if (lvl === 2 && !flags.tsunade_byakugo && o.hp <= Math.floor(o.maxHp / 2)) {
           flags.tsunade_byakugo = 1;
           o = { ...o, hp: o.maxHp };
-          log(ctx, 'Byakugō no In: Tsunade curou totalmente o Portão!', side, u.cardId, 'info');
+          log(ctx, 'Byakugō no In: Tsunade curou totalmente a Vitalidade!', side, u.cardId, 'info');
         }
         break;
       default:

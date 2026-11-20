@@ -37,6 +37,7 @@ import {
   healUnit,
   nextUid,
 } from './battleEngine';
+import { MAX_BOARD_UNITS, MAX_HAND_SIZE } from './limits';
 
 export const RECURRING_TRIGGERS: readonly RecurringTrigger[] = [
   'inicio_rodada',
@@ -50,8 +51,8 @@ export const RECURRING_TRIGGERS: readonly RecurringTrigger[] = [
   'ultimo_desejo',
 ];
 
-const MAX_BOARD = 5;
-const MAX_HAND = 9;
+const MAX_BOARD = MAX_BOARD_UNITS;
+const MAX_HAND = MAX_HAND_SIZE;
 const MAX_RESERVE = 3;
 
 /** Habilidades recorrentes ativas da unidade (patente atual + Equipamento). Selado = nenhuma. */
@@ -128,9 +129,9 @@ export function describeRecurringEffect(e: RecurringEffect): string {
     case 'barrier':
       return `${TARGET_TEXT[e.target]} ${e.target === 'all_allies' || e.target === 'other_allies' || e.target === 'all_enemies' ? 'ganham' : 'ganha'} Substituição`;
     case 'gate_damage':
-      return `cause ${e.amount} de dano ao Portão rival`;
+      return `cause ${e.amount} de dano à Vitalidade rival`;
     case 'gate_heal':
-      return `cure ${e.amount} do seu Portão`;
+      return `cure ${e.amount} da sua Vitalidade`;
     case 'draw':
       return e.amount === 1 ? 'compre 1 carta' : `compre ${e.amount} cartas`;
     case 'reserve':
@@ -144,7 +145,7 @@ export function describeRecurringEffect(e: RecurringEffect): string {
     case 'gain_keyword':
       return `${TARGET_TEXT[e.target]} ganha ${KEYWORD_DISPLAY_NAME[e.keyword] ?? e.keyword} nesta rodada`;
     case 'pay_gate':
-      return `pague ${e.amount} de Vida do seu Portão`;
+      return `pague ${e.amount} de Vida da sua Vitalidade`;
   }
 }
 
@@ -157,7 +158,7 @@ function describeCondition(c?: RecurringCondition): string {
   if (c.selfDamaged) parts.push('se esta unidade estiver ferida');
   if (c.attackingAlone) parts.push('se atacar sozinha');
   if (c.allyNinjaFaction) parts.push(`com um Ninja do ${c.allyNinjaFaction} em campo`);
-  if (c.minOwnGate) parts.push(`com o Portão acima de ${c.minOwnGate}`);
+  if (c.minOwnGate) parts.push(`com a Vitalidade acima de ${c.minOwnGate}`);
   return parts.length ? `${parts.join(' e ')}, ` : '';
 }
 

@@ -48,6 +48,7 @@ import {
   canUnitAttack,
   checkEnemyTrapsOnEvent,
   chooseBestTrap,
+  isOcultoArmable,
   createBoardUnit,
   createInitialPlayerState,
   drawCards,
@@ -157,7 +158,7 @@ interface Cinematic {
   /** Unidade de origem (destacada) e alvos (setas). */
   originUid?: string;
   targetUids?: string[];
-  /** Projétil do atacante até o Portão (data-uid 'gate-player' | 'gate-enemy'). */
+  /** Projétil do atacante até a Vitalidade (data-uid 'gate-player' | 'gate-enemy'). */
   projectileTo?: string;
   /** Banner de rodada: a Ficha de Ataque voa até este elemento. */
   tokenTo?: string;
@@ -171,7 +172,7 @@ interface Cinematic {
 function shortCardText(card: CardDef | undefined): string {
   if (!card) return '';
   const raw =
-    card.kind === 'jutsu' || card.kind === 'armadilha' || card.kind === 'equipamento'
+    card.kind === 'jutsu' || card.kind === 'equipamento'
       ? card.effectText
       : card.abilityText;
   let clean = (raw || '').replace(/\s+/g, ' ').trim();
@@ -187,7 +188,7 @@ const cineId = (p: string) => `${p}_${Date.now().toString(36)}_${(cineSeq++).toS
 
 /**
  * Combate resolvido "par a par": uma faixa "Combate!" e depois cada par destacado
- * (seta atacante → bloqueador/Portão) com pausa; a última cena aplica o resultado.
+ * (seta atacante → bloqueador/Vitalidade) com pausa; a última cena aplica o resultado.
  */
 interface StackStep {
   entry: StackEntry;
@@ -218,7 +219,7 @@ const MAIN_ACTION_TONE: Record<'amber' | 'red' | 'sky' | 'green' | 'gray' | 'vio
   gray: 'bg-slate-700 text-slate-300 border border-slate-600',
 };
 
-/** Vila do símbolo no Portão: facção mais frequente entre os Ninjas do baralho (desempate: Konoha). */
+/** Vila do símbolo na Vitalidade: facção mais frequente entre os Ninjas do baralho (desempate: Konoha). */
 function deckVillage(cardIds: string[]): VillageKey {
   const count = new Map<VillageKey, number>();
   for (const id of cardIds) {
@@ -1081,7 +1082,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
               .join(', ')}`
           );
         }
-        if (hpGain > 0) parts.push(`curou ${hpGain} do Portão`);
+        if (hpGain > 0) parts.push(`curou ${hpGain} da Vitalidade`);
         if (extraGain > 0) {
           const lastId = caster.hand[caster.hand.length - 1];
           parts.push(
@@ -1171,7 +1172,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           {
             id: nextUid('trpq'),
             round,
-            text: `Armadilha! ${getCardById(chosen.cardId)?.name} disparou porque ${card.name} entrou.`,
+            text: `Oculto! ${getCardById(chosen.cardId)?.name} disparou porque ${card.name} entrou.`,
             tone: 'trap',
             actor: defenderSide,
             cardId: chosen.cardId,
@@ -1270,8 +1271,8 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           round,
           text:
             side === 'player'
-              ? `Você armou a armadilha secreta ${trap.name}.`
-              : 'Oponente armou uma Armadilha oculta!',
+              ? `Você armou a carta Oculto ${trap.name}.`
+              : 'Oponente armou uma carta Oculto!',
           tone: 'trap',
         },
       ]);
@@ -1292,7 +1293,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
   /**
    * Combate estilo LoR: calcula o resultado (motor, regras intactas) e mostra par a par,
    * da esquerda para a direita (~1s por par): aproximação → impacto (tremor, números,
-   * projétil ao Portão se não bloqueado). O estado real é aplicado no fim.
+   * projétil à Vitalidade se não bloqueado). O estado real é aplicado no fim.
    */
   const buildCombatCinematics = useCallback(
     (
@@ -1313,7 +1314,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       const defGate: 'player' | 'enemy' = attackerSide === 'player' ? 'enemy' : 'player';
       const totalGate = Math.max(0, defBefore.hp - defAfter.hp);
 
-      // Parte do dano ao Portão de cada par (simulação isolada só para exibir; soma = total real).
+      // Parte do dano à Vitalidade de cada par (simulação isolada só para exibir; soma = total real).
       const share: Record<string, number> = {};
       let remaining = totalGate;
       pairs.forEach((p) => {
@@ -1344,7 +1345,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         const blk = p.blockerUid ? defBefore.board.find((u) => u.uid === p.blockerUid) : undefined;
         const here = [att.uid, ...(blk ? [blk.uid] : [])];
         here.forEach((uid) => pairUids.add(uid));
-        const gateTxt = attackerSide === 'enemy' ? 'seu Portão' : 'Portão Rival';
+        const gateTxt = attackerSide === 'enemy' ? 'sua Vitalidade' : 'Vitalidade Rival';
         const title = `${nameOf(att)} (${getUnitPower(att)}/${getUnitHealth(att)}) ⚔ ${
           blk ? `${nameOf(blk)} (${getUnitPower(blk)}/${getUnitHealth(blk)})` : gateTxt
         }`;
@@ -1365,7 +1366,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           side: attackerSide,
           title: blk
             ? g > 0
-              ? `${title} · ${g} passam para o Portão`
+              ? `${title} · ${g} passam para a Vitalidade`
               : title
             : g > 0
               ? `${nameOf(att)} acerta ${gateTxt}: −${g}`
@@ -1444,7 +1445,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       }
 
       // IA escolhe bloqueadores como uma pessoa: prefere quem sobrevive ou mata o atacante,
-      // só "se sacrifica" com o Portão baixo, e não é 100% previsível.
+      // só "se sacrifica" com a Vitalidade baixo, e não é 100% previsível.
       const usedBlockers = new Set(pairsToResolve.map((p) => p.blockerUid).filter(Boolean));
       const availableDefenders = currE.board.filter((u) => !usedBlockers.has(u.uid));
       const finalPairs = pairsToResolve.map((pair) => {
@@ -1690,7 +1691,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       setCombatPairs(nextPairs);
       setPhase(returnPhase);
       // Correção do travamento "Vez do Rival": se a Pilha foi aberta enquanto você escolhia bloqueadores
-      // (Jutsu Rápido/Lento ou Armadilha durante o bloqueio), a vez volta para você terminar os bloqueios.
+      // (Jutsu Rápido/Lento ou Oculto durante o bloqueio), a vez volta para você terminar os bloqueios.
       // Antes, quando o rival passava, a vez ficava com ele em DECLARE_BLOCK, e a IA não age nessa fase.
       setActiveTurn(returnPhase === 'DECLARE_BLOCK' ? 'player' : nextTurnAfterStack);
       addLogs(allLogs);
@@ -1751,7 +1752,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           id: cineId('stkA'),
           kind: 'effect',
           side: entry.caster,
-          title: `${isTrap ? 'Armadilha resolve' : 'Resolvendo'}: ${name}`,
+          title: `${isTrap ? 'Oculto resolve' : 'Resolvendo'}: ${name}`,
           text: shortCardText(c),
           originUid: stackUid,
           targetUids: target ? [target] : [],
@@ -1917,7 +1918,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
             {
               id: nextUid('trpq'),
               round,
-              text: `Armadilha! ${getCardById(chosen.cardId)?.name} disparou contra ${jutsu.name}.`,
+              text: `Oculto! ${getCardById(chosen.cardId)?.name} disparou contra ${jutsu.name}.`,
               tone: 'trap',
               actor: defenderSide,
               cardId: chosen.cardId,
@@ -1973,7 +1974,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           {
             id: nextUid('trpq'),
             round,
-            text: `Armadilha! ${getCardById(chosen.cardId)?.name} disparou contra ${jutsu.name}.`,
+            text: `Oculto! ${getCardById(chosen.cardId)?.name} disparou contra ${jutsu.name}.`,
             tone: 'trap',
             actor: defenderSide,
             cardId: chosen.cardId,
@@ -2203,7 +2204,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           {
             id: nextUid('trpq'),
             round,
-            text: `Armadilha! ${getCardById(chosen.cardId)?.name} disparou porque ${
+            text: `Oculto! ${getCardById(chosen.cardId)?.name} disparou porque ${
               pairs.map((p) => getCardById((attackerSide === 'player' ? nextP : nextE).board.find((u) => u.uid === p.attackerUid)?.cardId ?? '')?.name).filter(Boolean).join(', ') || 'o rival'
             } atacou.`,
             tone: 'trap',
@@ -2299,7 +2300,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         {
           id: nextUid('trpchoose'),
           round,
-          text: `Você ativou ${getCardById(chosenSlot.cardId)?.name}. A outra armadilha segue escondida.`,
+          text: `Você ativou ${getCardById(chosenSlot.cardId)?.name}. A outra oculto segue escondida.`,
           tone: 'trap',
         },
       ]);
@@ -2434,11 +2435,11 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       return;
     }
 
-    if (card.kind === 'armadilha') {
+    if (isOcultoArmable(card)) {
       if (phase !== 'MAIN' || jutsuStack.length > 0) return;
       executeArmTrap('player', card, idx, player, enemy);
       return;
-    }
+    } // card narrowed below; armável já é TrapCardDef via isOcultoArmable
 
     if (card.kind === 'equipamento') {
       if (phase !== 'MAIN' || jutsuStack.length > 0 || player.board.length === 0) return;
@@ -2450,7 +2451,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       const canPlayInCurrentPhase =
         card.speed === 'Imediata' ||
         card.speed === 'Rapida' ||
-        ((card.speed === 'Lenta' || card.speed === 'Focada') &&
+        ((card.speed === 'Lenta' || card.speed === 'Focada' || (card.speed === 'Oculta' && !card.triggerType)) &&
           phase === 'MAIN' &&
           jutsuStack.length === 0);
       if (!canPlayInCurrentPhase) return;
@@ -2614,7 +2615,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
       ) {
         executeSummon('player', card, dragPayload.handIndex, player, enemy);
       } else if (
-        card.kind === 'armadilha' &&
+        isOcultoArmable(card) &&
         phase === 'MAIN' &&
         jutsuStack.length === 0
       ) {
@@ -2623,7 +2624,9 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         const canPlayInPhase =
           card.speed === 'Imediata' ||
           card.speed === 'Rapida' ||
-          ((card.speed === 'Lenta' || card.speed === 'Focada') &&
+          ((card.speed === 'Lenta' ||
+            card.speed === 'Focada' ||
+            (card.speed === 'Oculta' && !card.triggerType)) &&
             phase === 'MAIN' &&
             jutsuStack.length === 0);
         if (canPlayInPhase && card.targetMode === 'none') {
@@ -2655,7 +2658,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
             return next;
           });
         } else if (zone === 'enemy_gate') {
-          // Estilo LoR: soltar no Portão só prepara; o ataque acontece ao clicar "Atacar".
+          // Estilo LoR: soltar na Vitalidade só prepara; o ataque acontece ao clicar "Atacar".
           setStagedAttackers((prev) => (prev.includes(unit.uid) ? prev : [...prev, unit.uid]));
         }
       }
@@ -2714,7 +2717,9 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         const canPlayInPhase =
           card.speed === 'Imediata' ||
           card.speed === 'Rapida' ||
-          ((card.speed === 'Lenta' || card.speed === 'Focada') &&
+          ((card.speed === 'Lenta' ||
+            card.speed === 'Focada' ||
+            (card.speed === 'Oculta' && !card.triggerType)) &&
             phase === 'MAIN' &&
             jutsuStack.length === 0);
         if (!canPlayInPhase) {
@@ -2885,11 +2890,11 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         });
       }
 
-      // Armar Armadilha (fica oculta: não revela o nome)
-      if (enemy.traps.length < 2) {
+      // Armar Oculto (fica oculta: não revela o nome)
+      if (enemy.traps.length < 3) {
         for (const item of enemyHandItems) {
           const c = item.card;
-          if (c?.kind !== 'armadilha' || !canPayCard(c, enemy, arenaId, item.idx)) continue;
+          if (!c || !isOcultoArmable(c) || !canPayCard(c, enemy, arenaId, item.idx)) continue;
           const trap = c;
           options.push({
             score: 2.5 + Math.random() * 2,
@@ -2899,7 +2904,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
                   id: cineId('aitrap'),
                   kind: 'stage',
                   side: 'enemy',
-                  title: 'Oponente armou uma Armadilha oculta',
+                  title: 'Oponente armou uma carta Oculto',
                   baseMs: 1100,
                   onDone: () => executeArmTrap('enemy', trap, item.idx, player, enemy),
                 },
@@ -2946,7 +2951,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
             score -= 0.5;
           }
         } else if (heal && enemy.hp >= enemy.maxHp && !/unidade|aliad/i.test(j.effectText)) {
-          continue; // curar Portão cheio
+          continue; // curar Vitalidade cheio
         }
         const tUid = targetUid;
         options.push({
@@ -3067,7 +3072,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
   const isDraggingHandUnit =
     draggedCard?.kind === 'ninja' || draggedCard?.kind === 'unidade';
   const isDraggingEquip = draggedCard?.kind === 'equipamento';
-  const isDraggingTrap = draggedCard?.kind === 'armadilha';
+  const isDraggingTrap = isOcultoArmable(draggedCard);
   const isDraggingUntargetedJutsu =
     draggedCard?.kind === 'jutsu' && draggedCard.targetMode === 'none';
   const isDraggingAllyUnit = dragPayload?.type === 'board_unit';
@@ -3088,7 +3093,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
   const combatUnitsRaw = useMemo(() => {
     if (combatPairs.length > 0) {
       // Ataque já declarado (de qualquer lado): os atacantes ficam na Zona de Combate
-      // enquanto a Pilha/armadilhas resolvem.
+      // enquanto a Pilha/ocultos resolvem.
       return combatPairs
         .map(
           (p) =>
@@ -3114,7 +3119,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
 
   const playerBenchUnits = useMemo(() => {
     const stagedSet = new Set(stagedAttackers);
-    // Atacantes já declarados (ataque do jogador aguardando a Pilha/armadilhas) continuam
+    // Atacantes já declarados (ataque do jogador aguardando a Pilha/ocultos) continuam
     // na Zona de Combate: não podem "voltar" para o campo só porque a Pilha mudou.
     const pairAttackers = new Set(combatPairs.map((p) => p.attackerUid));
     return player.board.filter((u) => !stagedSet.has(u.uid) && !pairAttackers.has(u.uid)).map(withPreview);
@@ -3140,7 +3145,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     }
   }, [player.board, enemy.board, inspected.unit]);
 
-  // Eventos marcados no Registro (armadilha, carta criada, Último Desejo…) viram cenas na fila.
+  // Eventos marcados no Registro (oculto, carta criada, Último Desejo…) viram cenas na fila.
   const seenLogIdsRef = useRef<Set<string> | null>(null);
   useEffect(() => {
     if (!seenLogIdsRef.current) {
@@ -3160,14 +3165,14 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
         side: entry.actor ?? 'system',
         title:
           entry.cine === 'trap'
-            ? `Armadilha! ${c?.name ?? ''}`
+            ? `Oculto! ${c?.name ?? ''}`
             : entry.cine === 'created'
               ? 'Carta criada na mão'
               : c?.name ?? 'Efeito',
         cardId: entry.cardId,
         text:
           entry.cine === 'trap'
-            ? `${c?.name ?? 'Armadilha'} — ${entry.text.replace(/^Armadilha!\s*.*?\bdisparou\s*/u, '').replace(/\.$/, '') || 'disparou'}`
+            ? `${c?.name ?? 'Oculto'} — ${entry.text.replace(/^Oculto!\s*.*?\bdisparou\s*/u, '').replace(/\.$/, '') || 'disparou'}`
             : entry.text,
         originUid: entry.originUid,
         targetUids: entry.targetUids,
@@ -3267,7 +3272,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     if (draggedCard && !isBusy) {
       if (draggedCard.kind === 'ninja' || draggedCard.kind === 'unidade' || draggedCard.kind === 'token')
         return { label: 'Invocar', sub: 'solte aqui ou no campo', tone: 'sky', disabled: false, dropTarget: true };
-      if (draggedCard.kind === 'armadilha')
+      if (isOcultoArmable(draggedCard))
         return { label: 'Armar', sub: 'solte aqui', tone: 'violet', disabled: false, dropTarget: true };
       if (draggedCard.kind === 'jutsu' && draggedCard.targetMode === 'none')
         return { label: 'Conjurar', sub: 'solte aqui', tone: 'sky', disabled: false, dropTarget: true };
@@ -3511,10 +3516,10 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
             <div className="border-b border-slate-800 pb-3">
               <div className="text-xs font-semibold text-purple-300 flex items-center gap-1.5">
                 <EyeOff className="w-3.5 h-3.5" />
-                <span>Limite de 1 Armadilha por Gatilho</span>
+                <span>Limite de 1 Oculto por Gatilho</span>
               </div>
               <h2 className="text-lg font-display font-bold text-white mt-1">
-                Escolha qual Armadilha ativar na Pilha
+                Escolha qual Oculto ativar na Pilha
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
                 A técnica escolhida será revelada e entrará na Pilha (Rápido). A outra permanecerá oculta.
@@ -3557,8 +3562,8 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
           : player.deckOut
             ? 'Seu baralho esgotou ao tentar comprar uma carta. Derrota imediata.'
             : isVictory
-              ? 'Você rompeu as defesas do Portão adversário e conquistou a arena.'
-              : 'Seu Portão caiu. Ajuste sua estratégia e retorne.';
+              ? 'Você rompeu as defesas da Vitalidade adversário e conquistou a arena.'
+              : 'Sua Vitalidade caiu. Ajuste sua estratégia e retorne.';
         return (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="max-w-md w-full rounded-2xl border border-slate-700 bg-[#111927] p-6 text-center shadow-2xl space-y-5">
