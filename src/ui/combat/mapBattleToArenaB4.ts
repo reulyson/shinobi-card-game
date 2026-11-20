@@ -26,8 +26,8 @@ const V7O_ICON: Partial<Record<Keyword, string>> = {
   'Visão Aguçada': 'visao-ninja',
   Veneno: 'veneno',
   Formação: 'formacao',
+  Sobrepujar: 'perfurante',
 };
-
 function keywordVisual(kw: Keyword): { id: string | null; label: string } {
   return {
     id: V7O_ICON[kw] ?? null,

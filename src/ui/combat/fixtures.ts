@@ -21,9 +21,8 @@ function pv(
 const KW = {
   golpe: { id: 'golpe-veloz', label: 'GOLPE VELOZ' },
   furtivo: { id: 'furtivo', label: 'FURTIVO' },
-  /** Sem ícone v7o (kwtext no mock). */
-  clone: { id: null, label: 'CLONE' },
-  perfurante: { id: null, label: 'PERFURANTE' },
+  clone: { id: 'clone', label: 'CLONE' },
+  perfurante: { id: 'perfurante', label: 'PERFURANTE' },
 } as const;
 
 const ART: Record<string, string> = {
