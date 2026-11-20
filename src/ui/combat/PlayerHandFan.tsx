@@ -61,19 +61,20 @@ export function PlayerHandFan({
             }}
           >
             <FieldCard
-              card={{
-                uid: `hand-${i}`,
-                cardId: c.cardId,
-                name: c.name,
-                owner: 'player',
-                artUrl: c.artUrl,
-                cost: c.cost,
-                preview: undefined,
-              }}
-              onClick={() => onCardClick?.(c.cardId, i)}
-              className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
-              style={{ width: cardW, height: cardH }}
-            />
+                  variant="compact"
+                  card={{
+                    uid: `hand-${i}`,
+                    cardId: c.cardId,
+                    name: c.name,
+                    owner: 'player',
+                    artUrl: c.artUrl,
+                    cost: c.cost,
+                    preview: undefined,
+                  }}
+                  onClick={() => onCardClick?.(c.cardId, i)}
+                  className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
+                  style={{ width: cardW, height: cardH }}
+                />
           </div>
         );
       })}

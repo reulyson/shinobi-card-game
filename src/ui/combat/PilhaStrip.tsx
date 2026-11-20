@@ -54,11 +54,11 @@ export function PilhaStrip({
             <div
               className="relative h-full w-full overflow-hidden rounded-full"
               style={{
-                border: `3.5px solid ${ring}`,
+                border: `${diameter >= 50 ? 3.5 : 3}px solid ${ring}`,
                 boxShadow: isNewest
-                  ? '0 0 0 2px #fff, 0 0 18px 4px rgba(255,210,63,0.95)'
-                  : '0 0 0 2px #fff, 0 4px 8px rgba(0,0,0,0.5)',
-                background: '#0b1030',
+                  ? '0 0 0 2px #fff, 0 2px 6px #000d, 0 0 0 4px #FFE55A, 0 0 16px 5px #FFD23Fcc'
+                  : '0 0 0 2px #fff, 0 2px 6px #000d',
+                background: '#000',
               }}
             >
               {item.artUrl ? (
@@ -69,26 +69,22 @@ export function PilhaStrip({
                 </div>
               )}
               <span
-                className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-black bg-gradient-to-b from-amber-300 to-orange-600 font-display text-[11px] text-white"
-                style={{ boxShadow: '0 0 0 1px #fff' }}
+                className="absolute flex items-center justify-center rounded-full font-display text-white"
+                style={{
+                  left: -4,
+                  top: -5,
+                  width: diameter >= 50 ? 22 : 15,
+                  height: diameter >= 50 ? 22 : 15,
+                  fontSize: diameter >= 50 ? 14 : 11,
+                  lineHeight: 1,
+                  background: ring,
+                  border: diameter >= 50 ? '2px solid #fff' : '1.5px solid #fff',
+                  boxShadow: diameter >= 50 ? '0 0 0 1.5px #111' : undefined,
+                }}
               >
                 {item.order}
               </span>
             </div>
-            {isNewest && (
-              <div
-                className="absolute left-1/2 -translate-x-1/2 text-amber-300"
-                style={{
-                  top: -16,
-                  fontSize: 14,
-                  textShadow: '0 0 8px #FFD23F, 0 1px 2px #000',
-                  filter: 'drop-shadow(0 0 4px #FFD23F)',
-                }}
-                aria-hidden
-              >
-                ▼
-              </div>
-            )}
           </div>
         );
       })}

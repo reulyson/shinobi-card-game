@@ -1,0 +1,410 @@
+/* Campo B4 — card6.field 238×330 @ zoom 0.4 → slot 95×132 (gen_v7o + gen_b4grid). */
+
+.fc-root {
+  position: relative;
+  width: 95px;
+  height: 132px;
+  overflow: visible;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fc-scale {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 238px;
+  height: 330px;
+  /* Mesmo mecanismo do mockup (gen_combate.zm) — zoom afeta layout, diferente de transform. */
+  zoom: 0.4;
+}
+
+.fc-card {
+  position: relative;
+  width: 238px;
+  height: 330px;
+  box-sizing: border-box;
+  border: 5px solid transparent;
+  border-radius: 12px;
+  /* Default = chuunin (prata) — Anbu/Clone sem rank */
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f3f4f6, #9ca3af 28%, #f9fafb 48%, #6b7280 72%, #d1d5db) border-box;
+  box-shadow: 0 6px 14px #000a;
+  overflow: visible;
+}
+
+.fc-card--gennin {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f0c08a, #a0612b 28%, #f6cfa0 48%, #7a431c 72%, #d99a5c) border-box;
+}
+
+.fc-card--chuunin {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #f3f4f6, #9ca3af 28%, #f9fafb 48%, #6b7280 72%, #d1d5db) border-box;
+}
+
+.fc-card--jounnin {
+  background:
+    linear-gradient(#0b1020, #0b1020) padding-box,
+    linear-gradient(135deg, #fff3b0, #c98a1b 28%, #fde68a 48%, #8a5a10 72%, #f5c542) border-box;
+}
+
+.fc-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.fc-art {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 68%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.fc-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    #0b102055 0%,
+    #0b102000 20%,
+    #0b102000 40%,
+    #0b1020 62%,
+    #0b1020 100%
+  );
+}
+
+.fc-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 25px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #f97316;
+  font: 13px Bangers, Impact, sans-serif;
+  letter-spacing: 1.5px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+}
+
+.fc-band--unidade {
+  background: #64748b;
+}
+
+.fc-band--token {
+  background: #0f766e;
+}
+
+.fc-flow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 29px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.fc-box {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  height: 62px;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 5px;
+  margin: 0;
+  border-top: 2px solid #5b6574;
+  border-bottom: 2px solid #5b6574;
+  border-left: 7px solid #1b2f63;
+  border-right: 7px solid #1b2f63;
+  background:
+    repeating-linear-gradient(100deg, #fff0 0 7px, #0000000d 7px 8px),
+    linear-gradient(180deg, #f4f6f9, #d5dbe3 45%, #b9c1cc);
+  background-clip: padding-box;
+  box-shadow: inset 0 2px 0 #fff, inset 0 -3px 4px #6b728055, 0 3px 8px #000b;
+  overflow: hidden;
+}
+
+.fc-card--chuunin .fc-box {
+  border-left-color: #3a6a28;
+  border-right-color: #3a6a28;
+}
+
+.fc-card--jounnin .fc-box {
+  border-left-color: #14275a;
+  border-right-color: #14275a;
+}
+
+.fc-name {
+  font-family: Cinzel, 'Times New Roman', serif;
+  font-weight: 900;
+  font-size: 17px;
+  line-height: 1.05;
+  letter-spacing: 0.5px;
+  color: #1a1208;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-rule {
+  width: 42%;
+  height: 2px;
+  background: #b91c1c;
+  border-radius: 1px;
+}
+
+.fc-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #166534;
+  color: #fff;
+  font: 800 10px/1.2 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  max-width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-tiles {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-tile {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: #0b1020;
+  border: 1.5px solid #b8923f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-tile img {
+  width: 18px;
+  height: 18px;
+}
+
+.fc-cost {
+  position: absolute;
+  left: -11px;
+  top: -11px;
+  width: 48px;
+  height: 48px;
+  z-index: 6;
+  filter: drop-shadow(0 3px 4px #000c);
+}
+
+.fc-cost__orb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.fc-cost b {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 28px/1 Bangers, Impact, sans-serif;
+  color: #fff;
+  -webkit-text-stroke: 2px #0b1530;
+  paint-order: stroke fill;
+}
+
+.fc-seal {
+  position: absolute;
+  right: -9px;
+  top: -9px;
+  width: 42px;
+  height: 42px;
+  z-index: 6;
+  filter: drop-shadow(0 3px 4px #000c);
+}
+
+.fc-seal__burst {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fde68a, #c98a1b 60%, #7a431c);
+  border: 3px solid #3a2410;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(
+    50% 0%,
+    61% 12%,
+    76% 8%,
+    78% 24%,
+    92% 30%,
+    84% 42%,
+    96% 55%,
+    82% 60%,
+    84% 76%,
+    68% 72%,
+    60% 88%,
+    50% 78%,
+    40% 88%,
+    32% 72%,
+    16% 76%,
+    18% 60%,
+    4% 55%,
+    16% 42%,
+    8% 30%,
+    22% 24%,
+    24% 8%,
+    39% 12%
+  );
+}
+
+.fc-seal__burst span {
+  font: 900 18px 'Yuji Boku', 'Noto Serif CJK JP', serif;
+  color: #14100c;
+  line-height: 1;
+}
+
+.fc-plaque {
+  position: absolute;
+  bottom: -26px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 66px;
+  padding: 0 12px 0 8px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #1b2342, #080c1f);
+  border: 5px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 5px 8px #000c;
+}
+
+.fc-plaque--l {
+  left: -12px;
+}
+
+.fc-plaque--r {
+  right: -12px;
+  padding: 0 8px 0 12px;
+}
+
+.fc-plaque b {
+  font: 56px/1 Bangers, Impact, sans-serif;
+  color: #fff;
+  -webkit-text-stroke: 2px #000;
+  text-shadow: 0 3px 0 #000;
+  min-width: 34px;
+  text-align: center;
+}
+
+.fc-plaque img {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  filter: drop-shadow(0 0 1px #000);
+}
+
+.fc-plaque--up {
+  border-color: #4ade80;
+}
+.fc-plaque--up b {
+  color: #4ade80;
+}
+
+.fc-plaque--down {
+  border-color: #ff5252;
+}
+.fc-plaque--down b {
+  color: #ff5252;
+}
+
+/* Filtro no scale (como no mockup); overflow visível para plaquinhas. */
+.fc-root[data-dying='true'] .fc-scale {
+  filter: grayscale(0.7) brightness(0.5);
+}
+
+.fc-crack {
+  position: absolute;
+  inset: 0;
+  width: 95px;
+  height: 132px;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.fc-skull {
+  position: absolute;
+  left: 28px;
+  top: 56px;
+  z-index: 14;
+  filter: drop-shadow(0 2px 3px #000);
+  pointer-events: none;
+}
+
+.fc-chip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% - 34px);
+  z-index: 14;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.fc-chip span {
+  background: #000c;
+  border: 1.5px solid #ffd23f;
+  color: #ffd23f;
+  border-radius: 8px;
+  font: 700 9px 'Plus Jakarta Sans', sans-serif;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.fc-chip span.fc-chip--ok {
+  border-color: #7cfc8a;
+  color: #7cfc8a;
+}

@@ -118,15 +118,27 @@ export function AttackArrows({ arrows }: { arrows: ArenaArrow[] }) {
               </linearGradient>
             </defs>
             {a.blocked && (
-              <line
-                x1={cx}
-                y1={ATT_Y + SLOT_H}
-                x2={cx}
-                y2={BLK_Y}
-                stroke="#FFD23F"
-                strokeWidth={2}
-                opacity={0.75}
-              />
+              <>
+                {/* conn: 5px #FFD23F + borda 1.5 #111 (gen_b4grid.conn) */}
+                <line
+                  x1={cx}
+                  y1={ATT_Y + SLOT_H}
+                  x2={cx}
+                  y2={BLK_Y}
+                  stroke="#111"
+                  strokeWidth={8}
+                  opacity={0.9}
+                />
+                <line
+                  x1={cx}
+                  y1={ATT_Y + SLOT_H}
+                  x2={cx}
+                  y2={BLK_Y}
+                  stroke="#FFD23F"
+                  strokeWidth={5}
+                  opacity={0.9}
+                />
+              </>
             )}
             {/* Sombra da trilha */}
             <polygon points={poly} fill="#000" opacity={0.35} transform="translate(2,3)" />
@@ -184,17 +196,17 @@ export function AttackArrows({ arrows }: { arrows: ArenaArrow[] }) {
             {!a.blocked && a.unblockedDamage != null && a.unblockedDamage > 0 && (
               <text
                 x={cx}
-                y={fromTop ? BLK_Y + SLOT_H / 2 : ATT_Y + 38}
+                y={fromTop ? BLK_Y + 38 + 27 : ATT_Y + 38 + 27}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill="#FF5252"
-                stroke="#fff"
-                strokeWidth={5}
+                fill="#fff"
+                stroke="#DC2626"
+                strokeWidth={6}
                 paintOrder="stroke fill"
-                fontSize={48}
-                style={{ fontFamily: 'Bangers, sans-serif' }}
+                fontSize={54}
+                style={{ fontFamily: 'Bangers, Impact, sans-serif', letterSpacing: '1px' }}
               >
-                −{a.unblockedDamage}
+                -{a.unblockedDamage}
               </text>
             )}
           </g>

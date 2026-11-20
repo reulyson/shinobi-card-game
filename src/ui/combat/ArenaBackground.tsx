@@ -20,7 +20,7 @@ export function ArenaBackground() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.66) 100%)',
+            'radial-gradient(ellipse at 50% 45%, #00000000 40%, #000000a8 100%)',
         }}
       />
       {/* Meios-tons laranja nos cantos */}

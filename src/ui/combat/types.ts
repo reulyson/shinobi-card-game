@@ -18,6 +18,10 @@ export interface FieldCardPreview {
   keywordChips?: string[];
 }
 
+export type CardRank = 'gennin' | 'chuunin' | 'jounnin';
+
+export type FieldBand = 'NINJA' | 'UNIDADE' | 'TOKEN';
+
 export interface ArenaCardRef {
   uid: string;
   cardId: string;
@@ -25,7 +29,17 @@ export interface ArenaCardRef {
   owner: OwnerSide;
   /** Arte / portrait URL opcional. */
   artUrl?: string;
+  /** object-position da arte (ex.: "50% 20%"). */
+  artPos?: string;
   cost?: number;
+  /** Moldura por patente (borda lateral + frame). */
+  rank?: CardRank;
+  /** Faixa de tipo (NINJA / UNIDADE). */
+  band?: FieldBand;
+  /** Pílula de texto no box (ex.: CLONE, PERFURANTE). */
+  pill?: string;
+  /** Ícones de palavra-chave no box (ex.: golpe-veloz, furtivo). */
+  kwIcons?: string[];
   /** Coluna 0–4; omitido = preenchimento sequencial. */
   column?: number;
   preview?: FieldCardPreview;

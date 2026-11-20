@@ -9,7 +9,6 @@ import {
   RIVAL_BACK_Y,
   SLOT_H,
   SLOT_W,
-  STK_BAND,
   ZONES,
   colX,
 } from './grid';
@@ -93,7 +92,7 @@ export function CombatBoard({
         width: BOARD.w,
         height: BOARD.h,
         zIndex: 8,
-        background: 'linear-gradient(180deg, rgba(14,22,54,0.78), rgba(8,12,34,0.84))',
+        background: 'linear-gradient(180deg, #0E1636dd, #080C22e8)',
         border: '5px solid #111',
         boxShadow:
           '0 0 0 3px #fff, 0 0 0 9px #F97316, 0 0 0 12px #111, 0 14px 30px rgba(0,0,0,0.75)',
@@ -122,65 +121,82 @@ export function CombatBoard({
         </svg>
       </div>
 
-      {/* Faixas 205→1395 (relativo: 5→1195) — atrás das cartas; o Histórico deixa laterais abertas. */}
+      {/* Faixas zone_bg: x=BOARD+5, w=BOARD-10 — atrás das cartas (gen_b4grid). */}
       <div
         className="pointer-events-none absolute"
         data-band="rival"
         style={{
-          left: STK_BAND.x - BOARD.x,
-          top: RIVAL_BACK_Y - BOARD.y,
-          width: STK_BAND.w,
-          height: 144,
-          background: 'rgba(185,28,28,0.34)',
+          left: 5,
+          top: ZONES.rivalBack.y - BOARD.y,
+          width: BOARD.w - 10,
+          height: ZONES.rivalBack.h,
+          background: '#B91C1C33',
+          borderTop: '2px solid #fff3',
+          borderBottom: '2px solid #fff3',
+          boxSizing: 'border-box',
         }}
       />
       <div
         className="pointer-events-none absolute"
         data-band="combat"
         style={{
-          left: STK_BAND.x - BOARD.x,
+          left: 5,
           top: ZONES.combat.y - BOARD.y,
-          width: STK_BAND.w,
+          width: BOARD.w - 10,
           height: ZONES.combat.h,
-          background: 'rgba(255,210,63,0.10)',
+          background: '#FFD23F14',
+          borderTop: '2px solid #fff3',
+          borderBottom: '2px solid #fff3',
+          boxSizing: 'border-box',
         }}
       />
       <div
         className="pointer-events-none absolute"
         data-band="player"
         style={{
-          left: STK_BAND.x - BOARD.x,
-          top: MY_BACK_Y - BOARD.y,
-          width: STK_BAND.w,
-          height: 144,
-          background: 'rgba(29,95,214,0.34)',
+          left: 5,
+          top: ZONES.myBack.y - BOARD.y,
+          width: BOARD.w - 10,
+          height: ZONES.myBack.h,
+          background: '#1D5FD633',
+          borderTop: '2px solid #fff3',
+          borderBottom: '2px solid #fff3',
+          boxSizing: 'border-box',
         }}
       />
-      {/* Linha da Pilha: só em BoardBands (z=15) para não duplicar sob o Histórico. */}
 
-      {/* Área info esquerda = footprint do Histórico (214×588), só labels. */}
+      {/* zone_bg: tab + desc em (zone.x+18, zone.y+12); counters CAMPO em y+66. */}
       <div
-        className="pointer-events-none absolute"
-        style={{
-          left: ZONES.infoLeft.x - BOARD.x,
-          top: ZONES.infoLeft.y - BOARD.y,
-          width: ZONES.infoLeft.w,
-          height: ZONES.infoLeft.h,
-        }}
-        data-zone="info-left"
-      />
-
+        className="pointer-events-none absolute text-[10px] font-bold leading-snug tracking-wide text-white/75"
+        style={{ left: 18, top: ZONES.rivalBack.y + 12 - BOARD.y, width: 200, zIndex: 11 }}
+      >
+        retaguarda · unidades em campo
+      </div>
       <SlantLabel
         text={`CAMPO ${rivalField}/${MAX_UNITS_PER_SIDE}`}
         tone="rival"
-        style={{ left: 18, top: 12 }}
+        style={{ left: 18, top: ZONES.rivalBack.y + 66 - BOARD.y }}
       />
-      <SlantLabel text="COMBATE" tone="combat" style={{ left: 18, top: 168 }} />
-      <SlantLabel text={previaLabel} tone="previa" style={{ left: 18, top: 210 }} />
+      <SlantLabel
+        text="COMBATE"
+        tone="combat"
+        style={{ left: 18, top: ZONES.combat.y + 12 - BOARD.y }}
+      />
+      <SlantLabel
+        text={previaLabel}
+        tone="previa"
+        style={{ left: 22, top: 352 - BOARD.y }}
+      />
+      <div
+        className="pointer-events-none absolute text-[10px] font-bold leading-snug tracking-wide text-white/75"
+        style={{ left: 18, top: ZONES.myBack.y + 12 - BOARD.y, width: 200, zIndex: 11 }}
+      >
+        retaguarda · unidades em campo
+      </div>
       <SlantLabel
         text={`CAMPO ${myField}/${MAX_UNITS_PER_SIDE}`}
         tone="player"
-        style={{ left: 18, top: BOARD.h - 48 }}
+        style={{ left: 18, top: ZONES.myBack.y + 66 - BOARD.y }}
       />
 
       <Row cards={rb} y={RIVAL_BACK_Y} onCardClick={onCardClick} />
@@ -207,7 +223,7 @@ function Row({
         return (
           <div
             key={card.uid}
-            className="absolute"
+            className="absolute overflow-visible"
             style={{
               left: colX(i) - BOARD.x,
               top: y - BOARD.y,
