@@ -103,7 +103,7 @@ function KeywordRow({
     const kw = keywords[0]!;
     return (
       <div className="fc-pill" data-kw-count="1">
-        {kw.id ? <img src={assetUrl(`art/icons/${kw.id}.svg`)} alt="" width={14} height={14} /> : null}
+        {kw.id ? <img src={assetUrl(`art/icons/${kw.id}.svg`)} alt="" /> : null}
         <span>{kw.label}</span>
       </div>
     );

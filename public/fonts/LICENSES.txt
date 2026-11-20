@@ -3,4 +3,5 @@ Fontes livres (SIL Open Font License 1.1), baixadas do Google Fonts:
 - Yuji Syuku (Kinuta Font Factory)
 - Plus Jakarta Sans (Tokotype)
 - JetBrains Mono (JetBrains)
+- Cinzel (Natanael Gama / TypeMates) — variável 400–900 para nomes das cartas de campo
 Licença: https://openfontlicense.org

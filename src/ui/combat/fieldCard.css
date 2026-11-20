@@ -159,17 +159,20 @@
   border-right-color: #14275a;
 }
 
+/* gen_v7o .box .nm — Title Case, Cinzel 900, sem letter-spacing extra */
 .fc-name {
-  font-family: Cinzel, 'Times New Roman', serif;
+  font-family: Cinzel, 'Times New Roman', Times, serif;
   font-weight: 900;
+  font-style: normal;
   font-size: 17px;
   line-height: 1.05;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   color: #1a1208;
   text-align: center;
+  text-transform: none;
+  font-variant: normal;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   white-space: nowrap;
 }
 
@@ -178,47 +181,64 @@
   height: 2px;
   background: #b91c1c;
   border-radius: 1px;
+  flex: none;
 }
 
+/* gen_v7o .pill — 1 palavra-chave: ícone 18px + nome */
 .fc-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: #166534;
-  color: #fff;
-  font: 800 10px/1.2 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: 0.6px;
+  gap: 6px;
+  padding: 5px 14px 5px 12px;
+  border-radius: 10px;
+  background: #0b1020f2;
+  border: 1.5px solid #d4a24c;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #fde68a;
   text-transform: uppercase;
-  max-width: 92%;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  flex: none;
+  box-sizing: border-box;
 }
 
+.fc-pill img {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  display: block;
+}
+
+/* gen_v7o tiles(kws, 24) no campo — ícone 18px */
 .fc-tiles {
   display: flex;
-  gap: 3px;
+  gap: 6px;
   align-items: center;
   justify-content: center;
+  flex: none;
 }
 
 .fc-tile {
   width: 24px;
   height: 24px;
-  border-radius: 5px;
-  background: #0b1020;
-  border: 1.5px solid #b8923f;
+  border-radius: 6px;
+  background: radial-gradient(circle at 35% 30%, #64748b, #1e293b 75%);
+  border: 2px solid #d4a24c;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  flex: none;
 }
 
 .fc-tile img {
   width: 18px;
   height: 18px;
+  display: block;
 }
 
 .fc-cost {
