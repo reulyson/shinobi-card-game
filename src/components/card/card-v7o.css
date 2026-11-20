@@ -178,11 +178,11 @@
 .ksl .ens{position:absolute;inset:1px;width:calc(100% - 2px);height:calc(100% - 2px)}
 .ksl .hk{position:absolute;right:3%;bottom:6%;width:22%;height:22%;background:#C1272D;border-radius:2px;z-index:2;transform:rotate(-6deg);opacity:.92}
 .seal6:has(.ksl){align-items:center}
-.card6 .band{height:34px!important}.card6 .band.f{height:28px!important}
+.card6 .band{height:34px!important}.card6 .band.f{height:30px!important}
 .bst b{font-size:28px!important}
-/* Campo: plaquinhas grandes (quase a altura da faixa), como stats-campo-zoom */
-.band.f .bst b{font-size:28px!important}
-.card6 .flow6{bottom:38px!important}.jut .flow6{bottom:38px!important}.card6.field .flow6{bottom:32px!important}
+/* Campo: plaquinhas ~+14% (28→32px) */
+.band.f .bst b{font-size:32px!important}
+.card6 .flow6{bottom:38px!important}.jut .flow6{bottom:38px!important}.card6.field .flow6{bottom:34px!important}
 .jut .gemabs{display:none}
 .card6 .box{height:124px;box-sizing:border-box;justify-content:center;overflow:hidden}
 .card6.field .box{height:62px;padding-top:4px;padding-bottom:4px}
@@ -193,15 +193,15 @@
 .card6 .tint,.card6 .sw{display:none!important}
 .card6 .art{height:68%!important}
 .card6 .band{height:30px!important;font-size:14px!important;letter-spacing:2.5px!important;gap:4px;position:absolute}
-/* Campo: faixa um pouco mais alta p/ plaquinhas 28px */
-.card6 .band.f{height:28px!important;font-size:11px!important;letter-spacing:1.5px!important}
+/* Campo: faixa 30px p/ plaquinhas 32px (~+14%) sem encostar na borda */
+.card6 .band.f{height:30px!important;font-size:11px!important;letter-spacing:1.5px!important}
 .card6 .band.gold,.card6 .jut .band{height:24px!important}
 .bst{position:absolute;left:8px;top:0;bottom:0;display:flex;align-items:center;gap:3px}
 .bst b{font:400 25px Bangers;color:#fff;-webkit-text-stroke:0;paint-order:stroke fill;-webkit-text-stroke:4px #0A0F1E;margin-right:6px;line-height:1}
 .band.f .bst{gap:2px}
-.band.f .bst.l{left:4px;right:auto;width:auto}
-.band.f .bst.r{left:auto!important;right:4px!important;width:auto!important}
-.band.f .bst b{font-size:28px!important;-webkit-text-stroke:4px #0A0F1E;margin-right:3px;line-height:1}
+.band.f .bst.l{left:3px;right:auto;width:auto}
+.band.f .bst.r{left:auto!important;right:3px!important;width:auto!important}
+.band.f .bst b{font-size:32px!important;-webkit-text-stroke:4px #0A0F1E;margin-right:2px;line-height:1}
 .card6 .band span{font:16px Bangers;letter-spacing:2.5px}.card6 .band.f span{font-size:12px}.card6 .band.gold span{font-size:16px}
 .bst svg{filter:drop-shadow(0 0 1px #000)}
 .card6 .band span{margin:0}
@@ -220,7 +220,7 @@
 }
 .card6.field .tiles{gap:4px}
 .card6.field .tile{border-radius:5px}
-.card6 .flow6{bottom:34px!important}.jut .flow6{bottom:28px!important}.card6.field .flow6{bottom:32px!important}
+.card6 .flow6{bottom:34px!important}.jut .flow6{bottom:28px!important}.card6.field .flow6{bottom:34px!important}
 .jut .gemabs{bottom:6px!important}
 .card6 .art{filter:none!important;mix-blend-mode:normal!important}
 /* hitai-ate */
