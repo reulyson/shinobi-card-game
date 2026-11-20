@@ -264,8 +264,16 @@ export function mapBattleToArenaB4(input: BattleArenaB4Input): ArenaB4Model {
         : 'PRÉVIA - NADA FOI APLICADO',
     myTurn,
     mainActionLabel,
-    rivalChakra: { current: enemy.mana, max: enemy.maxMana },
-    myChakra: { current: player.mana, max: player.maxMana },
+    rivalChakra: {
+      current: enemy.mana,
+      max: enemy.maxMana,
+      reserve: enemy.spellMana,
+    },
+    myChakra: {
+      current: player.mana,
+      max: player.maxMana,
+      reserve: player.spellMana,
+    },
     historicoLines,
     combatBusy: rivalCombat.length + myCombat.length > 0,
   };

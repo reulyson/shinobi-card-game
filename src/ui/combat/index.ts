@@ -1,8 +1,6 @@
 export { ArenaB4Screen } from './ArenaB4Screen';
 export { ArenaB4Demo, resolveArenaB4DemoFromSearch } from './ArenaB4Demo';
 export { FieldCard } from './FieldCard';
-export { HistoricoScroll } from './HistoricoScroll';
-export { TurnCoin } from './TurnCoin';
 export { UzumakiCardBack } from './UzumakiCardBack';
 export { FixedStage } from './FixedStage';
 export { mapBattleToArenaB4 } from './mapBattleToArenaB4';

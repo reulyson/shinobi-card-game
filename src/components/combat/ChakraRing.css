@@ -1,0 +1,97 @@
+.chakra-ring-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.chakra-pip {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.chakra-pip--full {
+  background: radial-gradient(circle at 35% 30%, #fff, var(--pip-c1) 40%, var(--pip-c2));
+  border: 2px solid #fff;
+  /* gen_b4prev: box-shadow:0 0 8px */
+  box-shadow:
+    0 0 8px var(--pip-c1),
+    0 0 0 1.5px #111;
+}
+
+.chakra-pip--empty {
+  background: #0b1230;
+  border: 2.5px solid var(--pip-empty-border);
+  box-shadow:
+    inset 0 0 4px #000,
+    0 0 0 1.5px #111;
+}
+
+.chakra-pip--sealed {
+  background-color: #2a2f3a;
+  background-image:
+    linear-gradient(45deg, transparent 42%, #6b7280 42% 58%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, #6b7280 42% 58%, transparent 58%);
+  border: 2px solid #4b5563;
+  opacity: 0.7;
+  box-shadow: 0 0 0 1.5px #000;
+}
+
+.chakra-diamond {
+  position: absolute;
+  transform: rotate(45deg);
+  box-sizing: border-box;
+  border: 1.5px solid #d6e6a0;
+  background: #2e3d18;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.chakra-diamond--on {
+  border-color: #111;
+  background: linear-gradient(135deg, #b6e04a, #f59e0b);
+  box-shadow: 0 0 6px #c7d93b;
+}
+
+.chakra-label {
+  position: absolute;
+  z-index: 4;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.chakra-label span {
+  display: inline-block;
+  transform: skewX(-12deg);
+  padding: 1px 14px;
+  border: 2.5px solid #111;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 3px 6px #000a;
+  font-family: Bangers, Impact, sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #fff;
+  -webkit-text-stroke: 3px #111;
+  paint-order: stroke fill;
+  line-height: 1.15;
+}
+
+.chakra-label span > i {
+  display: inline-block;
+  transform: skewX(12deg);
+  font-style: normal;
+}
+
+.chakra-label--rival span {
+  background: linear-gradient(180deg, #ff7a7a, #c81e1e);
+}
+
+.chakra-label--player span {
+  background: linear-gradient(180deg, #7dc4ff, #1d5fd6);
+}

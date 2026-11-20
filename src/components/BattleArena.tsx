@@ -96,6 +96,7 @@ import { CardInspector } from './CardInspector';
 import { AnimePortrait } from './AnimePortrait';
 import { ArenaBanner } from './ArenaBanner';
 import { AudioMixerPopover } from './AudioMixerPopover';
+import type { TurnCoinHandle } from './combat';
 import { getNinjaLevelUpQuote } from '../data/voiceLines';
 import { formatDuration, recordMatchResult } from '../utils/matchHistory';
 import { soundFX } from '../utils/sound';
@@ -3223,6 +3224,16 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     if (el) el.scrollTop = el.scrollHeight;
   }, [logs]);
 
+  /** Parte 4: moeda + timer (pausável pelo motor durante cinemáticas). */
+  const turnCoinRef = useRef<TurnCoinHandle | null>(null);
+  const battleScrollOpen = phase !== 'MULLIGAN';
+  const turnConfirmLabel =
+    phase === 'DECLARE_BLOCK' ? 'CONFIRMAR BLOQUEIOS' : 'CONFIRMAR ATAQUE';
+  const handleTurnTimeout = () => {
+    if (activeTurn !== 'player') return;
+    handlePassTurnButton();
+  };
+
   // Mão em leque: mede a largura disponível para calcular a sobreposição.
   const handRowRef = useRef<HTMLDivElement | null>(null);
   const [handRowWidth, setHandRowWidth] = useState(900);
@@ -3369,7 +3380,7 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     jutsuStack: visibleStack,
     gatePreview,
     combatPreview,
-    mainActionLabel: mainAction.label.toUpperCase(),
+    mainActionLabel: turnConfirmLabel,
     historicoLines: logs.slice(-12).map((l) => l.text),
     deckTotals: {
       player: playerDeckIds.length,
@@ -3397,7 +3408,13 @@ export const BattleArena: React.FC<BattleArenaProps> = ({
     >
       <ArenaB4Screen
         model={arenaB4Model}
-        onMainAction={mainAction.disabled ? undefined : handlePassTurnButton}
+        onMainAction={handlePassTurnButton}
+        onTurnTimeout={handleTurnTimeout}
+        actionDisabled={mainAction.disabled}
+        turnPaused={isBusy || phase === 'MULLIGAN' || phase === 'GAME_OVER'}
+        turnResetKey={round}
+        historicoOpen={battleScrollOpen}
+        turnCoinRef={turnCoinRef}
         onCardClick={handleArenaCardClick}
         onHandCardClick={handleArenaHandClick}
       >
