@@ -408,13 +408,7 @@ export const AnimePortrait: React.FC<AnimePortraitProps> = ({
               alt={card.name}
               referrerPolicy="no-referrer"
               onError={onError}
-              className="w-full h-full object-cover object-center opacity-95 scale-105"
-            />
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: `radial-gradient(circle at 50% 42%, transparent 25%, rgba(9,13,22,0.55) 100%)`,
-              }}
+              className="w-full h-full object-cover object-center"
             />
           </>
         ) : (

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Combo / Ataque Duplo: dois cortes diagonais -->
+  <path d="M5 17.5L14.5 5.5" stroke="#FCD34D" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M9.5 18.5L19 6.5" stroke="#FCD34D" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="5" cy="17.5" r="1.4" fill="#0F172A" stroke="#FCD34D" stroke-width="1.1"/>
+  <circle cx="19" cy="6.5" r="1.4" fill="#0F172A" stroke="#FCD34D" stroke-width="1.1"/>
+</svg>
