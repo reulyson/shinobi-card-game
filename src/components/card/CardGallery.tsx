@@ -212,9 +212,10 @@ export const CardGallery: React.FC = () => {
                 vitality={4}
                 powerState={compareStat(3, 3)}
                 vitalityState={compareStat(4, 2)}
+                keywordsOverride={['Ataque Rápido']}
               />
               <span className="text-[11px] text-slate-400 text-center">
-                2+ KW · só ícones · vida acima (verde)
+                Sasuke · 1 KW pílula GOLPE VELOZ · vida verde
               </span>
             </div>
           )}

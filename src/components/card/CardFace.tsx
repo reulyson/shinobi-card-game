@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoardUnit, CardDef } from '../../types/game';
+import { BoardUnit, CardDef, Keyword } from '../../types/game';
 import { getSignatureOwner, SIGNATURE_JUTSU_IDS } from '../../data/cards';
 import { NINJA_CREATED_ONLY_IDS } from '../../data/ninjaExtras';
 import { getNinjaPatenteCost, getUnitHealth, getUnitPower } from '../../engine/battleEngine';
@@ -39,6 +39,8 @@ export interface CardFaceProps {
   className?: string;
   exclusive?: boolean;
   createdByCard?: boolean;
+  /** Sobrescreve as keywords exibidas (ex.: galeria / compare). */
+  keywordsOverride?: readonly Keyword[];
 }
 
 /** Omite placeholders de “sem habilidade ao baixar”; mostra só texto real. */
@@ -357,6 +359,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
   className = '',
   exclusive = false,
   createdByCard = false,
+  keywordsOverride,
 }) => {
   const field = size === 'field';
   const fitEnabled = size === 'hand' || size === 'zoom' || size === 'collection' || size === 'inspector';
@@ -389,7 +392,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
     vitalityState ??
     (shownVitality != null ? compareStat(shownVitality, baseVitality) : 'base');
 
-  const kws = keywordsFor(card, unit, rank);
+  const kws = keywordsOverride ?? keywordsFor(card, unit, rank);
   const pills = keywordPills(kws);
   const rules = abilityTextFor(card, rank);
   const lvlCounter = levelUpCounter(
@@ -534,8 +537,8 @@ export const CardFace: React.FC<CardFaceProps> = ({
               <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
                 {card.name}
               </div>
-              {/* Jutsu/Equip: sem linha sob o nome. Ninja LoR também esconde via CSS. */}
-              {!isJutsuFace && !isEquip ? <div className="rule" /> : null}
+              {/* Campo / Jutsu / Equip: sem linha sob o nome. Ninja LoR (mão/zoom) também via CSS. */}
+              {!field && !isJutsuFace && !isEquip ? <div className="rule" /> : null}
 
               {!field &&
                 card.kind !== 'unidade' &&
