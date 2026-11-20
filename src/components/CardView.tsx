@@ -15,6 +15,7 @@ import {
   CardDef,
   formatKeywords,
   getKeywordLabel,
+  isOcultoJutsu,
   JutsuSpeed,
   KeywordBurstId,
   SPEED_DISPLAY_NAME,
@@ -94,6 +95,7 @@ const SPEED_META: Record<JutsuSpeed, { label: string; icon: React.ReactNode; col
   Lenta: { label: SPEED_DISPLAY_NAME.Lenta, icon: <Hourglass className="w-3 h-3" />, color: 'text-amber-300' },
   Imediata: { label: SPEED_DISPLAY_NAME.Imediata, icon: <Sparkles className="w-3 h-3" />, color: 'text-emerald-300' },
   Focada: { label: SPEED_DISPLAY_NAME.Focada, icon: <Sparkles className="w-3 h-3" />, color: 'text-teal-300' },
+  Oculta: { label: SPEED_DISPLAY_NAME.Oculta, icon: <EyeOff className="w-3 h-3" />, color: 'text-purple-300' },
 };
 
 export const CardView: React.FC<CardViewProps> = ({
@@ -190,13 +192,13 @@ export const CardView: React.FC<CardViewProps> = ({
               ? 'border-sky-400/90 hover:border-amber-300'
               : card.kind === 'equipamento'
                 ? 'border-cyan-600/70'
-                : card.kind === 'armadilha'
-                  ? 'border-purple-500/80'
-                  : card.kind === 'jutsu'
-                    ? 'border-sky-500/75'
-                    : card.kind === 'ninja'
-                      ? 'border-orange-500/80'
-                      : 'border-[#a0703f]/90';
+                : card.kind === 'jutsu'
+                  ? isOcultoJutsu(card)
+                    ? 'border-purple-500/80'
+                    : 'border-sky-500/75'
+                  : card.kind === 'ninja'
+                    ? 'border-orange-500/80'
+                    : 'border-[#a0703f]/90';
 
   // Nome em fonte de título (Bangers, só maiúsculas e mais larga): no tabuleiro fica mais justo para não truncar mais que antes
   const nameClass = `${size === 'board' ? 'text-[11px] tracking-normal' : 'text-xs tracking-wide'} font-display text-white leading-tight truncate drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)]`;
@@ -491,26 +493,6 @@ export const CardView: React.FC<CardViewProps> = ({
             <div className={`flex items-center gap-1 text-[10px] font-semibold ${SPEED_META[card.speed].color}`}>
               {SPEED_META[card.speed].icon}
               <span>{SPEED_META[card.speed].label} · {card.category}</span>
-            </div>
-            <div className={nameClass}>{card.name}</div>
-            {(size === 'collection' || size === 'inspector') && (
-              <p className="text-[11px] text-slate-300 leading-snug line-clamp-3 mt-0.5">
-                {card.effectText}
-              </p>
-            )}
-            {size === 'hand' && (
-              <p className="text-[9.5px] text-slate-100 leading-snug line-clamp-2 bg-slate-950/80 rounded px-1 py-0.5">
-                {card.effectText}
-              </p>
-            )}
-          </>
-        )}
-
-        {card.kind === 'armadilha' && (
-          <>
-            <div className="flex items-center gap-1 text-[10px] font-semibold text-purple-300">
-              <EyeOff className="w-3 h-3" />
-              <span>Armadilha Oculta</span>
             </div>
             <div className={nameClass}>{card.name}</div>
             {(size === 'collection' || size === 'inspector') && (

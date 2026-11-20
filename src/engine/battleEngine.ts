@@ -25,18 +25,29 @@ import {
   NinjaCardDef,
   NinjaRankMemory,
   PlayerState,
+  TrapCardDef,
   TrapSlot,
   UnitCardDef,
+  isOcultoJutsu,
   pushKeywordFx,
 } from '../types/game';
 import {
   SECOND_ATTACK_UNIT_ID,
   applyCopiarOnResolve,
+  applyKai,
   isInGenjutsu,
   linkPartner,
   poisonOnStrike,
 } from './keywords';
+import { MAX_BOARD_UNITS, MAX_HAND_SIZE, MAX_OCULTO_IN_PLAY, STARTING_VITALIDADE } from './limits';
 import { applyUnitPreStrike } from './unitEffects';
+
+export { MAX_BOARD_UNITS, MAX_HAND_SIZE, MAX_OCULTO_IN_PLAY, STARTING_VITALIDADE } from './limits';
+
+/** Oculto armável: velocidade Oculto com gatilho (ex-Armadilha). */
+export function isOcultoArmable(card: CardDef | undefined | null): card is TrapCardDef {
+  return isOcultoJutsu(card) && !!card.triggerType;
+}
 
 let uidCounter = 1;
 export function nextUid(prefix = 'u'): string {
@@ -58,8 +69,8 @@ export function createInitialPlayerState(deckIds: string[]): PlayerState {
   const hand = shuffled.slice(0, 5);
   const deck = shuffled.slice(5);
   return {
-    hp: 20,
-    maxHp: 20,
+    hp: STARTING_VITALIDADE,
+    maxHp: STARTING_VITALIDADE,
     mana: 1,
     maxMana: 1,
     spellMana: 0,
@@ -238,7 +249,7 @@ export function getEffectiveCost(
 ): number {
   // Soma todos os descontos e aplica de uma vez: no máximo −2 e nunca abaixo de 1.
   let discount = 0;
-  if (activeArenaRule(arenaId) === 'floresta_da_morte' && card.kind === 'armadilha') {
+  if (activeArenaRule(arenaId) === 'floresta_da_morte' && isOcultoArmable(card)) {
     discount += 1;
   }
   if (
@@ -278,14 +289,18 @@ export function getUnplayableReason(
     if (ownerState.board.some((u) => u.cardId === card.id)) {
       return `Ninja Único: ${card.name} já está em campo. A outra cópia só pode ser jogada depois que ele morrer.`;
     }
-    if (ownerState.board.length >= 5) return 'Campo cheio (máx. 5 unidades).';
+    if (ownerState.board.length >= MAX_BOARD_UNITS) {
+      return `Campo cheio (máx. ${MAX_BOARD_UNITS} unidades).`;
+    }
     if (ownerState.mana < cost) {
       return `Ninja custa só Chakra principal: precisa de ${cost} e você tem ${ownerState.mana} (a Reserva de Jutsu não paga Ninjas).`;
     }
     return null;
   }
   if (card.kind === 'unidade' || card.kind === 'token') {
-    if (ownerState.board.length >= 5) return 'Campo cheio (máx. 5 unidades).';
+    if (ownerState.board.length >= MAX_BOARD_UNITS) {
+      return `Campo cheio (máx. ${MAX_BOARD_UNITS} unidades).`;
+    }
     if (ownerState.mana < cost) return `Chakra insuficiente: precisa de ${cost} e você tem ${ownerState.mana}.`;
     return null;
   }
@@ -294,7 +309,9 @@ export function getUnplayableReason(
     if (ownerState.mana < cost) return `Chakra insuficiente: precisa de ${cost} e você tem ${ownerState.mana}.`;
     return null;
   }
-  if (card.kind === 'armadilha' && ownerState.traps.length >= 2) return 'Já há 2 Armadilhas armadas.';
+  if (isOcultoArmable(card) && ownerState.traps.length >= MAX_OCULTO_IN_PLAY) {
+    return `Já há ${MAX_OCULTO_IN_PLAY} Ocultos armados.`;
+  }
   if (ownerState.mana + ownerState.spellMana < cost) {
     return `Chakra insuficiente: precisa de ${cost} (Chakra ${ownerState.mana} + Reserva ${ownerState.spellMana}).`;
   }
@@ -440,7 +457,7 @@ export function onNinjaEnteredBoard(
 }
 
 /**
- * Invocação por efeito (jutsu, token, armadilha, habilidade).
+ * Invocação por efeito (jutsu, token, oculto, habilidade).
  * Regra Ninja Único: se o Ninja já está em campo, a invocação falha e a carta vira
  * o Token Exclusivo dele (se definido) ou o Jutsu Exclusivo, na mão (se houver espaço).
  * Se o Ninja entra, cria o Jutsu Exclusivo na mão (onNinjaEnteredBoard).
@@ -1072,7 +1089,8 @@ export function getMatchingTraps(
         : 'on_enemy_summon';
   return defender.traps.filter((slot) => {
     const def = getCardById(slot.cardId);
-    return def?.kind === 'armadilha' && def.triggerType === targetTrigger;
+    if (!isOcultoArmable(def)) return false;
+    return def.triggerType === targetTrigger;
   });
 }
 
@@ -1154,8 +1172,10 @@ export function resolveTrapEffect(
     logs.push({
       id: nextUid('log'),
       round,
-      text: 'Kagemane no Jutsu: o atacante mais forte foi Paralisado e saiu do ataque!',
+      text: 'Oculto · Kagemane no Jutsu: o atacante mais forte foi Paralisado e saiu do ataque!',
       tone: 'trap',
+      actor: trapOwnerSide,
+      cardId: trapCardId,
     });
   } else if (trapCardId === 'trap_nevoa_venenosa' && activeAttackerUids.length > 0) {
     const attackerIds = new Set(activeAttackerUids);
@@ -1184,8 +1204,10 @@ export function resolveTrapEffect(
     logs.push({
       id: nextUid('log'),
       round,
-      text: 'Gogyō Fūin: o rival perdeu 2 de Reserva e seu Portão curou 2!',
+      text: 'Oculto · Gogyō Fūin: o rival perdeu 2 de Reserva e sua Vitalidade curou 2!',
       tone: 'trap',
+      actor: trapOwnerSide,
+      cardId: trapCardId,
     });
   } else if (trapCardId === 'trap_arvore_genjutsu') {
     const targetUid =
@@ -1220,10 +1242,10 @@ export function resolveTrapEffect(
 }
 
 /**
- * IA: entre várias armadilhas com o mesmo gatilho, escolhe a que mais rende.
- * Heurística simples: simula cada armadilha e pontua o estrago no lado inimigo
+ * IA: entre vários Ocultos com o mesmo gatilho, escolhe o que mais rende.
+ * Heurística simples: simula cada oculto e pontua o estrago no lado inimigo
  * (Poder/Vida perdidos, abates, atacantes retirados do ataque, Reserva de Jutsu
- * drenada) e o ganho de Vida do Portão do dono.
+ * drenada) e o ganho de Vida da Vitalidade do dono.
  */
 export function chooseBestTrap(
   matching: TrapSlot[],
@@ -1702,7 +1724,7 @@ export function resolveJutsuEffect(
           return { ...u, keywords: kws, impactStacks: u.impactStacks + 1 };
         });
         applyDestinadoOnAlly(tid);
-        fx.unitFx[tid] = { type: 'jutsu', label: 'Atq. Portão' };
+        fx.unitFx[tid] = { type: 'jutsu', label: 'Atq. Vitalidade' };
       }
       break;
     }
@@ -1971,14 +1993,14 @@ export function resolveJutsuEffect(
         logs.push({
           id: nextUid('det'),
           round,
-          text: `Byakugan achou e destruiu a armadilha ${trapDef?.name || 'do rival'}.`,
+          text: `Byakugan achou e destruiu a oculto ${trapDef?.name || 'do rival'}.`,
           tone: 'trap',
         });
       } else {
         logs.push({
           id: nextUid('det'),
           round,
-          text: 'Byakugan: nenhuma armadilha encontrada.',
+          text: 'Byakugan: nenhuma oculto encontrada.',
           tone: 'info',
         });
       }
@@ -1993,14 +2015,14 @@ export function resolveJutsuEffect(
         logs.push({
           id: nextUid('det'),
           round,
-          text: `Kagura Shingan achou e destruiu a armadilha ${trapDef?.name || 'do rival'}.`,
+          text: `Kagura Shingan achou e destruiu a oculto ${trapDef?.name || 'do rival'}.`,
           tone: 'trap',
         });
       } else {
         logs.push({
           id: nextUid('det'),
           round,
-          text: 'Kagura Shingan: nenhuma armadilha encontrada.',
+          text: 'Kagura Shingan: nenhuma oculto encontrada.',
           tone: 'info',
         });
       }
@@ -2255,6 +2277,37 @@ export function resolveJutsuEffect(
       }
       break;
     }
+    case 'jutsu_fuma_shuriken': {
+      // TODO Grupo 8: dano da Fūma NÃO decidido — mantido 2 (valor atual / ex-bonusAttack).
+      const tid = resolveEnemyTarget(targetUid);
+      if (tid && !tryPopSpellShield(tid)) {
+        didDamage = true;
+        opponent.board = opponent.board.map((u) => {
+          if (u.uid !== tid) return u;
+          const res = applyDamageToUnit(u, 2);
+          fx.unitFx[tid] = { type: 'hit', label: `-${res.actualDamage}` };
+          return res.unit;
+        });
+      }
+      break;
+    }
+    case 'jutsu_kai': {
+      const tid = resolveAllyTarget(targetUid);
+      if (tid) {
+        didHealOrBuff = true;
+        caster.board = caster.board.map((u) => (u.uid === tid ? applyKai(u) : u));
+        fx.unitFx[tid] = { type: 'jutsu', label: 'Kai' };
+        logs.push({
+          id: nextUid('kai'),
+          round,
+          text: `Kai: Genjutsu e Selado removidos de ${getCardById(caster.board.find((u) => u.uid === tid)?.cardId ?? '')?.name ?? 'aliado'}.`,
+          tone: 'jutsu',
+          actor: casterSide,
+          cardId: jutsu.id,
+        });
+      }
+      break;
+    }
   }
 
   // Process deaths from spell damage (including equipment returns!)
@@ -2481,7 +2534,7 @@ export function resolveCombatPairs(
     }
 
     if (!defUnit) {
-      // Unblocked: strikes Portão (twice if Ataque Duplo!)
+      // Unblocked: strikes Vitalidade (twice if Ataque Duplo!)
       const strikes = !attUnit.silenced && attUnit.keywords.includes('Ataque Duplo') ? 2 : 1;
       if (strikes === 2) pushKeywordFx(fx, attUnit.uid, 'combo');
       const totalNexusDmg = attPower * strikes;
@@ -2504,16 +2557,16 @@ export function resolveCombatPairs(
       logs.push({
         id: nextUid('log'),
         round,
-        text: `${attCard.name} causou ${totalNexusDmg + impactDamage} de dano ao Portão!`,
+        text: `${attCard.name} causou ${totalNexusDmg + impactDamage} de dano à Vitalidade!`,
         tone: 'combat',
       });
 
-      // Ao golpear (Grupo 4): golpe no Portão.
+      // Ao golpear (Grupo 4): golpe na Vitalidade.
       if (attPower > 0) {
         attUnit = runCombatTrigger('ao_golpear', 'att', attUnit.uid, undefined, attUnit, undefined).au;
       }
 
-      // Ninjas: Ao golpear e promoção (golpe no Portão).
+      // Ninjas: Ao golpear e promoção (golpe na Vitalidade).
       {
         const post = applyNinjaPostStrike(attUnit, undefined, attState, defState, {
           damageDealt: totalNexusDmg,

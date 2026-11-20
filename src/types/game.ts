@@ -48,13 +48,19 @@ export type Keyword =
   | 'Formação'
   | 'Copiar';
 
-export type JutsuSpeed = 'Rapida' | 'Lenta' | 'Imediata' | 'Focada';
+export type JutsuSpeed = 'Rapida' | 'Lenta' | 'Imediata' | 'Focada' | 'Oculta';
+
+/** Família do Jutsu (Grupo 8): selo na carta. Só aplicar onde já decidido. */
+export type JutsuFamily = 'Ninjutsu' | 'Genjutsu' | 'Taijutsu';
+
+export type OcultoTriggerType = 'on_enemy_attack' | 'on_enemy_jutsu' | 'on_enemy_summon';
 
 export const SPEED_DISPLAY_NAME: Record<JutsuSpeed, string> = {
   Imediata: 'Instantâneo',
   Rapida: 'Rápido',
   Lenta: 'Preparado',
   Focada: 'Concentrado',
+  Oculta: 'Oculto',
 };
 
 export const SPEED_FULL_LABEL: Record<JutsuSpeed, string> = {
@@ -62,6 +68,13 @@ export const SPEED_FULL_LABEL: Record<JutsuSpeed, string> = {
   Rapida: 'Rápido — entra na Pilha e pode ser respondido',
   Lenta: 'Preparado — fora de combate, entra na Pilha',
   Focada: 'Concentrado — fora de combate, resolve na hora',
+  Oculta: 'Oculto — joga virado para baixo; ativa no gatilho',
+};
+
+export const FAMILY_DISPLAY_NAME: Record<JutsuFamily, string> = {
+  Ninjutsu: 'Ninjutsu',
+  Genjutsu: 'Genjutsu',
+  Taijutsu: 'Taijutsu',
 };
 
 export const KEYWORD_DISPLAY_NAME: Record<Keyword, string> = {
@@ -74,7 +87,7 @@ export const KEYWORD_DISPLAY_NAME: Record<Keyword, string> = {
   Assustador: 'Intimidação',
   Imprudente: 'Ímpeto',
   Formidável: 'Muralha',
-  Impacto: 'Ataque ao Portão',
+  Impacto: 'Ataque à Vitalidade',
   'Não Bloqueia': 'Sem Guarda',
   Imóvel: 'Imobilizado',
   Barreira: 'Substituição',
@@ -266,7 +279,7 @@ export type RecurringEffect =
   | { type: 'progress'; amount: number }
   /** Ganha uma palavra-chave até o início da próxima rodada (merge 4+5+7: Investida das Unidades). */
   | { type: 'gain_keyword'; target: RecurringTarget; keyword: Keyword }
-  /** O dono paga Vida do próprio Portão (ex.: Selo Amaldiçoado da Anko). */
+  /** O dono paga Vida da própria Vitalidade (ex.: Selo Amaldiçoado da Anko). */
   | { type: 'pay_gate'; amount: number };
 
 export interface RecurringCondition {
@@ -282,7 +295,7 @@ export interface RecurringCondition {
   attackingAlone?: boolean;
   /** Exige um Ninja aliado desta facção em campo (ex.: Tazuna com Time 7). */
   allyNinjaFaction?: TeamFaction;
-  /** Exige o próprio Portão com mais que esta Vida (ex.: Anko paga 2 só com 5+). */
+  /** Exige a própria Vitalidade com mais que esta Vida (ex.: Anko paga 2 só com 5+). */
   minOwnGate?: number;
 }
 
@@ -393,11 +406,18 @@ export interface JutsuCardDef extends CardMediaFields {
   category: JutsuCategory;
   faction: TeamFaction;
   speed: JutsuSpeed;
+  /** Família (Grupo 8). Opcional até validação completa das velocidades por família. */
+  family?: JutsuFamily;
   cost: number;
   targetMode: JutsuTargetMode;
   effectText: string;
   flavorText: string;
   elementColor: string;
+  /**
+   * Gatilho de Oculto (ex-Oculto). Só para speed === 'Oculta'.
+   * // TODO Grupo 8: resposta do rival a Oculto / prioridade — indefinido.
+   */
+  triggerType?: OcultoTriggerType;
   symbolType:
     | 'rasengan'
     | 'chidori'
@@ -415,19 +435,14 @@ export interface JutsuCardDef extends CardMediaFields {
     | 'sand';
 }
 
-export interface TrapCardDef extends CardMediaFields {
-  id: string;
-  kind: 'armadilha';
-  name: string;
-  jpName?: string;
-  wikiTitle: string;
-  faction: TeamFaction;
-  cost: number;
-  triggerType: 'on_enemy_attack' | 'on_enemy_jutsu' | 'on_enemy_summon';
-  effectText: string;
-  flavorText: string;
-  elementColor: string;
-}
+/**
+ * @deprecated Grupo 8 removeu o tipo Oculto. Use JutsuCardDef com speed 'Oculta'.
+ * Mantido só como alias tipado para migração de imports.
+ */
+export type TrapCardDef = JutsuCardDef & {
+  speed: 'Oculta';
+  triggerType: OcultoTriggerType;
+};
 
 export interface EquipmentCardDef extends CardMediaFields {
   id: string;
@@ -443,7 +458,7 @@ export interface EquipmentCardDef extends CardMediaFields {
   effectText: string;
   flavorText: string;
   accentColor: string;
-  /** Habilidades recorrentes dadas ao portador enquanto equipado (Grupo 4; usadas pelo Grupo 8). */
+  /** Habilidades recorrentes dadas ao portador enquanto equipado (Grupo 4). */
   recurring?: RecurringAbility[];
 }
 
@@ -451,8 +466,12 @@ export type CardDef =
   | NinjaCardDef
   | UnitCardDef
   | JutsuCardDef
-  | TrapCardDef
   | EquipmentCardDef;
+
+/** Carta de Jutsu com velocidade Oculto (ex-Oculto). */
+export function isOcultoJutsu(card: CardDef | undefined | null): card is JutsuCardDef {
+  return !!card && card.kind === 'jutsu' && card.speed === 'Oculta';
+}
 
 export interface ArenaDefinition {
   id: ArenaId;
@@ -525,12 +544,16 @@ export interface BoardUnit {
   ninjaState?: Record<string, number>;
 }
 
+/** Slot de carta Oculto armada (face-down). Campo `traps` no estado mantém o nome interno. */
 export interface TrapSlot {
   uid: string;
   cardId: string;
   owner: 'player' | 'enemy';
   armedRound: number;
 }
+
+/** Alias Grupo 8: cartas Oculto em jogo. */
+export type OcultoSlot = TrapSlot;
 
 export interface CombatPair {
   attackerUid: string;

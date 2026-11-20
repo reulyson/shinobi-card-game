@@ -338,7 +338,6 @@ const KIND_LABEL: Record<CardDef['kind'], string> = {
   unidade: 'Unidade',
   token: 'Token',
   jutsu: 'Jutsu',
-  armadilha: 'Armadilha',
   equipamento: 'Equipamento',
 };
 
@@ -399,7 +398,7 @@ export const AnimePortrait: React.FC<AnimePortraitProps> = ({
   const { url, failed, onError } = useCardImage(card, effectiveRank);
   const rankName = effectiveRank === 3 ? 'Jounnin' : effectiveRank === 2 ? 'Chuunin' : 'Gennin';
 
-  if (card.kind === 'jutsu' || card.kind === 'armadilha' || card.kind === 'equipamento') {
+  if (card.kind === 'jutsu' || card.kind === 'equipamento') {
     return (
       <div className={`relative w-full h-full overflow-hidden bg-slate-950 ${className}`}>
         {url && !failed ? (

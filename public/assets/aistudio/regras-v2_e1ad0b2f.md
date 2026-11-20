@@ -8,9 +8,9 @@
 
 ## 1. Objetivo e Condição de Vitória
 
-- Cada jogador inicia a partida com um Portão de 20 pontos de Vida, 5 cartas na mão e um baralho embaralhado de 24 cartas.
-- Vitória: reduza a Vida do Portão adversário a 0 (através de ataques não bloqueados, dano excedente de Chidori, Senbon, habilidades ou Jutsus diretos).
-- Campo de Batalha: cada lado possui até 5 espaços de aliados (Ninjas, Unidades ou Tokens) e até 2 espaços ocultos de Armadilhas.
+- Cada jogador inicia a partida com Vitalidade de 20 pontos de Vida, 5 cartas na mão e um baralho embaralhado de 24 cartas.
+- Vitória: reduza a Vida da Vitalidade adversário a 0 (através de ataques não bloqueados, dano excedente de Chidori, Senbon, habilidades ou Jutsus diretos).
+- Campo de Batalha: cada lado possui até 5 espaços de aliados (Ninjas, Unidades ou Tokens) e até 2 espaços ocultos de Ocultos.
 - **Início da partida:** o jogador que vai primeiro é sorteado e começa com a Ficha de Ataque na Rodada 1.
 - **Mulligan:** antes da Rodada 1, cada jogador pode trocar uma única vez qualquer quantidade das 5 cartas iniciais; as cartas trocadas voltam ao baralho, que é embaralhado, e novas cartas são compradas.
 - **Baralho vazio:** se o jogador precisar comprar uma carta com o baralho vazio, ele perde a partida na hora.
@@ -19,19 +19,19 @@
 
 - Tamanho do Baralho: exatamente 24 cartas.
 - Ninjas (Campeões): máximo de 3 personagens Ninja distintos por baralho, com no máximo 2 cópias de cada Ninja (total máximo de 6 cartas de Ninja no deck).
-- Demais Cartas (Unidades, Jutsus, Armadilhas e Equipamentos): máximo de 3 cópias de qualquer carta repetida.
+- Demais Cartas (Unidades, Jutsus, Ocultos e Equipamentos): máximo de 3 cópias de qualquer carta repetida.
 - Tokens não entram na montagem do baralho (veja 4.6).
 
 ## 3. Chakra e Reserva de Jutsu
 
 - Chakra Principal: começa em 1/1 na Rodada 1 e aumenta em +1 a cada nova rodada até o máximo de 10/10.
 - Reserva de Chakra (Mana de Feitiço): ao final de cada rodada, até 3 pontos de Chakra não gastos são armazenados na Reserva de Jutsu.
-  - O Chakra da Reserva pode ser usado exclusivamente para conjurar Jutsus e armar Armadilhas.
-  - A Reserva é consumida automaticamente antes do Chakra principal ao jogar Jutsus ou Armadilhas.
+  - O Chakra da Reserva pode ser usado exclusivamente para conjurar Jutsus e armar Ocultos.
+  - A Reserva é consumida automaticamente antes do Chakra principal ao jogar Jutsus ou Ocultos.
 
 ## 4. Os 5 Tipos de Cartas + Tokens
 
-São 5 tipos de cartas que podem entrar no baralho (Ninjas, Unidades, Jutsus, Armadilhas e Equipamentos). Os Tokens são um sexto grupo, mas **não são um tipo de baralho** (veja 4.6).
+São 5 tipos de cartas que podem entrar no baralho (Ninjas, Unidades, Jutsus, Ocultos e Equipamentos). Os Tokens são um sexto grupo, mas **não são um tipo de baralho** (veja 4.6).
 
 ### 4.1. Ninjas (3 Níveis: Gennin → Chuunin → Jounnin)
 
@@ -51,28 +51,28 @@ Shinobis comuns e tropas de apoio das vilas (Anbu, Raiz, Médicos de Campo, Poli
 
 Técnicas ninjas que afetam o campo, unidades ou Portões. Dividem-se por categoria:
 
-- Ataque: Direto (no Portão), Individual (1 alvo), Múltiplo (alvo + secundário/Portão) e em Área (todos os inimigos).
+- Ataque: Direto (na Vitalidade), Individual (1 alvo), Múltiplo (alvo + secundário/Vitalidade) e em Área (todos os inimigos).
 - Fortalecer: concedem bônus de Poder/Vida ou palavras-chave defensivas.
 - Enfraquecer: aplicam Genjutsu, Bloqueio de Chakra, Selar, Tenketsu Aberto ou Exaustão.
-- Cura: restauram Vida de aliados e do Portão.
+- Cura: restauram Vida de aliados e da Vitalidade.
 - Invocação: colocam Tokens poderosos diretamente em campo.
-- Detectar/Revelar: revelam e removem Armadilhas ocultas do oponente (veja 4.4). **[REVISAR]**
+- Detectar/Revelar: revelam e removem cartas Oculto do oponente (veja 4.4). **[REVISAR]**
 
-### 4.4. Armadilhas
+### 4.4. Ocultos
 
-Cartas secretas armadas face para baixo (até 2 simultâneas). O oponente sabe quantas armadilhas existem, mas não qual técnica foi ocultada. Disparam automaticamente quando o inimigo executa o gatilho específico:
+Cartas secretas armadas face para baixo (até 2 simultâneas). O oponente sabe quantas ocultos existem, mas não qual técnica foi ocultada. Disparam automaticamente quando o inimigo executa o gatilho específico:
 
-- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri)
-- Ao Conjurar Jutsu (Gogyō Fūin)
+- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri) — Jutsus velocidade Oculto
+- Ao Conjurar Jutsu (Gogyō Fūin) — Jutsu velocidade Oculto
 - Ao Invocar Unidade (Magen: Jubaku Satsu)
 
-Regras de Armadilhas:
+Regras de Ocultos:
 
 - **Armar:** custa Chakra (a Reserva de Jutsu pode ser usada) e tem velocidade **Selo do Boi**: só pode ser feito fora de combate e com a Pilha vazia.
 - **Disparo:** ao disparar, o efeito entra na Pilha com velocidade **Selo do Tigre** e pode ser respondido pelo oponente.
-- **Depois de disparar:** a Armadilha é revelada e descartada.
-- **Limite:** no máximo 1 Armadilha dispara por gatilho. Se houver 2 Armadilhas com o mesmo gatilho, o dono escolhe qual ativar, e a outra continua oculta.
-- **Remoção:** o oponente pode remover uma Armadilha oculta com Jutsus da categoria Detectar/Revelar, que a revelam e a descartam sem ativar o efeito.
+- **Depois de disparar:** o Oculto é revelada e descartada.
+- **Limite:** no máximo 1 Oculto dispara por gatilho. Se houver 2 Ocultos com o mesmo gatilho, o dono escolhe qual ativar, e a outra continua oculta.
+- **Remoção:** o oponente pode remover uma carta Oculto com Jutsus da categoria Detectar/Revelar, que a revelam e a descartam sem ativar o efeito.
 
 ### 4.5. Equipamentos
 
@@ -96,20 +96,20 @@ Cartas geradas exclusivamente por habilidades de personagens ou Jutsus durante a
 |---|---|---|---|
 | **Selo do Coelho** (Imediata) | A qualquer momento (mesmo em combate ou com a Pilha cheia) | Não entra na Pilha; o oponente não responde; resolve na hora e você mantém a vez | Truques instantâneos |
 | **Selo do Tigre** (Rápida) | A qualquer momento (inclusive em combate ou como resposta) | Entra na Pilha; o oponente pode responder com Selo do Tigre ou Selo do Coelho | Reações e truques de combate |
-| **Selo do Boi** (Lenta) | Só fora de combate e com a Pilha vazia | Entra na Pilha; passa a prioridade antes de resolver | Jutsus mais fortes; armar Armadilhas |
+| **Selo do Boi** (Lenta) | Só fora de combate e com a Pilha vazia | Entra na Pilha; passa a prioridade antes de resolver | Jutsus mais fortes; armar Ocultos |
 | **Selo do Dragão** (Focada) | Só fora de combate e com a Pilha vazia | Não entra na Pilha; resolve na hora, sem resposta | Jutsus de compra, invocação e utilidade **[REVISAR]** |
 
 - Pilha LIFO: quando ambos param de responder e o jogador ativo clica em Selo de Encerramento, a Pilha resolve de cima para baixo.
-- Armadilhas disparadas entram na Pilha com velocidade Selo do Tigre (veja 4.4).
+- Ocultos disparadas entram na Pilha com velocidade Selo do Tigre (veja 4.4).
 
 ## 6. Fluxo Fluido de Turno e Combate por Arrasto (um único botão)
 
 1. **Início da Rodada:** o Chakra enche até o novo máximo (1–10), a Reserva guarda até 3, ambos compram 1 carta, Ninjutsu Médico cura totalmente, efeitos temporários, Genjutsu e Bloqueio de Chakra expiram, Bunshins caem e a Ficha de Ataque alterna.
 2. **Arrasto:**
-   - Ninjas/Unidades vão da mão ao campo; Equipamentos são arrastados sobre um aliado; Jutsus e Armadilhas vão ao alvo (ou à zona central).
+   - Ninjas/Unidades vão da mão ao campo; Equipamentos são arrastados sobre um aliado; Jutsus e Ocultos vão ao alvo (ou à zona central).
    - Atacar: com a Ficha ativa, arraste os atacantes para o Campo de Duelo; Selo de Encerramento dispara o ataque.
    - Bloquear: arraste defensores sobre os atacantes; Selo de Encerramento resolve.
-   - Todo ataque passa pela fase de bloqueio. Ataque direto ao Portão só é permitido para atacantes que o oponente não consegue bloquear (por exemplo, Shunshin sem bloqueadores Shunshin ou com Byakugan). **[REVISAR]**
+   - Todo ataque passa pela fase de bloqueio. Ataque direto à Vitalidade só é permitido para atacantes que o oponente não consegue bloquear (por exemplo, Shunshin sem bloqueadores Shunshin ou com Byakugan). **[REVISAR]**
 3. **Resolução:** Hiraishin golpeia primeiro e, se abater o bloqueador, não sofre contra-ataque; Lâminas Gêmeas golpeia antes e de novo junto com o bloqueador. Selo Duplo: se ambos passam seguidos sem agir, a rodada termina.
 
 ## 7. Arenas Dinâmicas
@@ -117,7 +117,7 @@ Cartas geradas exclusivamente por habilidades de personagens ou Jutsus durante a
 As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como Minato, Hashirama ou Suiryūdan. São apenas estas 4:
 
 - Vale do Fim: atacantes isolados (1 ou 2 unidades) recebem +2/+0 no combate. Evoluções (Chuunin/Jounnin) concedem +1/+1 extra.
-- Floresta da Morte: Armadilhas custam 1 a menos (mín. 1). No início de cada rodada, a unidade mais ferida sem Ninjutsu Médico sofre 1 de dano.
+- Floresta da Morte: Ocultos custam 1 a menos (mín. 1). No início de cada rodada, a unidade mais ferida sem Ninjutsu Médico sofre 1 de dano.
 - Arena do Exame Chūnin: unidades com Hiraishin entram com +0/+1. Jutsus de velocidade Selo do Coelho concedem +1/+1 temporário ao alvo.
 - Telhados de Konoha: cartas com função Hokage ou Sensei custam 1 a menos. Início da rodada recarrega +1 de Reserva de Jutsu.
 
@@ -127,14 +127,14 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 
 - Shunshin (LoR: Elusivo): só pode ser bloqueado por unidades com Shunshin ou Byakugan.
 - Byakugan (LoR: Visão Aguçada): pode bloquear atacantes Shunshin.
-- Chidori (LoR: Sobrepujar): o dano excedente acima da Vida do bloqueador atinge diretamente o Portão inimigo.
+- Chidori (LoR: Sobrepujar): o dano excedente acima da Vida do bloqueador atinge diretamente a Vitalidade inimiga.
 - Hiraishin (LoR: Ataque Rápido): ao atacar, golpeia antes do bloqueador.
 - Lâminas Gêmeas (LoR: Ataque Duplo): ao atacar, golpeia antes e novamente junto com o bloqueador.
 - Duelo Ninja (LoR: Desafiador): o jogador atacante escolhe qual unidade inimiga vai bloquear este atacante (como no LoR). **[REVISAR]**
 - Intenção Assassina (LoR: Assustador): só pode ser bloqueado por inimigos com 3 ou mais de Poder.
 - Hachimon (LoR: Imprudente): só pode ser bloqueado por inimigos com 3 ou mais de Vida.
 - Baika (LoR: Formidável): ataca usando sua Vida atual no lugar do Poder.
-- Senbon (LoR: Impacto): ao golpear atacando, causa 1 de dano direto ao Portão inimigo por acúmulo.
+- Senbon (LoR: Impacto): ao golpear atacando, causa 1 de dano direto à Vitalidade inimiga por acúmulo.
 - Formação Ino-Shika-Chō (LoR: Patrulheiro): na 1ª vez na rodada em que apenas unidades com Formação Ino-Shika-Chō atacam, recarrega a Ficha de Ataque para um segundo ataque.
 - Sem Guarda (LoR: Não Bloqueia) / Imobilizado (LoR: Imóvel): não pode bloquear ataques, ou não pode atacar nem bloquear.
 
@@ -145,7 +145,7 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 - Armadura de Areia (LoR: Robusto): sofre 1 de dano a menos de todas as fontes.
 - Ninjutsu Médico (LoR: Regeneração): restaura toda sua Vida máxima no início de cada rodada.
 - Izanagi (LoR: Imortal): na primeira vez que morreria, retorna ao campo sob Genjutsu com 1 de Vida.
-- Absorção de Chakra (LoR: Roubo de Vida) / Sifão de Chakra (LoR: Drenar): todo dano causado por esta unidade ou efeito cura o seu Portão.
+- Absorção de Chakra (LoR: Roubo de Vida) / Sifão de Chakra (LoR: Drenar): todo dano causado por esta unidade ou efeito cura a sua Vitalidade.
 
 ### Efeitos Negativos
 
@@ -164,7 +164,7 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 - Chegada (LoR: Jogar) / Investida (LoR: Atacar) / Última Vontade (LoR: Suspiro Final): disparam ao invocar da mão, ao declarar ataque ou ao morrer.
 - Trabalho em Equipe (LoR: Auxiliar): ao atacar, concede bônus temporário ao aliado posicionado à sua direita na linha de ataque.
 - Selos de Mão (LoR: Imbuir): dispara efeitos sempre que você resolve um Jutsu.
-- Primeiro Selo (LoR: Amanhecer) / Selo Encadeado (LoR: Anoitecer) / Roubo de Pergaminhos (LoR: Saquear): bônus ao ser a 1ª carta da rodada (Primeiro Selo), 2ª+ carta da rodada (Selo Encadeado) ou após já ter causado dano ao Portão rival na rodada (Roubo de Pergaminhos).
+- Primeiro Selo (LoR: Amanhecer) / Selo Encadeado (LoR: Anoitecer) / Roubo de Pergaminhos (LoR: Saquear): bônus ao ser a 1ª carta da rodada (Primeiro Selo), 2ª+ carta da rodada (Selo Encadeado) ou após já ter causado dano à Vitalidade rival na rodada (Roubo de Pergaminhos).
 - Cadeia de Selos (LoR: Fluxo) / Pavio (LoR: Contagem): Cadeia de Selos ativa na rodada seguinte após conjurar 2+ Jutsus; Pavio reduz marcadores por rodada até disparar.
 - Vontade do Fogo (LoR: Fúria): ganha +1/+1 permanente ao abater uma unidade em combate.
 - Profecia do Sapo (LoR: Destinado): ganha +1/+1 permanente na 1ª vez na rodada que você a alveja com Jutsu ou Equipamento.
@@ -176,10 +176,10 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 
 ## Mudanças nesta versão
 
-- Alvo principal padronizado como **Portão** em todo o documento (antes: Escudo / Portão Rival / Portão Principal).
+- Alvo principal padronizado como **Portão** em todo o documento (antes: Escudo / Vitalidade Rival / Vitalidade Principal).
 - Melancolia corrigida para -1/-1 permanente cumulativo (agora **Exaustão**).
 - Tokens: não são tipo de baralho e contam como Unidades; Token que sofre Kuchiyose Reverso deixa de existir. Título da seção 4 virou "5 tipos de cartas + Tokens".
-- Armadilhas: armar custa Chakra e é Selo do Boi (Lenta); o disparo entra na Pilha como Selo do Tigre (Rápida) e pode ser respondido; descartada após disparar; máx. 1 por gatilho (o dono escolhe qual, se houver mais de uma); removível por Jutsus Detectar/Revelar (nova categoria).
+- Ocultos: armar custa Chakra e é Selo do Boi (Lenta); o disparo entra na Pilha como Selo do Tigre (Rápida) e pode ser respondido; descartada após disparar; máx. 1 por gatilho (o dono escolhe qual, se houver mais de uma); removível por Jutsus Detectar/Revelar (nova categoria).
 - Equipamento: volta à mão quando o portador deixa o campo (morte, Kuchiyose Reverso, Kekkai); destruído com mão cheia (9); Selado desliga o bônus.
 - Duelo Ninja (Desafiador): o atacante escolhe o bloqueador.
 - Nova velocidade Selo do Dragão (Focada); tabela de velocidades em markdown.
@@ -187,4 +187,4 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 - Ataque direto só contra atacante que não pode ser bloqueado; removida a ideia de ataque que pula bloqueios.
 - Novas regras: sorteio e Ficha de Ataque inicial, mulligan e baralho vazio (derrota imediata).
 - Nomes temáticos de Naruto aplicados em todo o documento (veja o glossário, com o equivalente de LoR entre parênteses).
-- Decisões confirmadas: sorteio do primeiro jogador, mulligan, derrota imediata com baralho vazio e escolha do dono entre Armadilhas com o mesmo gatilho.
+- Decisões confirmadas: sorteio do primeiro jogador, mulligan, derrota imediata com baralho vazio e escolha do dono entre Ocultos com o mesmo gatilho.

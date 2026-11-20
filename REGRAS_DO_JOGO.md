@@ -6,9 +6,9 @@
 
 ## 1. Objetivo e Condição de Vitória
 
-- Cada jogador inicia a partida com um Portão de 20 pontos de Vida, 5 cartas na mão e um baralho embaralhado de 24 cartas.
-- Vitória: reduza a Vida do Portão adversário a 0 (através de ataques não bloqueados, dano excedente de Perfurante, Ataque ao Portão, habilidades ou Jutsus diretos).
-- Campo de Batalha: cada lado possui até 5 espaços de aliados (Ninjas, Unidades ou Tokens) e até 2 espaços ocultos de Armadilhas.
+- Cada jogador inicia a partida com **Vitalidade 20**, 5 cartas na mão e um baralho embaralhado de 24 cartas.
+- Vitória: reduza a Vitalidade adversária a 0 (através de ataques não bloqueados, dano excedente de Perfurante, Ataque à Vitalidade, habilidades ou Jutsus diretos).
+- Campo de Batalha: cada lado possui até **5** espaços de aliados (Ninjas, Unidades ou Tokens) e até **3** cartas **Oculto** em jogo. Mão máxima: **9** cartas.
 - **Início da partida:** o jogador que vai primeiro é sorteado e começa com a Ficha de Ataque na Rodada 1.
 - **Mulligan:** antes da Rodada 1, cada jogador pode trocar uma única vez qualquer quantidade das 5 cartas iniciais; as cartas trocadas voltam ao baralho, que é embaralhado, e novas cartas são compradas.
 - **Baralho vazio:** se o jogador precisar comprar uma carta com o baralho vazio, ele perde a partida na hora.
@@ -17,7 +17,7 @@
 
 - Tamanho do Baralho: exatamente 24 cartas.
 - Ninjas (Campeões): máximo de 3 personagens Ninja distintos por baralho, com no máximo 2 cópias de cada Ninja (total máximo de 6 cartas de Ninja no deck).
-- Demais Cartas (Unidades, Jutsus, Armadilhas e Equipamentos): máximo de 3 cópias de qualquer carta repetida.
+- Demais Cartas (Unidades, Jutsus e Equipamentos): máximo de 3 cópias de qualquer carta repetida. Jutsus com velocidade Oculto entram no baralho como Jutsus.
 - Tokens não entram na montagem do baralho (veja 4.6).
 - Ninja Único, Jutsu Exclusivo e Token Exclusivo: veja 4.1. Jutsus Exclusivos e Tokens **não podem entrar no baralho**; eles são criados durante a partida.
 
@@ -25,12 +25,12 @@
 
 - Chakra Principal: começa em 1/1 na Rodada 1 e aumenta em +1 a cada nova rodada até o máximo de 10/10.
 - Reserva de Chakra (Mana de Feitiço): ao final de cada rodada, até 3 pontos de Chakra não gastos são armazenados na Reserva de Jutsu.
-  - O Chakra da Reserva pode ser usado exclusivamente para conjurar Jutsus e armar Armadilhas.
-  - A Reserva é consumida automaticamente antes do Chakra principal ao jogar Jutsus ou Armadilhas.
+  - O Chakra da Reserva pode ser usado exclusivamente para conjurar Jutsus (incluindo armar Ocultos).
+  - A Reserva é consumida automaticamente antes do Chakra principal ao jogar Jutsus.
 
-## 4. Os 5 Tipos de Cartas + Tokens
+## 4. Os Tipos de Cartas + Tokens
 
-São 5 tipos de cartas que podem entrar no baralho (Ninjas, Unidades, Jutsus, Armadilhas e Equipamentos). Os Tokens são um sexto grupo, mas **não são um tipo de baralho** (veja 4.6).
+São **4 tipos** de cartas que podem entrar no baralho: **Ninja, Unidade, Jutsu e Equipamento**. (O tipo Armadilha foi removido; o papel passou à velocidade **Oculto** dos Jutsus.) Os Tokens **não são um tipo de baralho** (veja 4.6); contam como Unidade ou Jutsu criado por carta.
 
 ### 4.1. Ninjas (3 Níveis: Gennin → Chuunin → Jounnin)
 
@@ -60,7 +60,7 @@ Exemplos de Jutsus Exclusivos (apenas exemplos, valores ilustrativos):
 | Ninja | Jutsu Exclusivo (exemplo) | Velocidade | Custo | Efeito (exemplo) |
 |---|---|---|---|---|
 | Naruto | Rasengan | Preparado | 4 | Causa 4 de dano a uma unidade inimiga. |
-| Sasuke | Chidori | Rápido | 3 | Causa 3 de dano a uma unidade inimiga; se ela morrer, o excedente vai ao Portão. |
+| Sasuke | Chidori | Rápido | 3 | Causa 3 de dano a uma unidade inimiga; se ela morrer, o excedente vai à Vitalidade. |
 | Kakashi | Raikiri | Instantâneo | 2 | Dá Golpe Veloz a um aliado nesta rodada. |
 
 ### 4.2. Unidades
@@ -69,30 +69,36 @@ Shinobis comuns e tropas de apoio das vilas (Anbu, Raiz, Médicos de Campo, Poli
 
 ### 4.3. Jutsus
 
-Técnicas ninjas que afetam o campo, unidades ou Portões. Dividem-se por categoria:
+Técnicas ninjas que afetam o campo, unidades ou a Vitalidade. Podem ter família **Ninjutsu / Genjutsu / Taijutsu** (quando marcada). Dividem-se por categoria:
 
-- Ataque: Direto (no Portão), Individual (1 alvo), Múltiplo (alvo + secundário/Portão) e em Área (todos os inimigos).
+- Ataque: Direto (na Vitalidade), Individual (1 alvo), Múltiplo (alvo + secundário/Vitalidade) e em Área (todos os inimigos).
 - Fortalecer: concedem bônus de Poder/Vida ou palavras-chave defensivas.
 - Enfraquecer: aplicam Paralisia, Bloqueio de Chakra, Selar, Exposto ou Exaustão.
-- Cura: restauram Vida de aliados e do Portão.
+- Cura: restauram Vida de aliados e da Vitalidade.
 - Invocação: colocam Tokens poderosos diretamente em campo.
-- Detectar/Revelar: categoria própria de Jutsus que revelam e removem Armadilhas ocultas do oponente (veja 4.4).
+- Detectar/Revelar: categoria própria de Jutsus que revelam e removem cartas Oculto do oponente (veja 4.4).
 
-### 4.4. Armadilhas
+### 4.4. Velocidade Oculto (ex-Armadilha)
 
-Cartas secretas armadas face para baixo (até 2 simultâneas). O oponente sabe quantas armadilhas existem, mas não qual técnica foi ocultada. Disparam automaticamente quando o inimigo executa o gatilho específico:
+**Oculto** é uma **velocidade de Jutsu** (não um tipo de baralho). A carta é jogada **virada para baixo**, só **fora de combate e com a Pilha vazia**, e só ativa quando o **gatilho** acontece. Máximo **3** em jogo por jogador. Na carta aparece a pílula "Oculto". Kai/detecção (Byakugan) revelam/anulam.
 
-- Ao Declarar Ataque (Kibaku Fuda, Kagemane no Jutsu, Dokugiri)
-- Ao Conjurar Jutsu (Gogyō Fūin)
+Cartas Oculto com gatilho no repositório (Jutsus, velocidade Oculto):
+
+- Ao Declarar Ataque (Kibaku Fuda, **Kagemane no Jutsu**, Dokugiri)
+- Ao Conjurar Jutsu (**Gogyō Fūin**)
 - Ao Invocar Unidade (Magen: Jubaku Satsu)
 
-Regras de Armadilhas:
+Também listadas como Oculto (gatilho face-down ainda pendente de confirmação): Kawarimi no Jutsu, Kirigakure no Jutsu.
 
-- **Armar:** custa Chakra (a Reserva de Jutsu pode ser usada) e tem velocidade **Preparado**: só pode ser feito fora de combate e com a Pilha vazia.
-- **Disparo:** ao disparar, o efeito entra na Pilha com velocidade **Rápido** e pode ser respondido pelo oponente.
-- **Depois de disparar:** a Armadilha é revelada e descartada.
-- **Limite:** no máximo 1 Armadilha dispara por gatilho. Se houver 2 Armadilhas com o mesmo gatilho, o dono escolhe qual ativar, e a outra continua oculta.
-- **Remoção:** o oponente pode remover uma Armadilha oculta com Jutsus da categoria Detectar/Revelar, que a revelam e a descartam sem ativar o efeito.
+TODO — Ocultos sem carta/texto aprovado no repo: Emboscada de Clone, Doton: Shinjū Zanshu, Senbon do Haku; **8º Oculto** a confirmar. TODO: resposta do rival a Oculto / prioridade — indefinido.
+
+Regras de Oculto:
+
+- **Armar:** custa Chakra (a Reserva de Jutsu pode ser usada); só fora de combate e com a Pilha vazia.
+- **Disparo:** ao disparar, o efeito entra na Pilha com velocidade **Rápido** e pode ser respondido (regra de resposta do rival a Oculto ainda pendente).
+- **Depois de disparar:** a carta é revelada e descartada.
+- **Limite:** no máximo 1 Oculto dispara por gatilho. Se houver vários com o mesmo gatilho, o dono escolhe qual ativar; os demais continuam ocultos.
+- **Remoção:** Jutsus Detectar/Revelar revelam e descartam um Oculto sem ativar o efeito.
 
 ### 4.5. Equipamentos
 
@@ -120,20 +126,21 @@ Cartas geradas exclusivamente por habilidades de personagens ou Jutsus durante a
 |---|---|---|---|
 | **Instantâneo** (Imediata) | A qualquer momento (mesmo em combate ou com a Pilha cheia) | Não entra na Pilha; o oponente não responde; resolve na hora e você mantém a vez | Truques instantâneos |
 | **Rápido** (Rápida) | A qualquer momento (inclusive em combate ou como resposta) | Entra na Pilha; o oponente pode responder com Rápido ou Instantâneo | Reações e truques de combate |
-| **Preparado** (Lenta) | Só fora de combate e com a Pilha vazia | Entra na Pilha; passa a prioridade antes de resolver | Jutsus mais fortes; armar Armadilhas |
+| **Preparado** (Lenta) | Só fora de combate e com a Pilha vazia | Entra na Pilha; passa a prioridade antes de resolver | Jutsus mais fortes |
 | **Concentrado** (Focada) | Só fora de combate e com a Pilha vazia | Não entra na Pilha; resolve na hora, sem resposta | Jutsus de compra, invocação e utilidade |
+| **Oculto** (Oculta) | Só fora de combate e com a Pilha vazia (armar virado para baixo) | Ativa no gatilho; o disparo entra na Pilha como Rápido | Armadilhas antigas / emboscadas |
 
 - Pilha LIFO: quando ambos param de responder e o jogador ativo clica em Passar Turno, a Pilha resolve de cima para baixo.
-- Armadilhas disparadas entram na Pilha com velocidade Rápido (veja 4.4).
+- Ocultos disparados entram na Pilha com velocidade Rápido (veja 4.4).
 
 ## 6. Fluxo Fluido de Turno e Combate por Arrasto (um único botão)
 
 1. **Início da Rodada:** o Chakra enche até o novo máximo (1–10), a Reserva guarda até 3, ambos compram 1 carta, Cura Natural cura totalmente, efeitos temporários, Paralisia e Bloqueio de Chakra expiram, Clones caem e a Ficha de Ataque alterna.
 2. **Arrasto:**
-   - Ninjas/Unidades vão da mão ao campo; Equipamentos são arrastados sobre um aliado; Jutsus e Armadilhas vão ao alvo (ou à zona central).
+   - Ninjas/Unidades vão da mão ao campo; Equipamentos são arrastados sobre um aliado; Jutsus e Ocultos vão ao alvo (ou à zona central).
    - Atacar: com a Ficha ativa, arraste os atacantes para a Zona de Combate; Passar Turno dispara o ataque.
    - Bloquear: arraste defensores sobre os atacantes; Passar Turno resolve.
-   - Todo ataque passa pela fase de bloqueio. Qualquer atacante que não for bloqueado acerta o Portão inimigo com todo o seu Poder (o defensor pode escolher não bloquear).
+   - Todo ataque passa pela fase de bloqueio. Qualquer atacante que não for bloqueado acerta a Vitalidade inimiga com todo o seu Poder (o defensor pode escolher não bloquear).
 3. **Resolução:** Golpe Veloz golpeia primeiro e, se abater o bloqueador, não sofre contra-ataque; Combo golpeia antes e de novo junto com o bloqueador. Passar Duplo: se ambos passam seguidos sem agir, a rodada termina.
 
 ## 7. Arenas Dinâmicas
@@ -141,7 +148,7 @@ Cartas geradas exclusivamente por habilidades de personagens ou Jutsus durante a
 As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como Minato, Hashirama ou Suiryūdan. São apenas estas 4:
 
 - Vale do Fim: atacantes isolados (1 ou 2 unidades) recebem +2/+0 no combate. Evoluções (Chuunin/Jounnin) concedem +1/+1 extra.
-- Floresta da Morte: Armadilhas custam 1 a menos (mín. 1). No início de cada rodada, a unidade mais ferida sem Cura Natural sofre 1 de dano.
+- Floresta da Morte: Jutsus Oculto (armáveis) custam 1 a menos (mín. 1). No início de cada rodada, a unidade mais ferida sem Cura Natural sofre 1 de dano.
 - Arena do Exame Chūnin: unidades com Golpe Veloz entram com +0/+1. Jutsus de velocidade Instantâneo concedem +1/+1 temporário ao alvo.
 - Telhados de Konoha: cartas com função Hokage ou Sensei custam 1 a menos. Início da rodada recarrega +1 de Reserva de Jutsu.
 
@@ -150,15 +157,15 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 ### Ataque e Bloqueio
 
 - Furtivo (LoR: Elusivo): só pode ser bloqueado por unidades com Furtivo ou Visão Ninja.
-- Visão Ninja (LoR: Visão Aguçada): pode bloquear atacantes Furtivos e vê as Armadilhas ocultas do rival enquanto estiver em campo.
-- Perfurante (LoR: Sobrepujar): o dano excedente acima da Vida do bloqueador atinge diretamente o Portão inimigo.
+- Visão Ninja (LoR: Visão Aguçada): pode bloquear atacantes Furtivos e vê as cartas Oculto do rival enquanto estiver em campo.
+- Perfurante (LoR: Sobrepujar): o dano excedente acima da Vida do bloqueador atinge diretamente a Vitalidade inimiga.
 - Golpe Veloz (LoR: Ataque Rápido): ao atacar, golpeia antes do bloqueador.
 - Combo (LoR: Ataque Duplo): ao atacar, golpeia antes e novamente junto com o bloqueador.
 - Provocar (LoR: Desafiador): o jogador atacante escolhe qual unidade inimiga vai bloquear este atacante (como no LoR).
 - Intimidação (LoR: Assustador): só pode ser bloqueado por inimigos com 3 ou mais de Poder.
 - Ímpeto (LoR: Imprudente): só pode ser bloqueado por inimigos com 3 ou mais de Vida.
 - Muralha (LoR: Formidável): ataca usando sua Vida atual no lugar do Poder.
-- Ataque ao Portão (LoR: Impacto): ao golpear atacando, causa 1 de dano direto ao Portão inimigo por acúmulo.
+- Ataque à Vitalidade (LoR: Impacto): ao golpear atacando, causa 1 de dano direto à Vitalidade inimiga por acúmulo.
 - Sem Guarda (LoR: Não Bloqueia) / Imobilizado (LoR: Imóvel): não pode bloquear ataques, ou não pode atacar nem bloquear.
 
 ### Proteção e Sobrevivência
@@ -168,7 +175,7 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 - Resistente (LoR: Robusto): sofre 1 de dano a menos de todas as fontes.
 - Cura Natural (LoR: Regeneração): restaura toda sua Vida máxima no início de cada rodada.
 - Segunda Chance (LoR: Imortal): na primeira vez que morreria, retorna ao campo Paralisado com 1 de Vida.
-- Absorção de Chakra (LoR: Roubo de Vida) / Dreno de Chakra (LoR: Drenar): todo dano causado por esta unidade ou efeito cura o seu Portão.
+- Absorção de Chakra (LoR: Roubo de Vida) / Dreno de Chakra (LoR: Drenar): todo dano causado por esta unidade ou efeito cura a sua Vitalidade.
 
 ### Efeitos Negativos
 
@@ -180,7 +187,7 @@ As Arenas são aleatórias por partida ou trocadas por Jutsus/Habilidades como M
 - Clone (LoR: Efêmero): morre após golpear ou ao fim da rodada (o Token Clone das Sombras tem Clone).
 - Veneno X: ao golpear e causar dano, envenena o alvo: no início de cada rodada ele sofre 1 de dano, por X rodadas. Não acumula: um novo Veneno só renova a duração. O dano de Veneno ignora Substituição e Resistente.
 - Genjutsu (estado): não ataca nem bloqueia até o fim da próxima rodada. Só o efeito Kai remove. Diferente da Paralisia (física), que dura só a rodada atual e que Kai não remove.
-- Kai (efeito de Jutsu): não é palavra-chave: remove Genjutsu ou Selado de um aliado.
+- Kai (Jutsu Genjutsu, Rápido): remove Genjutsu e Selado de um aliado (não remove Paralisia).
 - Exaustão (LoR: Melancolia): aplica -1/-1 permanente cumulativo na unidade.
 - Maldição (LoR: Amaldiçoar): aumenta o custo de Chakra de cartas na mão.
 - Aprisionar (LoR: Capturar): remove um alvo do campo até a unidade que aplicou Aprisionar sair de jogo.

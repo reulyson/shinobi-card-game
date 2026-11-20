@@ -95,6 +95,9 @@ function playMain(side: Side, P: { player: PlayerState; enemy: PlayerState }, ro
       caster = d.oppState;
       P[side] = caster;
       P[oppSide] = opp;
+    } else if (card.kind === 'jutsu' && card.speed === 'Oculta' && card.triggerType) {
+      caster = { ...caster, traps: [...caster.traps, { uid: `t${Math.random()}`, cardId: card.id, owner: side, armedRound: round }] };
+      P[side] = caster;
     } else if (card.kind === 'jutsu') {
       P[side] = caster;
       const r = resolveJutsuEffect(card as JutsuCardDef, side, undefined, P.player, P.enemy, arena, round);
@@ -107,9 +110,6 @@ function playMain(side: Side, P: { player: PlayerState; enemy: PlayerState }, ro
         const r = attachEquipmentToUnit(card as EquipmentCardDef, target, caster);
         caster = applyNinjaEquipHooks(r.ownerState, { arenaId: arena });
       }
-      P[side] = caster;
-    } else if (card.kind === 'armadilha') {
-      caster = { ...caster, traps: [...caster.traps, { uid: `t${Math.random()}`, cardId: card.id, owner: side, armedRound: round }] };
       P[side] = caster;
     }
     check(P.player, `main ${card.id}`);
@@ -244,7 +244,7 @@ for (let m = 0; m < N; m++) {
     finished++;
     totalRounds += Math.min(round, 30);
     const res = P.player.hp <= 0 && P.enemy.hp <= 0 ? 'empate' : P.player.hp <= 0 ? 'enemy' : P.enemy.hp <= 0 ? 'player' : 'limite';
-    console.log(`partida ${m + 1}: ${res} em ${Math.min(round, 30)} rodadas (Portões ${P.player.hp}/${P.enemy.hp}, ${logs.length} logs) [${arena}]`);
+    console.log(`partida ${m + 1}: ${res} em ${Math.min(round, 30)} rodadas (Vitalidade ${P.player.hp}/${P.enemy.hp}, ${logs.length} logs) [${arena}]`);
   } catch (err) {
     crashes++;
     console.log(`partida ${m + 1}: ERRO na rodada ${round}:`, err);

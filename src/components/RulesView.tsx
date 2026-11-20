@@ -11,15 +11,15 @@ const KEYWORD_GROUPS = [
     title: 'Ataque e Bloqueio',
     items: [
       { name: 'Furtivo (LoR: Elusivo)', desc: 'Só pode ser bloqueado por unidades com Furtivo ou Visão Ninja.' },
-      { name: 'Visão Ninja (LoR: Visão Aguçada)', desc: 'Pode bloquear atacantes Furtivos e vê as Armadilhas ocultas do rival enquanto estiver em campo.' },
-      { name: 'Perfurante (LoR: Sobrepujar)', desc: 'O dano excedente acima da Vida do bloqueador atinge diretamente o Portão inimigo.' },
+      { name: 'Visão Ninja (LoR: Visão Aguçada)', desc: 'Pode bloquear atacantes Furtivos e vê as cartas Oculto do rival enquanto estiver em campo.' },
+      { name: 'Perfurante (LoR: Sobrepujar)', desc: 'O dano excedente acima da Vida do bloqueador atinge diretamente a Vitalidade inimiga.' },
       { name: 'Golpe Veloz (LoR: Ataque Rápido)', desc: 'Ao atacar, golpeia antes do bloqueador.' },
       { name: 'Combo (LoR: Ataque Duplo)', desc: 'Ao atacar, golpeia antes e novamente junto com o bloqueador.' },
       { name: 'Provocar (LoR: Desafiador)', desc: 'O jogador atacante escolhe qual unidade inimiga vai bloquear este atacante (como no LoR).' },
       { name: 'Intimidação (LoR: Assustador)', desc: 'Só pode ser bloqueado por inimigos com 3 ou mais de Poder.' },
       { name: 'Ímpeto (LoR: Imprudente)', desc: 'Só pode ser bloqueado por inimigos com 3 ou mais de Vida.' },
       { name: 'Muralha (LoR: Formidável)', desc: 'Ataca usando sua Vida atual no lugar do Poder.' },
-      { name: 'Ataque ao Portão (LoR: Impacto)', desc: 'Ao golpear atacando, causa 1 de dano direto ao Portão inimigo por acúmulo.' },
+      { name: 'Ataque à Vitalidade (LoR: Impacto)', desc: 'Ao golpear atacando, causa 1 de dano direto à Vitalidade inimiga por acúmulo.' },
       { name: 'Sem Guarda (LoR: Não Bloqueia) / Imobilizado (LoR: Imóvel)', desc: 'Não pode bloquear ataques, ou não pode atacar nem bloquear.' },
     ],
   },
@@ -31,7 +31,7 @@ const KEYWORD_GROUPS = [
       { name: 'Resistente (LoR: Robusto)', desc: 'Sofre 1 de dano a menos de todas as fontes.' },
       { name: 'Cura Natural (LoR: Regeneração)', desc: 'Restaura toda sua Vida máxima no início de cada rodada.' },
       { name: 'Segunda Chance (LoR: Imortal)', desc: 'Na primeira vez que morreria, retorna ao campo Paralisado com 1 de Vida.' },
-      { name: 'Absorção de Chakra (LoR: Roubo de Vida) / Dreno de Chakra (LoR: Drenar)', desc: 'Todo dano causado por esta unidade ou efeito cura o seu Portão.' },
+      { name: 'Absorção de Chakra (LoR: Roubo de Vida) / Dreno de Chakra (LoR: Drenar)', desc: 'Todo dano causado por esta unidade ou efeito cura a sua Vitalidade.' },
     ],
   },
   {
@@ -45,7 +45,7 @@ const KEYWORD_GROUPS = [
       { name: 'Clone (LoR: Efêmero)', desc: 'Morre após golpear ou ao fim da rodada (o Token Clone das Sombras tem Clone).' },
       { name: 'Veneno X', desc: 'Ao golpear e causar dano, envenena o alvo: no início de cada rodada ele sofre 1 de dano, por X rodadas. Não acumula: um novo Veneno só renova a duração. O dano de Veneno ignora Substituição e Resistente.' },
       { name: 'Genjutsu (estado)', desc: 'Não ataca nem bloqueia até o fim da próxima rodada. Só o efeito Kai remove. Diferente da Paralisia (física), que dura só a rodada atual e que Kai não remove.' },
-      { name: 'Kai (efeito de Jutsu)', desc: 'Não é palavra-chave: remove Genjutsu ou Selado de um aliado.' },
+      { name: 'Kai (Jutsu Genjutsu, Rápido)', desc: 'Remove Genjutsu e Selado de um aliado (não remove Paralisia).' },
       { name: 'Exaustão (LoR: Melancolia)', desc: 'Aplica -1/-1 permanente cumulativo na unidade.' },
       { name: 'Maldição (LoR: Amaldiçoar)', desc: 'Aumenta o custo de Chakra de cartas na mão.' },
       { name: 'Aprisionar (LoR: Capturar)', desc: 'Remove um alvo do campo até a unidade que aplicou Aprisionar sair de jogo.' },
@@ -106,9 +106,9 @@ export const RulesView: React.FC<RulesViewProps> = ({ onStartMatch }) => {
         <section className="rounded-xl border border-slate-800 bg-[#111927] p-5 space-y-2.5">
           <h2 className="text-base font-display font-bold text-amber-300">01. Objetivo e Condição de Vitória</h2>
           <ul className="space-y-1.5 text-sm text-slate-300">
-            <li>Cada jogador começa com um <strong>Portão de 20 de Vida</strong>, 5 cartas na mão e um baralho de 24 cartas.</li>
-            <li><strong className="text-amber-200">Vitória:</strong> reduza a Vida do Portão adversário a 0 (ataques não bloqueados, excedente de Perfurante, Ataque ao Portão, habilidades ou Jutsus diretos).</li>
-            <li><strong className="text-white">Campo:</strong> até 5 aliados (Ninjas, Unidades ou Tokens) e até 2 Armadilhas ocultas por lado.</li>
+            <li>Cada jogador começa com <strong>Vitalidade 20</strong>, 5 cartas na mão e um baralho de 24 cartas.</li>
+            <li><strong className="text-amber-200">Vitória:</strong> reduza a Vitalidade adversária a 0 (ataques não bloqueados, excedente de Perfurante, Ataque à Vitalidade, habilidades ou Jutsus diretos).</li>
+            <li><strong className="text-white">Campo:</strong> até 5 aliados (Ninjas, Unidades ou Tokens) e até 3 Ocultos em jogo por lado; mão máx. 9.</li>
             <li><strong className="text-white">Sorteio:</strong> quem vai primeiro é sorteado e começa com a Ficha de Ataque na Rodada 1.</li>
             <li><strong className="text-white">Mulligan:</strong> antes da Rodada 1, troque uma única vez qualquer quantidade das 5 cartas iniciais.</li>
             <li><strong className="text-red-300">Baralho vazio:</strong> precisar comprar com o baralho vazio é derrota na hora.</li>
@@ -119,16 +119,16 @@ export const RulesView: React.FC<RulesViewProps> = ({ onStartMatch }) => {
           <h2 className="text-base font-display font-bold text-amber-300">02. Baralho e Chakra</h2>
           <ul className="space-y-1.5 text-sm text-slate-300">
             <li><strong className="text-white">24 cartas exatas.</strong> Máx. 3 Ninjas distintos, até 2 cópias de cada (máx. 6 cartas de Ninja).</li>
-            <li>Unidades, Jutsus, Armadilhas e Equipamentos: até 3 cópias. Tokens não entram no baralho.</li>
+            <li>Unidades, Jutsus e Equipamentos: até 3 cópias. Tokens não entram no baralho.</li>
             <li><strong className="text-rose-300">Jutsus Exclusivos e Tokens não entram no baralho:</strong> são criados durante a partida.</li>
             <li><strong className="text-sky-300">Chakra:</strong> começa em 1/1 e sobe +1 por rodada até 10/10.</li>
-            <li><strong className="text-sky-300">Reserva de Jutsu:</strong> até 3 de Chakra não gasto ficam guardados; só servem para Jutsus e Armadilhas e são gastos antes do Chakra principal.</li>
+            <li><strong className="text-sky-300">Reserva de Jutsu:</strong> até 3 de Chakra não gasto ficam guardados; só servem para Jutsus (incl. armar Ocultos) e são gastos antes do Chakra principal.</li>
             <li><strong className="text-sky-300">Custo mínimo 1:</strong> nenhuma carta custa menos de 1 depois de descontos, e os descontos somados valem no máximo −2 por carta. Aumentos (ex.: Maldição) somam por cima.</li>
           </ul>
         </section>
 
         <section className="rounded-xl border border-slate-800 bg-[#111927] p-5 space-y-2.5">
-          <h2 className="text-base font-display font-bold text-amber-300">03. Os 5 Tipos de Cartas + Tokens</h2>
+          <h2 className="text-base font-display font-bold text-amber-300">03. Tipos de Cartas + Tokens</h2>
           <ul className="space-y-1.5 text-sm text-slate-300">
             <li><strong className="text-amber-200">Ninjas (3 níveis):</strong> sobem de <strong>Gennin → Chuunin → Jounnin</strong> ao cumprir missões em campo. Cada graduação tem sua imagem.</li>
             <li><strong className="text-amber-200">Jogar um Ninja:</strong> custa só <strong>Chakra principal</strong> (a Reserva de Jutsu não paga Ninjas) e ele entra sempre como <strong>Gennin</strong>, com a habilidade de Entrada e o Jutsu Exclusivo criado na mão.</li>
@@ -137,8 +137,8 @@ export const RulesView: React.FC<RulesViewProps> = ({ onStartMatch }) => {
             <li><strong className="text-rose-300">Jutsu Exclusivo:</strong> não entra no baralho. Sempre que o Ninja entra em campo (da mão ou por efeito), 1 cópia do Jutsu Exclusivo dele é criada na sua mão. Conjurá-lo com o Ninja em campo conta +1 na missão de Promoção.</li>
             <li><strong className="text-rose-300">Cópia repetida e Token Exclusivo:</strong> enquanto o Ninja estiver em campo, as cópias dele na mão (ou compradas depois) viram o Token Exclusivo dele, se tiver um, ou o Jutsu Exclusivo, e voltam a ser o Ninja quando ele morre (com a patente salva). Se um efeito tentar invocar outra cópia, a invocação falha e você recebe essa mesma carta na mão.</li>
             <li><strong className="text-slate-100">Unidades:</strong> tropas das vilas (Anbu, Raiz, Médicos de Campo, Oinin etc.). Não são promovidas.</li>
-            <li><strong className="text-sky-300">Jutsus:</strong> Ataque (direto, individual, múltiplo, área), Fortalecer, Enfraquecer, Cura, Invocação e Detectar/Revelar (categoria própria, remove Armadilhas ocultas).</li>
-            <li><strong className="text-purple-300">Armadilhas:</strong> armar custa Chakra (pode usar a Reserva) e é <strong>Preparado</strong>; ao disparar, entra na Pilha como <strong>Rápido</strong> e pode ser respondida; depois é revelada e descartada. Só 1 dispara por gatilho: com 2 do mesmo gatilho, o dono escolhe. Jutsus Detectar/Revelar descartam Armadilhas ocultas sem ativá-las.</li>
+            <li><strong className="text-sky-300">Jutsus:</strong> Ataque (direto, individual, múltiplo, área), Fortalecer, Enfraquecer, Cura, Invocação e Detectar/Revelar (categoria própria, remove cartas Oculto).</li>
+            <li><strong className="text-purple-300">Oculto (velocidade de Jutsu):</strong> joga virado para baixo, só fora de combate com a Pilha vazia; ativa no gatilho. Máx. <strong>3</strong> em jogo. O disparo entra na Pilha como <strong>Rápido</strong>. Detectar/Revelar descarta Ocultos sem ativá-los. (Tipo Armadilha removido.)</li>
             <li><strong className="text-cyan-300">Equipamentos:</strong> 1 por aliado (equipar outro devolve o anterior à mão). Voltam à mão quando o portador sai de campo; são destruídos se a mão tiver 9 cartas. Com o portador <strong>Selado</strong>, ficam ligados a ele, mas bônus e palavras-chave ficam desligados.</li>
             <li><strong className="text-orange-300">Tokens:</strong> criados por habilidades e Jutsus; não entram no baralho. Dependendo da carta, um Token é uma Unidade (vai ao campo e conta como Unidade em todas as regras) ou um Jutsu (vai para a mão). Um Ninja pode ter um Token Exclusivo. Tokens com Clone (como o Clone das Sombras) somem ao golpear ou no fim da rodada. Token que sofre Recuar deixa de existir.</li>
           </ul>
@@ -149,8 +149,9 @@ export const RulesView: React.FC<RulesViewProps> = ({ onStartMatch }) => {
           <ul className="space-y-2 text-sm text-slate-300">
             <li><strong className="text-emerald-300">Instantâneo:</strong> a qualquer momento (mesmo em combate ou com a Pilha cheia); não entra na Pilha, o oponente não responde, resolve na hora e você mantém a vez.</li>
             <li><strong className="text-sky-300">Rápido:</strong> a qualquer momento (inclusive em combate ou como resposta); entra na Pilha e o oponente pode responder com Rápido ou Instantâneo.</li>
-            <li><strong className="text-amber-300">Preparado:</strong> só fora de combate e com a Pilha vazia; entra na Pilha e passa a prioridade antes de resolver. Também é a velocidade para armar Armadilhas.</li>
+            <li><strong className="text-amber-300">Preparado:</strong> só fora de combate e com a Pilha vazia; entra na Pilha e passa a prioridade antes de resolver. </li>
             <li><strong className="text-teal-300">Concentrado:</strong> só fora de combate e com a Pilha vazia; não entra na Pilha e resolve na hora, sem resposta (compra, invocação e utilidade).</li>
+            <li><strong className="text-purple-300">Oculto:</strong> só fora de combate e com a Pilha vazia; joga virado para baixo e ativa no gatilho (máx. 3 em jogo).</li>
           </ul>
           <p className="text-xs text-slate-400 pt-1">
             Quando ambos param de responder e o jogador ativo clica em <strong>Passar Turno</strong>, a Pilha resolve de cima para baixo (o último a entrar resolve primeiro).
@@ -161,9 +162,9 @@ export const RulesView: React.FC<RulesViewProps> = ({ onStartMatch }) => {
           <h2 className="text-base font-display font-bold text-amber-300">05. Fluxo de Turno e Combate por Arrasto (um único botão)</h2>
           <ul className="space-y-1.5 text-sm text-slate-300">
             <li><strong className="text-white">Início da Rodada:</strong> o Chakra enche até o novo máximo, a Reserva guarda até 3, ambos compram 1 carta, Cura Natural cura totalmente, efeitos temporários, Paralisia e Bloqueio de Chakra expiram, Clones caem e a Ficha de Ataque alterna.</li>
-            <li><strong className="text-white">Arrasto:</strong> Ninjas/Unidades vão da mão ao campo; Equipamentos vão sobre um aliado; Jutsus e Armadilhas vão ao alvo (ou à zona central).</li>
+            <li><strong className="text-white">Arrasto:</strong> Ninjas/Unidades vão da mão ao campo; Equipamentos vão sobre um aliado; Jutsus e Ocultos vão ao alvo (ou à zona central).</li>
             <li><strong className="text-amber-200">Atacar:</strong> com a Ficha ativa, arraste os atacantes para a <strong>Zona de Combate</strong>; Passar Turno dispara o ataque. Atacante com <strong>Provocar</strong> (ou contra um inimigo <strong>Exposto</strong>): clique nele e depois no inimigo, ou arraste-o até o inimigo, para escolher quem vai bloquear. O defensor não pode trocar esse bloqueio.</li>
-            <li><strong className="text-amber-200">Bloquear:</strong> arraste defensores sobre os atacantes; Passar Turno resolve. Todo ataque passa pela fase de bloqueio; qualquer atacante que não for bloqueado acerta o Portão com todo o seu Poder.</li>
+            <li><strong className="text-amber-200">Bloquear:</strong> arraste defensores sobre os atacantes; Passar Turno resolve. Todo ataque passa pela fase de bloqueio; qualquer atacante que não for bloqueado acerta a Vitalidade com todo o seu Poder.</li>
             <li><strong className="text-white">Resolução:</strong> Golpe Veloz golpeia primeiro e, se abater o bloqueador, não sofre contra-ataque; Combo golpeia antes e de novo junto com o bloqueador. <strong>Passar Duplo:</strong> se ambos passam seguidos sem agir, a rodada termina.</li>
           </ul>
         </section>
