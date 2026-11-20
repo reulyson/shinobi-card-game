@@ -537,8 +537,8 @@ export const CardFace: React.FC<CardFaceProps> = ({
               <div className="nm" style={{ fontSize: nameFontSize(card.name, field) }}>
                 {card.name}
               </div>
-              {/* Campo / Jutsu / Equip: sem linha sob o nome. Ninja LoR (mão/zoom) também via CSS. */}
-              {!field && !isJutsuFace && !isEquip ? <div className="rule" /> : null}
+              {/* Linha sob o nome só em Ninja LoR (mão/zoom); CSS esconde. Campo/Jutsu/Equip/Unidade: sem .rule. */}
+              {!field && isLor ? <div className="rule" /> : null}
 
               {!field &&
                 card.kind !== 'unidade' &&
