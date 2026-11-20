@@ -179,7 +179,9 @@
 .ksl .hk{position:absolute;right:3%;bottom:6%;width:22%;height:22%;background:#C1272D;border-radius:2px;z-index:2;transform:rotate(-6deg);opacity:.92}
 .seal6:has(.ksl){align-items:center}
 .card6 .band{height:34px!important}.card6 .band.f{height:28px!important}
-.bst b{font-size:28px!important}.band.f .bst b{font-size:22px!important}
+.bst b{font-size:28px!important}
+/* Campo: plaquinhas grandes (quase a altura da faixa), como stats-campo-zoom */
+.band.f .bst b{font-size:28px!important}
 .card6 .flow6{bottom:38px!important}.jut .flow6{bottom:38px!important}.card6.field .flow6{bottom:32px!important}
 .jut .gemabs{display:none}
 .card6 .box{height:124px;box-sizing:border-box;justify-content:center;overflow:hidden}
@@ -191,16 +193,34 @@
 .card6 .tint,.card6 .sw{display:none!important}
 .card6 .art{height:68%!important}
 .card6 .band{height:30px!important;font-size:14px!important;letter-spacing:2.5px!important;gap:4px;position:absolute}
-.card6 .band.f{height:25px!important;font-size:11px!important;letter-spacing:1.5px!important}
+/* Campo: faixa um pouco mais alta p/ plaquinhas 28px */
+.card6 .band.f{height:28px!important;font-size:11px!important;letter-spacing:1.5px!important}
 .card6 .band.gold,.card6 .jut .band{height:24px!important}
 .bst{position:absolute;left:8px;top:0;bottom:0;display:flex;align-items:center;gap:3px}
 .bst b{font:400 25px Bangers;color:#fff;-webkit-text-stroke:0;paint-order:stroke fill;-webkit-text-stroke:4px #0A0F1E;margin-right:6px;line-height:1}
-.band.f .bst{left:5px;gap:2px}.band.f .bst b{font-size:20px;-webkit-text-stroke:3.5px #0A0F1E;margin-right:4px}
-.card6 .band span{font:16px Bangers;letter-spacing:2.5px}.card6 .band.f span{font-size:13px}.card6 .band.gold span{font-size:16px}
+.band.f .bst{gap:2px}
+.band.f .bst.l{left:4px;right:auto;width:auto}
+.band.f .bst.r{left:auto!important;right:4px!important;width:auto!important}
+.band.f .bst b{font-size:28px!important;-webkit-text-stroke:4px #0A0F1E;margin-right:3px;line-height:1}
+.card6 .band span{font:16px Bangers;letter-spacing:2.5px}.card6 .band.f span{font-size:12px}.card6 .band.gold span{font-size:16px}
 .bst svg{filter:drop-shadow(0 0 1px #000)}
 .card6 .band span{margin:0}
-.bst.r{left:auto;right:8px}.band.f .bst.r{right:5px}.bst.r b{margin:0 0 0 0}.bst.l b{margin-right:0}.bst.r{flex-direction:row}
-.card6 .flow6{bottom:34px!important}.jut .flow6{bottom:28px!important}.card6.field .flow6{bottom:29px!important}
+.bst.r{left:auto;right:8px;width:auto}.bst.r b{margin:0 0 0 0}.bst.l b{margin-right:0}.bst.r{flex-direction:row}
+/* Campo: pílula 1 KW com ícone legível (após scale 0.5) */
+.card6.field .pill{
+  font-size:11px!important;
+  padding:3px 9px 3px 7px!important;
+  gap:4px!important;
+  border-radius:8px;
+}
+.card6.field .pill img{
+  width:18px!important;
+  height:18px!important;
+  flex:none;
+}
+.card6.field .tiles{gap:4px}
+.card6.field .tile{border-radius:5px}
+.card6 .flow6{bottom:34px!important}.jut .flow6{bottom:28px!important}.card6.field .flow6{bottom:32px!important}
 .jut .gemabs{bottom:6px!important}
 .card6 .art{filter:none!important;mix-blend-mode:normal!important}
 /* hitai-ate */
@@ -286,7 +306,7 @@
 .card6.equip .box .req{color:#FDE68A}
 /* ---- v7o (LoR): área inferior do Ninja ---- */
 .card6.lor:not(.jut):not(.field) .flow6{bottom:34px!important}
-.card6.lor:not(.jut):not(.field) .box{height:212px!important;margin:0!important;border:none!important;border-radius:0!important;outline:none!important;
+.card6.lor:not(.jut):not(.field) .box{height:212px;min-height:212px;margin:0!important;border:none!important;border-radius:0!important;outline:none!important;
  background:linear-gradient(180deg,#0B102000 0,#0B1020CC 26%,#0B1020F2 52%,#0B1020F8 100%)!important;box-shadow:none!important;
  padding:46px 16px 8px!important;justify-content:flex-end!important;gap:3px!important;overflow:hidden!important}
 .card6.lor .box .rv{display:none!important}
@@ -320,14 +340,18 @@
 .bst b.sc-stat-up{color:#4ade80!important;-webkit-text-stroke-color:#052e16!important}
 .bst b.sc-stat-down{color:#f87171!important;-webkit-text-stroke-color:#450a0a!important}
 .bst b.sc-stat-base{color:#fff!important}
+.band.f .bst b.sc-stat-up{-webkit-text-stroke:4px #052e16!important}
+.band.f .bst b.sc-stat-down{-webkit-text-stroke:4px #450a0a!important}
+.band.f .bst b.sc-stat-base{-webkit-text-stroke:4px #0A0F1E!important}
 
 /* Selected / dimmed / playable chrome used by CardView */
 .sc-v7o-scale.is-selected .card6{box-shadow:0 0 0 2px #fbbf24,0 12px 26px rgba(0,0,0,.6)}
 .sc-v7o-scale.is-dimmed{opacity:.55}
 .sc-v7o-scale.is-playable .card6{box-shadow:0 0 0 2px #34d399aa,0 12px 26px rgba(0,0,0,.6)}
 
-/* Fit: children don't flex-shrink away */
-.card6 .box > *{flex-shrink:0}
+/* Fit: conteúdo não encolhe — exceto .rule (v7o deixa flex-shrink colapsar a linha sob o nome quando o painel aperta, ex.: Chidori) */
+.card6 .box > *:not(.rule){flex-shrink:0}
+.card6 .box .rule{flex-shrink:1;min-height:0}
 .card6 .box .rules{overflow:visible}
 .card6.lor .box .req{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 
@@ -420,18 +444,27 @@
   margin:0!important;
   line-height:normal!important;
 }
-/* Linha de família sob o nome do jutsu (gen_v7o sempre renderiza .rule) */
+/* .rule: igual ao v7o — sem margem extra (gaps = só gap:3px do box).
+ * Em cards apertados o flex-shrink pode colapsar a linha (ex.: Chidori na ref).
+ * Genjutsu: a ref mantém a linha roxa — não colapsar. */
 .card6.jut .box .rule{
-  display:block!important;
-  width:86%;
+  display:block;
+  margin:0;
+}
+.card6.fam-genjutsu .box .rule{
+  flex-shrink:0;
   height:1.5px;
-  margin:2px 0 1px;
+  min-height:1.5px;
 }
 .card6.jut .box{
   gap:3px!important;
   justify-content:center!important;
   padding:15px 18px!important;
   overflow:visible!important;
+}
+/* Nome do jutsu: peso 900 como o Cinzel do mock (Georgia sem versalete) */
+.card6.jut .box .nm{
+  font-weight:900!important;
 }
 /* Oculto: v7o.html usa class="pill" padrão (borda ouro), sem .trap/.trig */
 .lvlbar{

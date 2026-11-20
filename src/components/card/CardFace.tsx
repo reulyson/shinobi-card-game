@@ -290,16 +290,17 @@ function KeywordRow({
 }) {
   if (pills.length === 0) return null;
   // 1 keyword → pílula ícone+nome; 2+ → só ícones lado a lado (todos os tamanhos)
+  // 1 keyword → pílula ícone+nome; 2+ → só ícones (mão, zoom e campo)
   if (pills.length === 1) {
     const p = pills[0];
     return (
       <div className="pill" title={p.label}>
-        {p.id && <CardIcon id={p.id} size={field ? 14 : 18} />}
+        {p.id ? <CardIcon id={p.id} size={field ? 18 : 18} /> : null}
         <span>{p.label}</span>
       </div>
     );
   }
-  const tile = field ? 24 : 30;
+  const tile = field ? 26 : 30;
   return (
     <div className="tiles">
       {pills.map((p, i) =>
@@ -408,7 +409,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
 
   const showBandStats =
     (isCharacter && shownPower != null && shownVitality != null) || isEquip;
-  const iconSz = field ? 15 : 19;
+  const iconSz = field ? 16 : 19;
 
   const boxRef = useFitCardPanel(fitEnabled && !field, [
     card.id,

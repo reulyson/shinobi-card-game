@@ -1,14 +1,19 @@
 import { useLayoutEffect, useRef } from 'react';
 
-/** Espelha o fit de gen_v7o.py: só .nm,.rules,.cap,.traits,.lvl; k até 0.8. */
-const FIT_SELECTOR = '.nm, .rules, .cap, .traits, .lvl';
+/**
+ * Auto-fit do painel v7o.
+ * - Nunca encolhe `.nm` / `.traits` (nome e patente íntegros).
+ * - Encolhe progressivamente `.rules`, `.req`, `.cap`, `.lvl` (mín. 0.8 como gen_v7o).
+ * - Se ainda não couber: sobe a altura do painel (LoR ou jutsu) sem clipar o nome.
+ */
+const SHRINK_SELECTOR = '.rules, .req, .cap, .lvl';
 const MIN_SCALE = 0.8;
 const STEP = 0.04;
+const LOR_BASE_H = 212;
+const LOR_MAX_H = 268;
+const JUT_BASE_H = 150;
+const JUT_MAX_H = 178;
 
-/**
- * Reduz fontes do painel até caber (sem clip), como no script da referência.
- * Ativo em hand/zoom/collection (escala nativa 312×438).
- */
 export function useFitCardPanel(enabled: boolean, deps: readonly unknown[]) {
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -16,30 +21,65 @@ export function useFitCardPanel(enabled: boolean, deps: readonly unknown[]) {
     const box = boxRef.current;
     if (!enabled || !box) return;
 
-    const els = Array.from(box.querySelectorAll<HTMLElement>(FIT_SELECTOR));
-    if (els.length === 0) return;
+    const card = box.closest('.card6');
+    const isLor = card?.classList.contains('lor') ?? false;
+    const isJut = card?.classList.contains('jut') ?? false;
+    const shrinkEls = Array.from(box.querySelectorAll<HTMLElement>(SHRINK_SELECTOR));
+    const nm = box.querySelector<HTMLElement>('.nm');
 
-    const bases = els.map((el) => parseFloat(getComputedStyle(el).fontSize) || 10);
+    const bases = shrinkEls.map((el) => parseFloat(getComputedStyle(el).fontSize) || 10);
 
     const reset = () => {
-      els.forEach((el, i) => {
-        el.style.fontSize = `${bases[i]}px`;
+      shrinkEls.forEach((el) => {
+        el.style.removeProperty('font-size');
+      });
+      box.style.removeProperty('height');
+      box.style.removeProperty('min-height');
+    };
+
+    const refreshBases = () => {
+      shrinkEls.forEach((el, i) => {
+        el.style.removeProperty('font-size');
+        bases[i] = parseFloat(getComputedStyle(el).fontSize) || bases[i];
       });
     };
 
     const applyScale = (k: number) => {
-      els.forEach((el, i) => {
-        el.style.fontSize = `${bases[i] * k}px`;
+      shrinkEls.forEach((el, i) => {
+        el.style.setProperty('font-size', `${bases[i] * k}px`, 'important');
       });
+    };
+
+    const nameVisible = (): boolean => {
+      if (!nm) return true;
+      return nm.getBoundingClientRect().top >= box.getBoundingClientRect().top - 0.5;
+    };
+
+    const overflows = (): boolean =>
+      box.scrollHeight > box.clientHeight + 8 || !nameVisible();
+
+    const growBox = (base: number, max: number) => {
+      let h = base;
+      box.style.setProperty('height', `${h}px`, 'important');
+      while (overflows() && h < max) {
+        h += 4;
+        box.style.setProperty('height', `${h}px`, 'important');
+      }
     };
 
     const fit = () => {
       reset();
+      refreshBases();
+
       let k = 1;
-      // gen_v7o: while scrollHeight > clientHeight+8 && k > .8
-      while (box.scrollHeight > box.clientHeight + 8 && k > MIN_SCALE) {
+      while (overflows() && k > MIN_SCALE) {
         k -= STEP;
         applyScale(k);
+      }
+
+      if (overflows()) {
+        if (isLor) growBox(LOR_BASE_H, LOR_MAX_H);
+        else if (isJut) growBox(JUT_BASE_H, JUT_MAX_H);
       }
     };
 

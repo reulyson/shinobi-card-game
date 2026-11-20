@@ -32,6 +32,15 @@ const COMPARE_IDS = [
   { id: 'equip_kubikiribocho', label: 'Equipamento', rank: 1 as const, key: 'equipamento' },
 ] as const;
 
+/** Cartas com os textos mais longos (por tipo) — stress do auto-fit. */
+const LONGEST_TEXT = [
+  { id: 'sasuke_uchiha', rank: 2 as const, label: 'Ninja Chuunin (texto longo)' },
+  { id: 'unit_anko_mitarashi', rank: 1 as const, label: 'Unidade (texto longo)' },
+  { id: 'shino_aburame', rank: 3 as const, label: 'Ninja Jounnin (texto longo)' },
+  { id: 'hinata_hyuga', rank: 3 as const, label: 'Ninja Jounnin 2 (texto longo)' },
+  { id: 'itachi_uchiha', rank: 3 as const, label: 'Ninja Jounnin 3 (texto longo)' },
+] as const;
+
 /**
  * Galeria de verificação visual v7o.
  * Abra com ?gallery=cartas
@@ -42,6 +51,9 @@ export const CardGallery: React.FC = () => {
   const naruto = getCardById('naruto_uzumaki');
   const zabuza = getCardById('zabuza_momochi');
   const sasuke = getCardById('sasuke_uchiha');
+  const longest = LONGEST_TEXT.map((row) => ({ ...row, card: getCardById(row.id) })).filter(
+    (r) => r.card,
+  );
 
   return (
     <div className="min-h-screen bg-[#0A0F1E] text-slate-100 p-10 space-y-14" data-gallery="cartas">
@@ -89,6 +101,33 @@ export const CardGallery: React.FC = () => {
         </div>
       </section>
 
+      <section data-section="texto-longo">
+        <h2 className="text-orange-300 font-semibold mb-2">
+          Stress · textos mais longos (mão · zoom · campo)
+        </h2>
+        <div className="flex flex-wrap gap-10 items-start" data-longest-row="all">
+          {longest.map(({ id, rank, label, card }) =>
+            card ? (
+              <div
+                key={`long-${id}-${rank}`}
+                className="flex flex-col gap-3 items-center"
+                data-longest={id}
+                data-rank={rank}
+              >
+                <div className="flex gap-4 items-end">
+                  <CardFace card={card} size="hand" rankLevel={rank} />
+                  <CardFace card={card} size="zoom" rankLevel={rank} />
+                  <CardFace card={card} size="field" rankLevel={rank} />
+                </div>
+                <span className="text-xs text-slate-400 text-center max-w-[320px]">
+                  {label} · {card.name}
+                </span>
+              </div>
+            ) : null,
+          )}
+        </div>
+      </section>
+
       <section data-section="frente-mao">
         <h2 className="text-orange-300 font-semibold mb-6">Frente · mão 156×219</h2>
         <div className="flex flex-wrap gap-10 items-start">
@@ -130,7 +169,7 @@ export const CardGallery: React.FC = () => {
             <div className="sc-gallery-field-wrap" data-compare="campo-anbu" data-card-id="unit_anbu_konoha">
               <CardFace card={anbu} size="field" power={2} vitality={2} />
               <span className="text-[11px] text-slate-400 text-center">
-                Anbu · 2/2 branco (base)
+                1 KW · pílula ícone+nome · stats base
               </span>
             </div>
           )}
@@ -145,7 +184,7 @@ export const CardGallery: React.FC = () => {
                 vitalityState={compareStat(3, 3)}
               />
               <span className="text-[11px] text-slate-400 text-center">
-                Naruto · poder 4 verde · vida 3 branca
+                1 KW · pílula · poder acima (verde)
               </span>
             </div>
           )}
@@ -160,7 +199,7 @@ export const CardGallery: React.FC = () => {
                 vitalityState={compareStat(3, 5)}
               />
               <span className="text-[11px] text-slate-400 text-center">
-                Zabuza · poder 5 branco · vida 3 vermelha
+                2+ KW · só ícones · vida abaixo (vermelho)
               </span>
             </div>
           )}
@@ -175,7 +214,7 @@ export const CardGallery: React.FC = () => {
                 vitalityState={compareStat(4, 2)}
               />
               <span className="text-[11px] text-slate-400 text-center">
-                Sasuke · poder 3 branco · vida 4 verde
+                2+ KW · só ícones · vida acima (verde)
               </span>
             </div>
           )}
