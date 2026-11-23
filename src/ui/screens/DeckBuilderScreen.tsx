@@ -92,6 +92,14 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('Todos');
   const [search, setSearch] = useState('');
   const [inspectedCard, setInspectedCard] = useState<CardDef | null>(ALL_CARDS[0]);
+  const [inspectorRank, setInspectorRank] = useState<1 | 2 | 3>(1);
+
+  const selectCardForInspect = (card: CardDef) => {
+    setInspectedCard(card);
+    if (card.kind === 'ninja') {
+      setInspectorRank(1);
+    }
+  };
 
   const filteredCards = useMemo(() => {
     return ALL_CARDS.filter((card) => {
@@ -189,7 +197,7 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
   const deckFillPct = Math.min(100, Math.round((activeDeckIds.length / MAX_DECK_SIZE) * 100));
 
   const searchField = (
-    <div className="relative w-full md:w-56 md:shrink-0">
+    <div className="relative w-full">
       <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
       <input
         type="text"
@@ -223,47 +231,57 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
       )}
     </div>
   ) : (
-    <div className="flex flex-col gap-3 w-full lg:max-w-xl">
-      <div className="flex flex-wrap items-center gap-2">
-        {onCancelEdit && (
-          <button type="button" onClick={onCancelEdit} className="btn-ghost text-sm py-2 flex items-center gap-1.5">
-            <ArrowLeft className="w-4 h-4" />
-            Meus decks
-          </button>
-        )}
-        <span className="domain-mode-chip domain-mode-chip--jade">
-          <Hammer className="w-3.5 h-3.5" aria-hidden="true" />
-          Escolher cartas
-        </span>
-      </div>
+    <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+      {onCancelEdit && (
+        <button type="button" onClick={onCancelEdit} className="btn-ghost text-sm py-2 flex items-center gap-1.5">
+          <ArrowLeft className="w-4 h-4" />
+          Meus decks
+        </button>
+      )}
+      <span className="domain-mode-chip domain-mode-chip--jade">
+        <Hammer className="w-3.5 h-3.5" aria-hidden="true" />
+        Montagem
+      </span>
+    </div>
+  );
+
+  const builderToolbar = !isGrimorio ? (
+    <div className="deck-editor-toolbar shrink-0">
+      <div className="deck-editor-toolbar__search">{searchField}</div>
       {onDeckNameChange && (
-        <label className="flex flex-col gap-1">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300/90">Nome do deck</span>
+        <label className="deck-editor-toolbar__name">
+          <span className="deck-editor-toolbar__label">Nome do deck</span>
           <input
             type="text"
             value={deckName ?? ''}
             onChange={(e) => onDeckNameChange(e.target.value)}
             maxLength={48}
-            className="w-full px-3 py-2 text-sm rounded-lg bg-slate-900 border border-emerald-800/60 text-slate-100 focus:outline-none focus:border-emerald-400"
+            placeholder="Ex.: Time 7 ofensivo"
+            className="deck-editor-toolbar__input"
           />
         </label>
       )}
-      <div className="deck-hero-meter">
-        <span className="deck-hero-meter__label">Montagem</span>
-        <div className="deck-hero-meter__track" role="meter" aria-valuenow={activeDeckIds.length} aria-valuemin={0} aria-valuemax={MAX_DECK_SIZE}>
+      <div className="deck-hero-meter deck-editor-toolbar__meter">
+        <span className="deck-hero-meter__label">Progresso</span>
+        <div
+          className="deck-hero-meter__track"
+          role="meter"
+          aria-valuenow={activeDeckIds.length}
+          aria-valuemin={0}
+          aria-valuemax={MAX_DECK_SIZE}
+        >
           <div
             className={`deck-hero-meter__fill ${activeDeckIds.length >= MAX_DECK_SIZE && !deckCheck.ok ? 'deck-hero-meter__fill--invalid' : ''}`}
             style={{ width: `${deckFillPct}%` }}
           />
         </div>
         <span className="deck-hero-meter__meta">
-          {activeDeckIds.length}/{MAX_DECK_SIZE} cartas
-          {deckCheck.ok && activeDeckIds.length >= MAX_DECK_SIZE ? ' · Válido' : ''}
-          {!deckCheck.ok && activeDeckIds.length >= MAX_DECK_SIZE ? ' · Inválido' : ''}
+          {activeDeckIds.length}/{MAX_DECK_SIZE} · Ninjas {distinctNinjasCount}/3
+          {deckCheck.ok && activeDeckIds.length >= MAX_DECK_SIZE ? ' · Pronto' : ''}
         </span>
       </div>
     </div>
-  );
+  ) : null;
 
   const factionActiveClass = isGrimorio
     ? 'bg-sky-500 text-slate-950 font-semibold'
@@ -273,8 +291,8 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
     : 'bg-emerald-500/20 text-emerald-100 border border-emerald-400/70';
 
   const filterControls = (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex flex-wrap items-center gap-1.5">
+    <div className="deck-filter-stack">
+      <div className="deck-filter-chips" role="group" aria-label="Filtrar por time">
         {FACTIONS.map((faction) => (
           <button
             key={faction}
@@ -290,7 +308,7 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className="deck-filter-chips deck-filter-chips--types" role="group" aria-label="Filtrar por tipo">
         {TYPE_FILTERS.map((t) => (
           <button
             key={t.id}
@@ -310,63 +328,55 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
   );
 
   const deckRailPanel = (
-    <DomainPanel accent="jade" className="deck-workshop-rail p-4 flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <div>
+    <DomainPanel accent="jade" className="deck-workshop-rail deck-workshop-rail--editor">
+      <div className="deck-workshop-rail__head">
+        <div className="flex items-center justify-between gap-2">
           <h2 className="text-base font-display text-emerald-100 tracking-wide">Seu baralho</h2>
-          <p className="text-xs text-slate-400 font-mono-num mt-0.5">
-            {activeDeckIds.length}/{MAX_DECK_SIZE} cartas · Ninjas {distinctNinjasCount}/3
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => onUpdateDeck(DECK_PRESETS[0].cardIds)}
-          className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-300"
-          title="Restaurar deck inicial"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Resetar</span>
-        </button>
-      </div>
-      <p className="text-[11px] text-emerald-200/80 leading-snug -mt-2">
-        Use <strong className="text-white">+</strong> e <strong className="text-white">−</strong> nas cartas para
-        montar. Salve para voltar à lista de decks.
-      </p>
-
-      <div className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-semibold text-slate-400">Decks prontos</span>
-        {DECK_PRESETS.map((preset) => (
           <button
-            key={preset.id}
             type="button"
-            onClick={() => onUpdateDeck(preset.cardIds)}
-            className="text-left px-2.5 py-2 rounded-md bg-slate-900 border border-slate-800 hover:border-emerald-500/60 transition-colors"
+            onClick={() => onUpdateDeck(DECK_PRESETS[0].cardIds)}
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-300"
+            title="Restaurar deck inicial"
           >
-            <div className="text-xs font-semibold text-white">{preset.name}</div>
-            <div className="text-[11px] text-slate-400 truncate">{preset.subtitle}</div>
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Limpar</span>
           </button>
-        ))}
+        </div>
+        <p className="text-[11px] text-slate-400 mt-1">
+          Toque em <strong className="text-emerald-200">+</strong> no catálogo ou remova aqui.
+        </p>
       </div>
 
-      <div>
-        <div className="text-[11px] font-semibold text-slate-400 mb-2">Curva de chakra</div>
-        <div className="grid grid-cols-6 gap-1.5 items-end h-14 px-1">
+      <details className="deck-workshop-rail__presets">
+        <summary className="deck-workshop-rail__presets-summary">Importar modelo pronto</summary>
+        <div className="flex flex-col gap-1 mt-2">
+          {DECK_PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => onUpdateDeck(preset.cardIds)}
+              className="text-left px-2.5 py-2 rounded-md bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 transition-colors"
+            >
+              <div className="text-xs font-semibold text-white">{preset.name}</div>
+              <div className="text-[11px] text-slate-400 line-clamp-1">{preset.subtitle}</div>
+            </button>
+          ))}
+        </div>
+      </details>
+
+      <div className="deck-workshop-rail__curve" aria-hidden={activeDeckIds.length === 0}>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Curva</span>
+        <div className="deck-mana-curve">
           {manaCurve.map((val, idx) => (
-            <div key={idx} className="flex flex-col items-center gap-1 h-full justify-end">
-              <div
-                className="w-full rounded-t bg-emerald-500/75"
-                style={{ height: `${Math.max(8, (val / maxBucket) * 100)}%` }}
-                title={`${val} cartas`}
-              />
-              <span className="text-[10px] font-mono-num text-slate-400">
-                {idx === 5 ? '6+' : idx + 1}
-              </span>
+            <div key={idx} className="deck-mana-curve__col" title={`${val} cartas`}>
+              <div className="deck-mana-curve__bar" style={{ height: `${Math.max(4, (val / maxBucket) * 100)}%` }} />
+              <span className="deck-mana-curve__lbl">{idx === 5 ? '6+' : idx + 1}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="max-h-52 overflow-y-auto flex flex-col gap-1 pr-1">
+      <div className="deck-workshop-rail__list">
         {uniqueDeckEntries.length === 0 ? (
           <p className="text-xs text-slate-500 py-4 text-center">Nenhuma carta no baralho ainda.</p>
         ) : (
@@ -377,7 +387,7 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
             >
               <button
                 type="button"
-                onClick={() => setInspectedCard(card)}
+                onClick={() => selectCardForInspect(card)}
                 className="flex items-center gap-2 min-w-0 text-left hover:text-emerald-300"
               >
                 <span className="sc-deck-thumb relative overflow-hidden rounded border border-slate-700/80 bg-slate-950 shrink-0">
@@ -403,40 +413,41 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
         )}
       </div>
 
-      {activeDeckIds.length >= MAX_DECK_SIZE && !deckCheck.ok && (
-        <p className="text-[11px] text-rose-300 leading-snug">{deckCheck.errors[0]}</p>
-      )}
-      {onSaveDeck ? (
-        <button
-          type="button"
-          onClick={onSaveDeck}
-          className="w-full py-2.5 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
-        >
-          <Save className="w-4 h-4" />
-          Salvar deck
-        </button>
-      ) : (
-        <button
-          type="button"
-          disabled={!deckCheck.ok}
-          onClick={onStartMatch}
-          className="w-full py-2.5 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-45 disabled:cursor-not-allowed"
-        >
-          <span>
-            {activeDeckIds.length < MAX_DECK_SIZE
-              ? `Complete ${MAX_DECK_SIZE} cartas`
-              : deckCheck.ok
-                ? 'Entrar em Batalha'
-                : 'Baralho inválido'}
-          </span>
-        </button>
-      )}
+      <div className="deck-workshop-rail__foot">
+        {activeDeckIds.length >= MAX_DECK_SIZE && !deckCheck.ok && (
+          <p className="text-[11px] text-rose-300 leading-snug mb-2">{deckCheck.errors[0]}</p>
+        )}
+        {onSaveDeck ? (
+          <button
+            type="button"
+            onClick={onSaveDeck}
+            className="w-full py-2.5 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+          >
+            <Save className="w-4 h-4" />
+            Salvar deck
+          </button>
+        ) : (
+          <button
+            type="button"
+            disabled={!deckCheck.ok}
+            onClick={onStartMatch}
+            className="w-full py-2.5 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-45 disabled:cursor-not-allowed"
+          >
+            <span>
+              {activeDeckIds.length < MAX_DECK_SIZE
+                ? `Complete ${MAX_DECK_SIZE} cartas`
+                : deckCheck.ok
+                  ? 'Entrar em Batalha'
+                  : 'Baralho inválido'}
+            </span>
+          </button>
+        )}
+      </div>
     </DomainPanel>
   );
 
   const catalogBody = (
     <>
-            {!isGrimorio && searchField}
             {filterControls}
             {filteredCards.length === 0 ? (
               <div className="py-16 text-center rounded-xl border border-slate-800 bg-slate-900/40 text-slate-400 text-sm">
@@ -460,8 +471,8 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
                     card={card}
                     size="collection"
                     selected={inspectedCard?.id === card.id}
-                    onClick={() => setInspectedCard(card)}
-                    onInspect={(c) => setInspectedCard(c)}
+                    onClick={() => selectCardForInspect(card)}
+                    onInspect={(c) => selectCardForInspect(c)}
                   />
                   {mode === 'builder' && !isDeckableCard(card) && (
                     <p className="px-1 text-[11px] leading-snug text-rose-300/90">
@@ -506,24 +517,32 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
   return (
     <DomainPageShell wide dense fill>
       <DomainPageHero domain={shellDomain} compact actions={heroActions} />
+      {builderToolbar}
       <div
         className={`domain-split-view flex-1 min-h-0 ${isGrimorio ? '' : 'domain-split-view--editor'}`}
       >
         <div
-          className={`domain-split-view__main domain-filter-rail ${
-            isGrimorio ? 'catalog-surface' : 'deck-catalog-surface'
+          className={`domain-split-view__main ${
+            isGrimorio ? 'domain-filter-rail catalog-surface' : 'deck-catalog-surface'
           }`}
         >
           {isGrimorio && (
-            <p className="text-[11px] text-sky-200/80 leading-snug">
-              {filteredCards.length} resultados · {ALL_CARDS.length} cartas no catálogo
-            </p>
+            <div className="text-[11px] text-sky-200/85 leading-snug space-y-1">
+              <p>
+                {filteredCards.length} resultados · {ALL_CARDS.length} cartas no catálogo
+              </p>
+              <p className="text-sky-200/60">
+                Só <strong className="text-sky-100 font-semibold">Ninjas</strong> promovem (Gennin → Chuunin →
+                Jounnin). Unidades, Jutsus e equipamentos não têm patentes. As graduações ficam no painel{' '}
+                <strong className="text-sky-100 font-semibold">Detalhe da carta</strong> à direita.
+              </p>
+            </div>
           )}
           {catalogBody}
         </div>
 
         {!isGrimorio && (
-          <aside className="domain-split-view__aside order-first lg:order-none">{deckRailPanel}</aside>
+          <aside className="domain-split-view__aside">{deckRailPanel}</aside>
         )}
 
         {isGrimorio && (
@@ -533,7 +552,13 @@ export const DeckBuilderScreen: React.FC<DeckBuilderScreenProps> = ({
                 Detalhe da carta
               </p>
               <div className="min-h-0 overflow-y-auto">
-                <CardInspector card={inspectedCard} />
+                <CardInspector
+                  card={inspectedCard}
+                  previewRank={inspectedCard?.kind === 'ninja' ? inspectorRank : undefined}
+                  onPreviewRankChange={
+                    inspectedCard?.kind === 'ninja' ? (rank) => setInspectorRank(rank) : undefined
+                  }
+                />
               </div>
             </DomainPanel>
           </aside>

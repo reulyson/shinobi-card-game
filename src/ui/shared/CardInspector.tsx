@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, EyeOff } from 'lucide-react';
 import {
   BoardUnit,
@@ -17,7 +17,9 @@ import {
 } from '../../data/keywordHelp';
 import { KEYWORD_VISUALS } from '../../data/keywordVisuals';
 import { getUnitHealth, getUnitPower } from '../../engine/battleEngine';
+import { getNinjaMaxRank } from '../../data/cards';
 import { CardFace } from '../card/CardFace';
+import { NinjaRankStrip } from './NinjaRankStrip';
 import { CardIcon } from '../card/CardIcon';
 import { CardIconId, keywordIconId } from '../card/theme';
 
@@ -29,6 +31,9 @@ interface CardInspectorProps {
   savedRank?: { level: 1 | 2 | 3; progress: number; target: number; cost: number };
   /** Modo compacto para o painel lateral esquerdo (214×588) durante a batalha. */
   compact?: boolean;
+  /** Controle externo da patente em prévia (Grimório). */
+  previewRank?: 1 | 2 | 3;
+  onPreviewRankChange?: (rank: 1 | 2 | 3) => void;
 }
 
 interface TermChip {
@@ -71,13 +76,25 @@ export const CardInspector: React.FC<CardInspectorProps> = ({
   onClose,
   savedRank,
   compact = false,
+  previewRank: previewRankProp,
+  onPreviewRankChange,
 }) => {
   const startRank = (unit?.evolutionLevel ?? savedRank?.level ?? 1) as 1 | 2 | 3;
-  const [previewRank, setPreviewRank] = useState<1 | 2 | 3>(startRank);
+  const [previewRankInternal, setPreviewRankInternal] = useState<1 | 2 | 3>(startRank);
+  const previewRank = previewRankProp ?? previewRankInternal;
+
+  const setPreviewRank = (rank: 1 | 2 | 3) => {
+    onPreviewRankChange?.(rank);
+    if (previewRankProp === undefined) {
+      setPreviewRankInternal(rank);
+    }
+  };
 
   useEffect(() => {
-    setPreviewRank(startRank);
-  }, [card?.id, startRank]);
+    if (previewRankProp === undefined) {
+      setPreviewRankInternal(startRank);
+    }
+  }, [card?.id, startRank, previewRankProp]);
 
   if (!card) {
     return (
@@ -92,6 +109,8 @@ export const CardInspector: React.FC<CardInspectorProps> = ({
   const isCharacter =
     card.kind === 'ninja' || card.kind === 'unidade' || card.kind === 'token';
   const activeRank: 1 | 2 | 3 = card.kind === 'ninja' ? previewRank : 1;
+  const ninjaMaxRank = card.kind === 'ninja' ? getNinjaMaxRank(card) : 3;
+  const previewBeyondMax = card.kind === 'ninja' && previewRank > ninjaMaxRank;
   const subtitleLabel =
     card.kind === 'ninja'
       ? `Ninja · ${card.role}`
@@ -357,36 +376,24 @@ export const CardInspector: React.FC<CardInspectorProps> = ({
       </div>
 
       {card.kind === 'ninja' && (
-        <div
-          className={`grid ${(card.maxRank ?? 3) === 3 ? 'grid-cols-3' : (card.maxRank ?? 3) === 2 ? 'grid-cols-2' : 'grid-cols-1'} gap-1.5 ${compact ? 'text-[11px]' : 'text-xs'} font-semibold`}
-        >
-          {([
-            { rank: 1 as const, label: 'Gennin' },
-            { rank: 2 as const, label: 'Chuunin' },
-            { rank: 3 as const, label: 'Jounnin' },
-          ])
-            .filter((tier) => tier.rank <= (card.maxRank ?? 3))
-            .map((tier) => {
-              const isActive = previewRank === tier.rank;
-              return (
-                <button
-                  key={tier.rank}
-                  type="button"
-                  onClick={() => setPreviewRank(tier.rank)}
-                  className={`${compact ? 'py-1 px-1.5' : 'py-1.5 px-2'} rounded-md border transition-colors ${
-                    isActive
-                      ? tier.rank === 3
-                        ? 'bg-orange-950/60 border-orange-400 text-orange-200'
-                        : tier.rank === 2
-                          ? 'bg-amber-950/60 border-amber-400 text-amber-200'
-                          : 'bg-sky-950/60 border-sky-400 text-sky-200'
-                      : 'bg-slate-900/70 border-slate-800 text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {tier.label}
-                </button>
-              );
-            })}
+        <div className="flex flex-col gap-1.5">
+          <NinjaRankStrip
+            card={card}
+            rank={previewRank}
+            onRankChange={setPreviewRank}
+            previewAllRanks
+          />
+          {previewBeyondMax && (
+            <p className={`${compact ? 'text-[10px]' : 'text-[11px]'} text-amber-200/90 leading-snug`}>
+              Prévia visual — em duelo, {card.name} promove no máximo até{' '}
+              {ninjaMaxRank === 1 ? 'Gennin' : ninjaMaxRank === 2 ? 'Chuunin' : 'Jounnin'}.
+            </p>
+          )}
+          {ninjaMaxRank < 3 && !previewBeyondMax && (
+            <p className={`${compact ? 'text-[10px]' : 'text-[11px]'} text-slate-500 leading-snug`}>
+              Patente máx. em partida: {ninjaMaxRank === 1 ? 'Gennin (sem promoção)' : 'Chuunin'}.
+            </p>
+          )}
         </div>
       )}
 

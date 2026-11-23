@@ -47,6 +47,8 @@ interface CardViewProps {
   keywordBursts?: KeywordBurstId[];
   vanishing?: boolean;
   savedRank?: { level: 1 | 2 | 3; progress: number; target: number };
+  /** Grimório / deck builder: prévia de patente sem unidade em campo. */
+  previewRank?: 1 | 2 | 3;
 }
 
 function useLocalKeywordBursts(unit?: BoardUnit): Array<{ id: KeywordBurstId; key: string }> {
@@ -127,6 +129,7 @@ export const CardView: React.FC<CardViewProps> = ({
   keywordBursts,
   vanishing = false,
   savedRank,
+  previewRank,
 }) => {
   const card = propCard || (unit ? getCardById(unit.cardId) : undefined);
   const localBursts = useLocalKeywordBursts(unit);
@@ -195,7 +198,7 @@ export const CardView: React.FC<CardViewProps> = ({
           vitality={vitality}
           powerState={powerState}
           vitalityState={vitalityState}
-          rankLevel={unit?.evolutionLevel ?? savedRank?.level}
+          rankLevel={unit?.evolutionLevel ?? savedRank?.level ?? previewRank}
           levelProgress={unit?.evolutionProgress ?? savedRank?.progress}
           selected={selected}
           dimmed={dimmed}
@@ -438,7 +441,7 @@ export const CardView: React.FC<CardViewProps> = ({
               vitality={vitality}
               powerState={powerState}
               vitalityState={vitalityState}
-              rankLevel={unit?.evolutionLevel ?? savedRank?.level}
+              rankLevel={unit?.evolutionLevel ?? savedRank?.level ?? previewRank}
               levelProgress={unit?.evolutionProgress ?? savedRank?.progress}
               selected={selected}
               dimmed={dimmed}
@@ -455,7 +458,7 @@ export const CardView: React.FC<CardViewProps> = ({
             vitality={vitality}
             powerState={powerState}
             vitalityState={vitalityState}
-            rankLevel={unit?.evolutionLevel ?? savedRank?.level}
+            rankLevel={unit?.evolutionLevel ?? savedRank?.level ?? previewRank}
             levelProgress={unit?.evolutionProgress ?? savedRank?.progress}
             selected={selected}
             dimmed={dimmed}

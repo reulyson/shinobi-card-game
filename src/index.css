@@ -1237,3 +1237,176 @@
   background: rgba(8, 15, 24, 0.55);
   padding: 0.65rem 0.75rem;
 }
+
+/* —— Editor de deck (montar-deck/criar|editar) —— */
+.deck-editor-toolbar {
+  display: grid;
+  gap: 0.65rem 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.12), rgba(8, 15, 24, 0.75));
+}
+@media (min-width: 768px) {
+  .deck-editor-toolbar {
+    grid-template-columns: minmax(160px, 1.2fr) minmax(140px, 1fr) minmax(180px, 0.9fr);
+    align-items: end;
+  }
+}
+.deck-editor-toolbar__label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(110, 231, 183, 0.85);
+  margin-bottom: 0.25rem;
+}
+.deck-editor-toolbar__input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #f1f5f9;
+}
+.deck-editor-toolbar__input:focus {
+  outline: none;
+  border-color: rgba(52, 211, 153, 0.75);
+}
+.deck-editor-toolbar__search .relative {
+  width: 100%;
+}
+.deck-editor-toolbar__meter {
+  min-width: 0;
+}
+
+.deck-filter-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding-bottom: 0.5rem;
+  margin: -0.15rem 0 0.35rem;
+  background: linear-gradient(180deg, rgba(8, 15, 24, 0.98) 70%, rgba(8, 15, 24, 0));
+}
+.deck-filter-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.15rem;
+  scrollbar-width: thin;
+}
+.deck-filter-chips--types {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+.deck-workshop-rail--editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.deck-workshop-rail__head {
+  padding: 1rem 1rem 0.65rem;
+  border-bottom: 1px solid rgba(52, 211, 153, 0.12);
+  flex-shrink: 0;
+}
+.deck-workshop-rail__presets {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+}
+.deck-workshop-rail__presets-summary {
+  cursor: pointer;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  list-style: none;
+  user-select: none;
+}
+.deck-workshop-rail__presets-summary::-webkit-details-marker {
+  display: none;
+}
+.deck-workshop-rail__presets[open] .deck-workshop-rail__presets-summary {
+  color: #6ee7b7;
+  margin-bottom: 0.35rem;
+}
+.deck-workshop-rail__curve {
+  padding: 0.5rem 1rem 0.65rem;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+}
+.deck-mana-curve {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.35rem;
+  align-items: end;
+  height: 2.5rem;
+  margin-top: 0.35rem;
+}
+.deck-mana-curve__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 0.2rem;
+}
+.deck-mana-curve__bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 0.25rem 0.25rem 0 0;
+  background: rgba(16, 185, 129, 0.7);
+}
+.deck-mana-curve__lbl {
+  font-size: 0.5625rem;
+  font-family: ui-monospace, monospace;
+  color: #64748b;
+}
+.deck-workshop-rail__list {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.deck-workshop-rail__foot {
+  padding: 0.65rem 1rem 1rem;
+  border-top: 1px solid rgba(52, 211, 153, 0.2);
+  background: rgba(6, 20, 16, 0.55);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1023px) {
+  .domain-split-view--editor {
+    gap: 0.65rem;
+  }
+  .domain-split-view--editor .domain-split-view__main {
+    flex: 1 1 auto;
+    min-height: min(52vh, 520px);
+  }
+  .domain-split-view--editor .domain-split-view__aside {
+    flex: 0 0 auto;
+    max-height: none;
+  }
+  .deck-workshop-rail--editor {
+    max-height: min(42vh, 360px);
+  }
+}
+@media (min-width: 1024px) {
+  .domain-split-view--editor .domain-split-view__aside {
+    max-height: 100%;
+  }
+}
