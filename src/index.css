@@ -17,6 +17,7 @@
     background-color: #0B111A;
     color: #F1F5F9;
     overflow-x: hidden;
+    overscroll-behavior-y: none;
   }
 
   /* Títulos, banners, botão principal e nomes de cartas: Bangers (traço de mangá). */
@@ -1117,8 +1118,30 @@
 }
 
 .app-shell-clip {
-  overflow-x: clip;
   max-width: 100%;
+}
+
+/* Menu: nav fixo + rolagem só no main (flex basis 0 evita main crescer com o conteúdo). */
+.app-menu-shell {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.app-menu-main {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.app-menu-main--locked {
+  overflow: hidden;
 }
 
 .domain-mode-chip {

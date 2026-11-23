@@ -324,19 +324,27 @@ function AppMain() {
 
   const activeDeckMeta = deckLibrary.decks.find((d) => d.id === deckLibrary.activeDeckId);
 
+  const isMenuShell = screen !== 'battle';
+  /** Só Grimório / Montar deck: viewport fixo com scroll interno nos painéis. */
+  const panelViewport = isMenuShell && viewportLocked;
+
   return (
     <div
-      className={`w-full text-slate-100 flex flex-col app-shell-clip min-h-dvh ${
-        viewportLocked ? 'h-dvh max-h-dvh overflow-hidden' : ''
-      } ${screen !== 'battle' ? 'app-v2-mesh' : 'bg-[#0B111A]'}`}
+      className={`w-full text-slate-100 flex flex-col app-shell-clip ${
+        panelViewport ? 'app-menu-shell' : isMenuShell ? 'min-h-dvh flex-1' : 'min-h-dvh'
+      } ${isMenuShell ? 'app-v2-mesh' : 'bg-[#0B111A]'}`}
     >
-      {screen !== 'battle' && (
+      {isMenuShell && (
         <AppNav screen={screen} onNavigate={goToScreen} onStartBattle={handleStartBattle} />
       )}
 
       <main
-        className={`flex flex-col w-full relative flex-1 ${
-          viewportLocked ? 'min-h-0 overflow-hidden' : 'min-h-0'
+        className={`flex flex-col w-full relative ${
+          screen === 'battle'
+            ? 'min-h-0 overflow-hidden flex-1'
+            : panelViewport
+              ? 'app-menu-main app-menu-main--locked'
+              : 'flex-1'
         }`}
       >
         <div className={`relative flex flex-col w-full ${viewportLocked ? 'flex-1 min-h-0' : ''}`}>

@@ -21,7 +21,7 @@ interface AppNavProps {
 export const AppNav: React.FC<AppNavProps> = ({ screen, onNavigate, onStartBattle }) => {
   return (
     <>
-      <header className="sticky top-0 z-30 app-nav-v2">
+      <header className="sticky top-0 z-30 app-nav-v2 shrink-0">
         <div className="h-14 px-3 sm:px-4 lg:px-5 flex items-center justify-between gap-4 max-w-[1680px] mx-auto w-full">
           <button
             type="button"
@@ -62,7 +62,7 @@ export const AppNav: React.FC<AppNavProps> = ({ screen, onNavigate, onStartBattl
         </div>
       </header>
 
-      <div className="lg:hidden flex items-center justify-around border-b border-slate-800/80 bg-[#0a0d12]/95 px-1 py-2 text-[11px] sm:text-xs font-medium text-slate-300">
+      <div className="lg:hidden shrink-0 flex items-center justify-around border-b border-slate-800/80 bg-[#0a0d12]/95 px-1 py-2 text-[11px] sm:text-xs font-medium text-slate-300">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.screen}
