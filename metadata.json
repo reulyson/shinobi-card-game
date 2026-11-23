@@ -1,0 +1,6 @@
+{
+  "name": "Shinobi CardGame",
+  "description": "Card game tático de Naruto inspirado em Runeterra, com evolução de personagens, arenas dinâmicas e jutsus rápidos, lentos, suporte e armadilhas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,95 @@
+import { MAX_HAND, ZONES } from './grid';
+import { ArenaFieldCard } from './ArenaFieldCard';
+import { TabLabel } from './TabLabel';
+
+import type { CardRank } from './types';
+
+export interface HandCardModel {
+  cardId: string;
+  name: string;
+  artUrl?: string;
+  cost?: number;
+  playable?: boolean;
+  rank?: CardRank;
+}
+
+/** Sua mão — leque com CardFace size="hand" (156×219). */
+export function PlayerHandFan({
+  cards,
+  onCardClick,
+  onCardHover,
+}: {
+  cards: HandCardModel[];
+  onCardClick?: (cardId: string, index: number) => void;
+  onCardHover?: (cardId: string | null, index?: number) => void;
+}) {
+  const z = ZONES.hand;
+  const list = cards.slice(0, MAX_HAND);
+  const n = list.length;
+  const cardW = 156;
+  const cardH = 219;
+  const [spread, drop, gap] = n <= 6 ? [7, 6, 92] : [5, 4, 84];
+  const cx = 800;
+  const base = 726;
+
+  return (
+    <div
+      // Camada 1600×900 só posiciona o leque: não pode capturar cliques do
+      // tabuleiro nem do botão da moeda (z 22) — só as cartas recebem eventos.
+      className="pointer-events-none absolute overflow-visible"
+      style={{ left: 0, top: 0, width: 1600, height: 900, zIndex: 24 }}
+      data-hand="player"
+      aria-label={`Mão ${n}/${MAX_HAND}`}
+    >
+      <div className="absolute" style={{ left: 1236, top: 724 }}>
+        <TabLabel tone="o" size={13}>
+          MÃO {n}/{MAX_HAND}
+        </TabLabel>
+      </div>
+      {list.map((c, i) => {
+        const o = i - (n - 1) / 2;
+        const left = cx + o * gap - cardW / 2;
+        const top = base + Math.abs(o) ** 2 * drop;
+        const rot = o * spread;
+        return (
+          <div
+            key={`${c.cardId}-${i}`}
+            className="pointer-events-auto absolute origin-bottom transition-transform hover:-translate-y-3"
+            style={{
+              left,
+              top,
+              width: cardW,
+              height: cardH,
+              transform: `rotate(${rot}deg)`,
+              transformOrigin: '50% 130%',
+              filter: 'drop-shadow(0 6px 10px #000b)',
+              zIndex: i,
+            }}
+          >
+            <ArenaFieldCard
+              size="hand"
+              card={{
+                uid: `hand-${i}`,
+                cardId: c.cardId,
+                name: c.name,
+                owner: 'player',
+                artUrl: c.artUrl,
+                cost: c.cost,
+                rank: c.rank,
+              }}
+              onClick={() => onCardClick?.(c.cardId, i)}
+              onMouseEnter={() => onCardHover?.(c.cardId, i)}
+              onMouseLeave={() => onCardHover?.(null)}
+              className={!c.playable && c.playable !== undefined ? 'opacity-70' : ''}
+            />
+          </div>
+        );
+      })}
+      <div
+        className="pointer-events-none absolute"
+        style={{ left: z.x, top: z.y, width: z.w, height: z.h }}
+        aria-hidden
+      />
+    </div>
+  );
+}

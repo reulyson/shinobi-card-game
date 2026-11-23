@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Ímpeto / Imprudente: seta de investida -->
+  <path d="M4 12h11.5" stroke="#FCD34D" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12.5 6.5L19.5 12l-7 5.5" fill="#0F172A" stroke="#FCD34D" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M4 8.5h4M4 15.5h4" stroke="#FCD34D" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

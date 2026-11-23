@@ -1,0 +1,10 @@
+Fontes livres (SIL Open Font License 1.1), baixadas do Google Fonts:
+- Bangers (Vernon Adams)
+- Yuji Syuku (Kinuta Font Factory)
+- Plus Jakarta Sans (Tokotype)
+- JetBrains Mono (JetBrains)
+Licença: https://openfontlicense.org
+
+Liberation Serif (Red Hat / Google) — SIL OFL 1.1 — nomes das cartas de campo.
+É o fallback métrico de Times New Roman que o mock usa quando `Cinzel,serif`
+não encontra Cinzel (HTML de combate não carrega Cinzel).

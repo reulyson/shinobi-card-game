@@ -1,0 +1,4 @@
+/* Embutir TurnChakraHud na arena: o crop gen_timer traz fundo próprio; no B4 fica transparente. */
+.arena-b4-turn-hud .turn-chakra-hud__canvas {
+  background: transparent;
+}
