@@ -1006,6 +1006,15 @@
   outline: 2px solid rgba(56, 189, 248, 0.7);
   outline-offset: 2px;
 }
+/* CardView: altura vem do aspect-ratio do v7o, não de h-full a 0 */
+.lobby-showcase-slot > .group {
+  display: block;
+  width: 100%;
+  aspect-ratio: 312 / 438;
+}
+.lobby-showcase-slot > .group > .relative {
+  height: auto;
+}
 .lobby-bento-visual {
   position: relative;
   min-height: 200px;
@@ -1043,7 +1052,7 @@
   width: 312px;
   height: 438px;
   transform-origin: top left;
-  transform: scale(calc(100cqw / 312));
+  transform: scale(var(--sc-collection-scale, 0.5));
 }
 
 .lobby-showcase-slot .sc-v7o-scale--collection {
@@ -1062,7 +1071,7 @@
   width: 312px;
   height: 438px;
   transform-origin: top left;
-  transform: scale(calc(100cqw / 312));
+  transform: scale(var(--sc-collection-scale, 0.5));
 }
 
 /* Inspeção lateral: mesma lógica de fit (sem scale(0.72) fixo no JSX) */

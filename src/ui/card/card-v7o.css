@@ -328,12 +328,13 @@
 .sc-v7o-scale{position:relative;flex:none;line-height:0}
 .sc-v7o-scale--hand{width:156px;height:219px}
 .sc-v7o-scale--field{width:119px;height:165px}
-.sc-v7o-scale--zoom,.sc-v7o-scale--collection,.sc-v7o-scale--inspector{width:312px;height:438px}
+.sc-v7o-scale--zoom,.sc-v7o-scale--inspector{width:312px;height:438px}
+.sc-v7o-scale--collection{position:relative;flex:none;line-height:0}
+.sc-v7o-scale--collection>.card6{transform-origin:top left;transform:scale(var(--sc-collection-scale,.5))}
 .sc-v7o-scale > .card6{transform-origin:top left}
 .sc-v7o-scale--hand > .card6{transform:scale(0.5)}
 .sc-v7o-scale--field > .card6{transform:scale(0.5)} /* 238×330 → 119×165 */
 .sc-v7o-scale--zoom > .card6,
-.sc-v7o-scale--collection > .card6,
 .sc-v7o-scale--inspector > .card6{transform:none}
 
 /* Stat color states for band numbers (Part 3) */

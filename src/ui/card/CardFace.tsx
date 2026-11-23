@@ -17,6 +17,7 @@ import {
   StatColorState,
   typeBandFor,
 } from './theme';
+import { useCollectionCardScale } from './useCollectionCardScale';
 import { useFitCardPanel } from './useFitCardPanel';
 import './card-v7o.css';
 
@@ -387,7 +388,12 @@ export const CardFace: React.FC<CardFaceProps> = ({
   keywordsOverride,
 }) => {
   const field = size === 'field';
-  const fitEnabled = size === 'hand' || size === 'zoom' || size === 'collection' || size === 'inspector';
+  const collectionScale = useCollectionCardScale(size === 'collection');
+  const fitEnabled =
+    size === 'hand' ||
+    size === 'zoom' ||
+    size === 'inspector' ||
+    (size === 'collection' && collectionScale.wideForFit);
   const rank = (rankLevel ?? unit?.evolutionLevel ?? 1) as 1 | 2 | 3;
   const [alphaPopout, setAlphaPopout] = React.useState(false);
   React.useEffect(() => {
@@ -498,6 +504,7 @@ export const CardFace: React.FC<CardFaceProps> = ({
 
   return (
     <div
+      ref={size === 'collection' ? collectionScale.ref : undefined}
       className={[
         'sc-v7o-scale',
         scaleClass,

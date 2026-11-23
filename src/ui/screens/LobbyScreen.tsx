@@ -265,7 +265,7 @@ export const LobbyScreen: React.FC<LobbyScreenProps> = (props) => {
           </button>
         }
       >
-        <div className="lobby-showcase-track card-collection-grid">
+        <div className="lobby-showcase-track">
           {SHOWCASE_IDS.map((id) => {
             const card = getCardById(id);
             if (!card) return null;
