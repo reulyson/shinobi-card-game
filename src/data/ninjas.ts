@@ -6,6 +6,7 @@
  * - Patentes variáveis (maxRank): 1 a 3. Custo de cada patente (custo de retorno) vem da ficha.
  * - Jutsu Exclusivo em 28 Ninjas; os outros 6 têm `generalJutsuId` (a cópia vira esse Jutsu geral).
  * - Os efeitos de cada patente ficam em src/engine/ninjaEffects.ts.
+ * - Arte local (PNG transparente): uma pasta por ninja em `public/art/ninjas/<id>/`; ver `ninjaArt.ts`.
  */
 import { Keyword, NinjaCardDef } from '../types/game';
 

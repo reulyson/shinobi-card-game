@@ -57,7 +57,12 @@ ok(NINJA_IDS.length === 34 && new Set(NINJA_IDS).size === 34, 'NINJA_IDS sem rep
 const allIds = ALL_CARDS.map((c) => c.id);
 ok(new Set(allIds).size === allIds.length, 'nenhum id repetido em ALL_CARDS');
 
-const IMG = /^https:\/\/static\.wikia\.nocookie\.net\/naruto\/images\//;
+const IMG =
+  /^https:\/\/static\.wikia\.nocookie\.net\/naruto\/images\//;
+const LOCAL_NINJA_ART = /^\/art\/ninjas\/[a-z0-9_]+\/(gennin|chuunin|jounnin)\.(png|webp)$/;
+function isNinjaImageUrl(u: string): boolean {
+  return IMG.test(u) || LOCAL_NINJA_ART.test(u);
+}
 for (const n of NINJA_CARDS as NinjaCardDef[]) {
   const errs: string[] = [];
   const max = getNinjaMaxRank(n);
@@ -87,7 +92,7 @@ for (const n of NINJA_CARDS as NinjaCardDef[]) {
   const dup = getCardById(getNinjaDuplicateCardId(n));
   if (!dup) errs.push('cópia repetida não vira nenhuma carta');
   const imgs = [n.imageUrl, n.imageUrls?.gennin, n.imageUrls?.chuunin, n.imageUrls?.jounnin].filter(Boolean) as string[];
-  if (imgs.length === 0 || !imgs.every((u) => IMG.test(u))) errs.push('imagem fora da Narutopedia');
+  if (imgs.length === 0 || !imgs.every((u) => isNinjaImageUrl(u))) errs.push('imagem inválida (Narutopedia ou /art/ninjas/)');
   if (!isDeckableCard(n)) errs.push('Ninja deveria entrar no baralho');
   ok(errs.length === 0, `${n.name} (patente máx. ${max}) válido${errs.length ? ': ' + errs.join(', ') : ''}`);
 }
